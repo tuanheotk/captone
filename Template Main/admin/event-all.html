@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Sự kiện của tôi - EventBox & VLAsk</title>
+    <!--== META TAGS ==-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!--== FAV ICON ==-->
+    <link rel="shortcut icon" href="images/fav.ico">
+
+    <!-- GOOGLE FONTS -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600|Quicksand:300,400,500" rel="stylesheet">
+
+    <!-- FONT-AWESOME ICON CSS -->
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+
+    <!--== ALL CSS FILES ==-->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mob.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/materialize.css" />
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+	<script src="js/html5shiv.js"></script>
+	<script src="js/respond.min.js"></script>
+	<![endif]-->
+</head>
+
+<body>
+    <!--== MAIN CONTRAINER ==-->
+    <div class="container-fluid sb1">
+        <div class="row">
+            <!--== LOGO ==-->
+            <div class="col-md-2 col-sm-3 col-xs-6 sb1-1">
+                <a href="#" class="btn-close-menu"><i class="fa fa-times" aria-hidden="true"></i></a>
+                <a href="#" class="atab-menu"><i class="fa fa-bars tab-menu" aria-hidden="true"></i></a>
+                <a href="index.html" class="logo"><img src="images/vlu.jpg" alt="" />
+                </a>
+            </div>
+            <!--== SEARCH ==-->
+            <div class="col-md-6 col-sm-6 mob-hide">
+                <!-- <form class="app-search">
+                    <input type="text" placeholder="Search..." class="form-control">
+                    <a href=""><i class="fa fa-search"></i></a>
+                </form> -->
+            </div>
+            <!--== NOTIFICATION ==-->
+            <div class="col-md-2 tab-hide">
+                
+            </div>
+            <!--== MY ACCCOUNT ==-->
+            <div class="col-md-2 col-sm-3 col-xs-6">
+                <!-- Dropdown Trigger -->
+                <a class='waves-effect dropdown-button top-user-pro' href='#' data-activates='top-menu'><img src="images/user/6.png" alt="" />My Account <i class="fa fa-angle-down" aria-hidden="true"></i>
+                </a>
+
+                <!-- Dropdown Structure -->
+                <ul id='top-menu' class='dropdown-content top-menu-sty'>
+                    <li><a href="setting.html" class="waves-effect"><i class="fa fa-cogs" aria-hidden="true"></i>Admin Setting</a>
+                    </li>
+                    
+                    </li>
+                    <li><a href="hotel-all.html" class="waves-effect"><i class="fa fa-building-o" aria-hidden="true"></i> Hotels</a>
+                    </li>
+                    <li><a href="package-all.html" class="waves-effect"><i class="fa fa-umbrella" aria-hidden="true"></i> Tour Packages</a>
+                    </li>
+                    <li><a href="event-all.html" class="waves-effect"><i class="fa fa-flag-checkered" aria-hidden="true"></i> Events</a>
+                    </li>
+                    <li><a href="offers.html" class="waves-effect"><i class="fa fa-tags" aria-hidden="true"></i> Offers</a>
+                    </li>
+                    <li><a href="user-add.html" class="waves-effect"><i class="fa fa-user-plus" aria-hidden="true"></i> Add New User</a>
+                    </li>
+                    <li><a href="#" class="waves-effect"><i class="fa fa-undo" aria-hidden="true"></i> Backup Data</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li><a href="#" class="ho-dr-con-last waves-effect"><i class="fa fa-sign-in" aria-hidden="true"></i> Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!--== BODY CONTNAINER ==-->
+    <div class="container-fluid sb2">
+        <div class="row">
+            <div class="sb2-1">
+                <!--== USER INFO ==-->
+                <div class="sb2-12">
+                    <ul>
+                        <li><img src="https://cf.shopee.vn/file/ddcb682a1e6c273a55b0d1fd9af83e06" alt="">
+                        </li>
+                        <li>
+                            <h5>Tôn Ngộ Không</h5>
+                        </li>
+                        <li></li>
+                    </ul>
+                </div>
+                <!--== LEFT MENU ==-->
+                <div class="sb2-13">
+                    <ul class="collapsible" data-collapsible="accordion">
+                        
+                        <li><a href="javascript:void(0)" class="collapsible-header active"><i class="fa fa-calendar-o" aria-hidden="true"></i> Sự kiện</a>
+                            <div class="collapsible-body left-sub-menu">
+                                <ul>
+                                    <li><a href="event-all.html" class="menu-active">Danh sách sự kiện</a>
+                                    </li>
+                                    <li><a href="event-add.html">Thêm sự kiện</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    
+                    </ul>
+                </div>
+            </div>
+            <div class="sb2-2">
+                <!-- <div class="sb2-2-2">
+                    <ul>
+                        <li><a href="#"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
+                        </li>
+                        <li class="active-bre"><a href="#"> Ui Form</a>
+                        </li>
+                    </ul>
+                </div> -->
+                <div class="sb2-2-3">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box-inn-sp">
+                                <div class="inn-title">
+                                    <h4>Danh sách sự kiện</h4>
+                                    <input type="text" placeholder="Tìm kiếm sự kiện">
+                                    
+                                    
+
+                                    <!-- Dropdown Structure -->
+
+                                </div>
+                                <div class="tab-inn">
+                                    <div class="table-responsive table-desi">
+                                        <table class="table table-hover" id="event-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Tên sự kiện</th>
+                                                    <th>Bắt đầu</th>
+                                                    <th>Kết thúc</th>
+                                                    <th>Trạng thái</th>
+                                                    <th>Tùy chọn</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>Hái trộm đào</td>
+                                                    <td>07:00 - 12/05/2018</td>
+                                                    <td>11:00 - 12/05/2018</td>
+                                                    <td><span class="label label-danger">Đã kết thúc</span></td>
+                                                    <td>
+                                                        <a href="event-edit.html"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                                                        <a href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td>Đại náo thiên cung</td>
+                                                    <td>12:00 - 10/11/2019</td>
+                                                    <td>18:00 - 10/11/2019</td>
+                                                    <td><span class="label label-danger">Đã kết thúc</span></td>
+                                                    <td>
+                                                        <a href="event-edit.html"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                                                        <a href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>3</td>
+                                                    <td>Show front end</td>
+                                                    <td>13:00 - 26/11/2019</td>
+                                                    <td>15:00 - 26/11/2019</td>
+                                                    <td><span class="label label-success">Đang diễn ra</span></td>
+                                                    <td>
+                                                        <a href="event-edit.html"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                                                        <a href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>4</td>
+                                                    <td>Talk show with Hằng Nga</td>
+                                                    <td>00:00 - 24/12/2019</td>
+                                                    <td>23:59 - 25/12/2019</td>
+                                                    <td><span class="label label-warning">Đang chờ duyệt</span></td>
+                                                    <td>
+                                                        <a href="event-edit.html"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                                                        <a href="#" data-toggle="modal" data-target="#delete-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                </tr>
+                                                
+                                                
+                                            </tbody>
+                                        </table>
+                                        <!-- delete modal -->
+                                        <div class="modal fade" id="delete-modal" tabindex="-1" role="dialog">
+                                            <div class="modal-dialog modal-small">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    </div>
+                                                    <div class="modal-body text-center">
+                                                        <input type="hidden" id="did">
+                                                        <h5>Xóa <span class="text-danger">Talk show with Hằng Nga</span></h5>
+                                                    </div>
+                                                    <div class="modal-footer justify-content-center">
+                                                        <button type="button" class="btn btn-danger btn-link">Xóa</button>
+                                                        <button type="button" class="btn btn-info" data-dismiss="modal">Hủy</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- end delete modal -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--======== SCRIPT FILES =========-->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/materialize.min.js"></script>
+    <script src="js/custom.js"></script>
+</body>
+
+</html>
