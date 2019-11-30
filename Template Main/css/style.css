@@ -1764,7 +1764,7 @@
      background-size: cover;
 }
  .inner_banner_4 {
-     background: url('../images/banner/4.jpg') no-repeat center center;
+     background: url('../images/t5.png') no-repeat center center;
      background-size: cover;
 }
  .inner_banner_5 {
@@ -2005,8 +2005,13 @@
  .dl2 {
 }
  .dl3 {
+     
 }
- .dl4 {
+#button-duyet a{
+    background: #4CAF50;
+
+}
+.dl4 {
 }
 /*-------------------------------------------------------*/
 /* PAGE: BLOG POSTS 

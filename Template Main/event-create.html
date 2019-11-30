@@ -173,131 +173,171 @@
 		<div class="db">
 			<!--LEFT SECTION-->
 			<div class="db-l">
-				<div class="db-l-1">
-					<ul>
-						<li><img src="images/db-profile.jpg" alt="" />
-						</li>
-						
-					</ul>
-				</div>
-				<div class="db-l-2">
-					<ul>
-						<li>
-							<a href="dashboard.html"><img src="images/icon/dbl1.png" alt="" /> Sự kiện tham gia</a>
-						</li>
-						
-						<li>
-							<a href="db-event-review.html"><img src="images/icon/dbl4.png" alt="" /> Sự kiện cần duyệt</a>
-						</li>
-                        <li>
-                            <a href="manage-my-event-list.html"><img src="images/icon/dbl6.png" alt="" />Sự kiện của tôi</a>
+                <div class="db-l-1">
+                    <ul>
+                        <li><img src="images/db-profile.jpg" alt="" />
                         </li>
-						<li>
-							<a href="db-my-profile.html"><img src="images/icon/dbl6.png" alt="" />Thông tin cá nhân</a>
-						</li>
-						
-					</ul>
-				</div>
-			</div>
-			<!--CENTER SECTION-->
-            <div class="db-2">
-                <div class="db-2-com db-2-main">
-                    <h4>Danh sách sự kiện</h4>
-                    <div class="db-2-main-com db-2-main-com-table">
-                        <table class="responsive-table">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Tên sự kiện</th>
-                                    <th>Thời gian</th>
-                                    <th>Địa điểm</th>
-                                    <th>Xét duyệt</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Talkshow AI - Blockchain</td>
-                                    <td>04/12/2019</td>
-                                    <td>Hội trường Trịnh Công Sơn</td>
-                                    <td><a href="review-event-detail.html"><span class="db-done">Chi tiết</span></a>&nbsp;&nbsp;
-                                        
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>12</td>
-                                    <td>Đêm nhạc Trịnh Công Sơn</td>
-                                    <td>05/12/2019</td>
-                                    <td>Hội trường Trịnh Công Sơn</td>
-                                    <td><a href="review-event-detail.html"><span class="db-done">Chi tiết</span></a>&nbsp;&nbsp;
-                                        
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>311</td>
-                                    <td>Hội thảo khoa học thời 4.0</td>
-                                    <td>11/12/2019</td>
-                                    <td>Phòng 12.1</td>
-                                   <td><a href="review-event-detail.html"><span class="db-done">Chi tiết</span></a>&nbsp;&nbsp;
-                                        
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>10</td>
-                                    <td>Lễ trao bằng sáng chế khoa CNSH</td>
-                                    <td>13/12/2019</td>
-                                    <td>Phòng 7.3</td>
-                                    <td><a href="review-event-detail.html"><span class="db-done">Chi tiết</span></a>&nbsp;&nbsp;
-                                        
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>12</td>
-                                    <td>Ngày hội tư vấn việc làm</td>
-                                    <td>24/12/2019</td>
-                                    <td>Sân trường Cơ Sở 3</td>
-                                    <td><a href="review-event-detail.html"><span class="db-done">Chi tiết</span></a>&nbsp;&nbsp;
-                                        
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>311</td>
-                                    <td>Giới thiệu sách "Đi đu đưa đi"</td>
-                                    <td>27/12/2019</td>
-                                    <td>Thư viện</td>
-                                    <td><a href="review-event-detail.html"><span class="db-done">Chi tiết</span></a>&nbsp;&nbsp;
-                                        
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                        
+                    </ul>
+                </div>
+                <div class="db-l-2">
+                    <ul>
+                        <li>
+                            <a href="dashboard.html"><img src="images/icon/dbl1.png" alt="" /> Sự kiện tham gia</a>
+                        </li>
+                        
+                        <li>
+                            <a href="db-event-review.html"><img src="images/icon/dbl4.png" alt="" /> Sự kiện cần duyệt</a>
+                        </li>
+                        <li>
+                            <a href="db-my-profile.html"><img src="images/icon/dbl6.png" alt="" />Thông tin cá nhân</a>
+                        </li>
+                        
+                    </ul>
                 </div>
             </div>
+			<!--CENTER SECTION-->
+			<div class="db-2">
+				<div class="db-2-com db-2-main">
+					<h4>Sửa sự kiện</h4>
+					<div class="db-2-main-com">
+						<div class="v2-search-form">
+               
+                    <form class="contact__form" method="post" action="mail/tourbooking.php">
+                          
+                            <div class="row">
+                               <div class="col s12"><label style="color: green">Tên sự kiện</label></div>
+                                <div class="input-field col s12">
+                                    <input type="text"  class="validate" name="name" value="TalkShow AI & Blockchain" required>
+                                    <label>Enter your name</label>
+
+                                </div>
+                            </div>
+                             <div class="row" style="margin-top: 30px;">
+                               <div class="col s12"><label style="color: green">Giờ bắt đầu</label></div>
+                                <div class="input-field col s12">
+                                    <input type="text"  class="validate" name="address" value="7:00" required>
+                                   <!--  <label>Enter your name</label> -->
+                                </div>
+                            </div> 
+                            <div class="row" style="margin-top: 30px;">
+                               <div class="col s12"><label style="color: green">Giờ kết thúc</label></div>
+                                <div class="input-field col s12">
+                                    <input type="text"  class="validate" name="address" value="10:30" required>
+                                   <!--  <label>Enter your name</label> -->
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 30px;">
+                               <div class="col s12"><label style="color: green">Ngày</label></div>
+                               <!--  <div class="input-field col s6">
+                                    <input type="number"  class="validate" name="phone" required>
+                                    <label>Enter your phone</label>
+                                </div> -->
+                                 <div class="input-field col s12">
+                                        <input id="post-auth" type="date" value="2019-02-04" class="validate">
+                                    
+                                    </div>
+                                <!-- <div class="input-field col s6">
+                                    <input type="email"  class="validate" name="email" required>
+                                    <label>Enter your email</label>
+                                </div> -->
+                            </div>
+                            <div class="row" style="margin-top: 30px;">
+                               <div class="col s12"><label style="color: green">Địa điểm</label></div>
+                                <div class="input-field col s12">
+                                    <input type="text"  class="validate" name="address" value="Hội trường Trịnh Công Sơn" required>
+                                   <!--  <label>Enter your name</label> -->
+                                </div>
+                            </div>
+                                   <div class="row" style="margin-top: 30px;">
+                               <div class="col s12"><label style="color: green">Số lượng vé</label></div>
+                         
+                                <div class="input-field col s12">
+
+                                    <input type="text"  class="validate" name="address" value="500" required>
+                                   <!--  <label>Enter your name</label> -->
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 30px;">
+                               <div class="col s12"><label style="color: green">Chi tiết sự kiện</label></div>
+                                    <div class="input-field col s12">
+                                        <textarea id="textarea1" class="materialize-textarea">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</textarea>
+                                    </div>
+                                </div>
+
+                                  <div class="row" style="margin-top: 30px;">
+                               <div class="col s12"><label style="color: green">Lịch trình</label></div>
+                         
+                                <div class="input-field col s3">
+                                    <input type="text" id="from" name="arrival" readonly>
+                                    <label for="from">7:00-7:30</label>
+                                </div>
+                                <div class="input-field col s9">
+                                    <input type="text" id="to" name="departure" readonly>
+                                    <label for="to">Khách mời Check-in</label>
+                            </div>
+                             <div class="input-field col s3">
+                                    <input type="text" id="from" name="arrival" readonly>
+                                    <label for="from">7:30-9:00</label>
+                                </div>
+                                <div class="input-field col s9">
+                                    <input type="text" id="to" name="departure" readonly>
+                                    <label for="to">Diễn giả thuyết trình về AI</label>
+                            </div>
+                             <div class="input-field col s3">
+                                    <input type="text" id="from" name="arrival" readonly>
+                                    <label for="from">9:00-10:00</label>
+                                </div>
+                                <div class="input-field col s9">
+                                    <input type="text" id="to" name="departure" readonly>
+                                    <label for="to">Sinh viên đặt câu hỏi</label>
+                            </div>
+                             <div class="input-field col s3">
+                                    <input type="text" id="from" name="arrival" readonly>
+                                    <label for="from">10:30</label>
+                                </div>
+                                <div class="input-field col s9">
+                                    <input type="text" id="to" name="departure" readonly>
+                                    <label for="to">Kết thúc sự kiện</label>
+                            </div>
+                        </div>
+                              <div class="row" style="margin-top: 30px;">
+                               <div class="col s12"><label style="color: green">Ảnh bìa</label></div>
+                                   
+                                    <div class="input-field col s12">
+                                        <div class="file-field">
+                                            <div >
+                                                
+                                                <input type="file">
+                                            </div>
+                                            <div class="file-path-wrapper">
+                                                <input class="file-path validate" type="text" placeholder="Click chọn ảnh bìa">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>                   
+
+                                                   
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input type="submit" value="Gửi sự kiện" class="waves-effect waves-light tourz-sear-btn v2-ser-btn">
+                                </div>
+                            </div>
+                              <div class="alert alert-success contact__msg" style="display: none" role="alert" style="margin-top: 30px;">
+                                Thank you for arranging a wonderful trip for us! Our team will contact you shortly!
+                            </div>
+                        </form>
+                     </div>
+					</div>
+				</div>
+			</div>
 
 			<!--RIGHT SECTION-->
-			<div class="db-3">
-				<h4>Thông báo</h4>
-				<ul>
-					<li>
-						<a href="#!"> <img src="images/icon/dbr1.jpg" alt="" />
-							<h5>Honeymoon Tailand</h5>
-							<p>Tuan Heo Accept</p>
-						</a>
-					</li>
-					<li>
-						<a href="#!"> <img src="images/icon/dbr3.jpg" alt="" />
-							<h5>Dubai</h5>
-							<p>Phan Tu Reject</p>
-						</a>
-					</li>
-					
-				</ul>
-			</div>
+			
 		</div>
 	</section>
 	<!--END DASHBOARD-->
-	
+	<!--====== TIPS BEFORE TRAVEL ==========-->
 	<!--====== FOOTER 2 ==========-->
     <section>
         <div class="rows">
@@ -370,6 +410,7 @@
 	<script src="js/wow.min.js"></script>
 	<script src="js/materialize.min.js"></script>
 	<script src="js/custom.js"></script>
+    <script src="js/mail.js"></script>
 </body>
 
 </html>

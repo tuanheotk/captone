@@ -173,64 +173,69 @@
 		<div class="db">
 			<!--LEFT SECTION-->
 			<div class="db-l">
-				<div class="db-l-1">
-					<ul>
-						<li><img src="images/db-profile.jpg" alt="" />
-						</li>
-						
-					</ul>
-				</div>
-				<div class="db-l-2">
-					<ul>
-						<li>
-							<a href="dashboard.html"><img src="images/icon/dbl1.png" alt="" /> Sự kiện tham gia</a>
-						</li>
-						
-						<li>
-							<a href="db-event-review.html"><img src="images/icon/dbl4.png" alt="" /> Sự kiện cần duyệt</a>
-						</li>
+                <div class="db-l-1">
+                    <ul>
+                        <li><img src="images/db-profile.jpg" alt="" />
+                        </li>
+                        
+                    </ul>
+                </div>
+                <div class="db-l-2">
+                    <ul>
+                        <li>
+                            <a href="dashboard.html"><img src="images/icon/dbl1.png" alt="" /> Sự kiện tham gia</a>
+                        </li>
+                        
+                        <li>
+                            <a href="db-event-review.html"><img src="images/icon/dbl4.png" alt="" /> Sự kiện cần duyệt</a>
+                        </li>
                         <li>
                             <a href="manage-my-event-list.html"><img src="images/icon/dbl6.png" alt="" />Sự kiện của tôi</a>
                         </li>
-						<li>
-							<a href="db-my-profile.html"><img src="images/icon/dbl6.png" alt="" />Thông tin cá nhân</a>
-						</li>
-						
-					</ul>
-				</div>
-			</div>
+                        <li>
+                            <a href="db-my-profile.html"><img src="images/icon/dbl6.png" alt="" />Thông tin cá nhân</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
 			<!--CENTER SECTION-->
-            <div class="db-2">
-                <div class="db-2-com db-2-main">
-                    <h4>Danh sách sự kiện</h4>
-                    <div class="db-2-main-com db-2-main-com-table">
-                        <table class="responsive-table">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Tên sự kiện</th>
-                                    <th>Thời gian</th>
-                                    <th>Địa điểm</th>
-                                    <th>Xét duyệt</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Talkshow AI - Blockchain</td>
-                                    <td>04/12/2019</td>
-                                    <td>Hội trường Trịnh Công Sơn</td>
-                                    <td><a href="review-event-detail.html"><span class="db-done">Chi tiết</span></a>&nbsp;&nbsp;
-                                        
-                                    </td>
-                                </tr>
-                                <tr>
+			<div class="db-2">
+				<div class="db-2-com db-2-main">
+					<h4>Danh sách sự kiện</h4>
+					<div class="db-2-main-com db-2-main-com-table">
+						<table class="responsive-table">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>Tên sự kiện</th>
+									<th>Thời gian</th>
+									<th>Địa điểm</th>
+									<th>Trạng thái</th>
+									<th>Thao tác</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>1</td>
+									<td>Talkshow AI - Blockchain</td>
+									<td>04/12/2019</td>
+									<td>Hội trường Trịnh Công Sơn</td>
+									<td><span class="db-done">Đang chạy</span></td>
+									<td><a href="manage-event-detail.html" class="text-warning fa fa-eye"></a>&nbsp;&nbsp;
+                                        <a href="event-edit.html" class="text-primary fa fa-pencil-square-o"></a>&nbsp;&nbsp;
+                                        <a class="text-danger fa fa-trash-o" data-toggle="modal" data-target="#exampleModal"></a>
+									</td>
+								</tr>
+								<tr>
                                     <td>12</td>
                                     <td>Đêm nhạc Trịnh Công Sơn</td>
                                     <td>05/12/2019</td>
                                     <td>Hội trường Trịnh Công Sơn</td>
-                                    <td><a href="review-event-detail.html"><span class="db-done">Chi tiết</span></a>&nbsp;&nbsp;
-                                        
+                                    <td><span class="db-not-done">Chờ duyệt</span></td>
+                                    <td><a href="manage-event-detail.html" class="text-warning fa fa-eye"></a>&nbsp;&nbsp;
+                                        <a href="event-edit.html" class="text-primary fa fa-pencil-square-o"></a>&nbsp;&nbsp;
+                                        <a class="text-danger fa fa-trash-o" data-toggle="modal" data-target="#exampleModal"></a>
                                     </td>
                                 </tr>
                                 <tr>
@@ -238,8 +243,10 @@
                                     <td>Hội thảo khoa học thời 4.0</td>
                                     <td>11/12/2019</td>
                                     <td>Phòng 12.1</td>
-                                   <td><a href="review-event-detail.html"><span class="db-done">Chi tiết</span></a>&nbsp;&nbsp;
-                                        
+                                    <td><span class="db-reject">Từ chối</span></td>
+                                    <td><a href="manage-event-detail.html" class="text-warning fa fa-eye"></a>&nbsp;&nbsp;
+                                        <a href="event-edit.html" class="text-primary fa fa-pencil-square-o"></a>&nbsp;&nbsp;
+                                        <a class="text-danger fa fa-trash-o" data-toggle="modal" data-target="#exampleModal"></a>
                                     </td>
                                 </tr>
                                 <tr>
@@ -247,8 +254,10 @@
                                     <td>Lễ trao bằng sáng chế khoa CNSH</td>
                                     <td>13/12/2019</td>
                                     <td>Phòng 7.3</td>
-                                    <td><a href="review-event-detail.html"><span class="db-done">Chi tiết</span></a>&nbsp;&nbsp;
-                                        
+                                    <td><span class="db-done">Đang chạy</span></td>
+                                    <td><a href="manage-event-detail.html" class="text-warning fa fa-eye"></a>&nbsp;&nbsp;
+                                        <a href="event-edit.html" class="text-primary fa fa-pencil-square-o"></a>&nbsp;&nbsp;
+                                        <a class="text-danger fa fa-trash-o" data-toggle="modal" data-target="#exampleModal"></a>
                                     </td>
                                 </tr>
                                 <tr>
@@ -256,8 +265,10 @@
                                     <td>Ngày hội tư vấn việc làm</td>
                                     <td>24/12/2019</td>
                                     <td>Sân trường Cơ Sở 3</td>
-                                    <td><a href="review-event-detail.html"><span class="db-done">Chi tiết</span></a>&nbsp;&nbsp;
-                                        
+                                    <td><span class="db-not-done">Chờ duyệt</span></td>
+                                    <td><a href="manage-event-detail.html" class="text-warning fa fa-eye"></a>&nbsp;&nbsp;
+                                        <a href="event-edit.html" class="text-primary fa fa-pencil-square-o"></a>&nbsp;&nbsp;
+                                        <a class="text-danger fa fa-trash-o" data-toggle="modal" data-target="#exampleModal"></a>
                                     </td>
                                 </tr>
                                 <tr>
@@ -265,39 +276,63 @@
                                     <td>Giới thiệu sách "Đi đu đưa đi"</td>
                                     <td>27/12/2019</td>
                                     <td>Thư viện</td>
-                                    <td><a href="review-event-detail.html"><span class="db-done">Chi tiết</span></a>&nbsp;&nbsp;
-                                        
+                                    <td><span class="db-reject">Từ chối</span></td>
+                                    <td><a href="manage-event-detail.html" class="text-warning fa fa-eye"></a>&nbsp;&nbsp;
+                                        <a href="event-edit.html" class="text-primary fa fa-pencil-square-o"></a>&nbsp;&nbsp;
+                                        <a class="text-danger fa fa-trash-o" data-toggle="modal" data-target="#exampleModal"></a>
                                     </td>
                                 </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-			<!--RIGHT SECTION-->
-			<div class="db-3">
-				<h4>Thông báo</h4>
-				<ul>
-					<li>
-						<a href="#!"> <img src="images/icon/dbr1.jpg" alt="" />
-							<h5>Honeymoon Tailand</h5>
-							<p>Tuan Heo Accept</p>
-						</a>
-					</li>
-					<li>
-						<a href="#!"> <img src="images/icon/dbr3.jpg" alt="" />
-							<h5>Dubai</h5>
-							<p>Phan Tu Reject</p>
-						</a>
-					</li>
-					
-				</ul>
+							</tbody>
+						</table>
+					</div>
+				</div>
 			</div>
+
+           <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Xác nhận</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    Bạn có muốn xoá sự kiện abc xyz igh?
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger">Xoá</button>&nbsp; &nbsp;
+                  </div>
+                </div>
+              </div>
+            </div>           
+			<!--RIGHT SECTION-->
+            <div class="db-3">
+                <h4>Thông báo</h4>
+                <ul>
+                    <li>
+                        <a href="#!"> <img src="images/icon/dbr1.jpg" alt="" />
+                            <h5>Honeymoon Tailand</h5>
+                            <p>Tuan Heo Accept</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#!"> <img src="images/icon/dbr3.jpg" alt="" />
+                            <h5>Dubai</h5>
+                            <p>Phan Tu Reject</p>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
 		</div>
 	</section>
 	<!--END DASHBOARD-->
-	
+	<!--====== TIPS BEFORE TRAVEL ==========-->
+	<section>
+		
+	</section>
 	<!--====== FOOTER 2 ==========-->
     <section>
         <div class="rows">
@@ -364,6 +399,9 @@
 			</ul>
 		</div>
 	</section>
+
+<!-- Modal -->
+
 	<!--========= Scripts ===========-->
 	<script src="js/jquery-latest.min.js"></script>
 	<script src="js/bootstrap.js"></script>
