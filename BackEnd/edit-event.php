@@ -1,0 +1,463 @@
+<?php
+$title = 'Sửa sự kiện';
+include('header.php');
+?>
+    <!--DASHBOARD-->
+    <section>
+        <div class="db">
+            <!--LEFT SECTION-->
+            <div class="db-l">
+                <div class="db-l-1">
+                    <ul>
+                        <li><img src="images/db-profile.jpg" alt="" />
+                        </li>
+                        
+                    </ul>
+                </div>
+                <div class="db-l-2">
+                    <ul>
+                        <li>
+                            <a href="my-events.php"><i class="fa fa-calendar" aria-hidden="true"></i> Sự kiện của tôi</a>
+                        </li>
+                        
+                        <!-- <li>
+                            <a href="my-events.php"><i class="fa fa-hourglass-end" aria-hidden="true"></i> Sự kiện đang chờ</a>
+                        </li> -->
+                        <li>
+                            <a href="my-events.php"><i class="fa fa-check" aria-hidden="true"></i> Sự kiện đã đăng ký tham gia</a>
+                        </li>
+                        
+                        
+                    </ul>
+                </div>
+            </div>
+            <!--CENTER SECTION-->
+            <div class="db-2">
+                <div class="db-2-com db-2-main">
+
+                    <?php 
+                    require"database-config.php";
+                    $eventID = $_GET["id"];
+                    $sql = "SELECT * FROM event WHERE id = ".$eventID;
+                    $result = mysqli_query($conn, $sql);
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        $name = $row["title"];
+                        $category = $row["category_id"];
+                        $faculty = $row["faculty_id"];
+                        $numTicket = $row["ticket_number"];
+                        $place = $row["place"];
+                        $startTime = $row["start_date"];
+                        $endTime = $row["end_date"];
+                        $shortDesc = $row["short_desc"];
+                        $description = $row["description"];
+                        $status = $row["status"];
+                        $avatar = $row["avatar"];
+                    }
+                     ?>
+
+                    <h4>Thông tin sự kiện</h4>
+                    <div class="db-2-main-com db2-form-pay db2-form-com">
+                        <form class="col s12" id="edit-event-form" method="POST" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input type="hidden" id="event-id" name="id" value="<?php echo $eventID ?>">
+                                    <input type="text" class="validate" id="event-name" name="name" value="<?php echo $name ?>" required="">
+                                    <label for="event-name">Tên sự kiện</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <select name="category" id="category">
+                                        <option selected disabled>Vui lòng chọn danh mục...</option>
+                                        <?php 
+                                        require("database-config.php");
+                                        $sql = "SELECT * FROM category";
+                                        $result = mysqli_query($conn, $sql);
+                                        while ($row = mysqli_fetch_assoc($result)) {
+                                            if ($category == $row["id"]) {
+                                                # code...
+                                                echo '<option value="'.$row["id"].'" selected>'.$row["name"].'</option>';
+                                            } else {
+                                                echo '<option value="'.$row["id"].'">'.$row["name"].'</option>';
+                                                # code...
+                                            }
+                                            
+                                        }
+                                        ?>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <select name="faculty" id="faculty">
+                                        <option selected disabled>Vui lòng chọn khoa...</option>
+                                        <?php 
+                                        require("database-config.php");
+                                        $sql = "SELECT * FROM faculty WHERE status = 1";
+                                        $result = mysqli_query($conn, $sql);
+                                        while ($row = mysqli_fetch_assoc($result)) {
+                                            if ($faculty == $row["faculty_id"]) {
+                                                # code...
+                                                echo '<option value="'.$row["faculty_id"].'" selected>'.$row["name"].'</option>';
+                                            } else {
+                                                echo '<option value="'.$row["faculty_id"].'">'.$row["name"].'</option>';
+                                                # code...
+                                            }
+                                            
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <select name="moderator" id="moderator">
+                                        <option selected disabled>Vui lòng chọn người điểm danh...</option>
+                                        <?php 
+                                        // require("database-config.php");
+                                        $sqlModID = mysqli_query($conn, "SELECT account_id FROM moderator WHERE status = 0 AND event_id =".$eventID);
+                                        $modID = mysqli_fetch_assoc($sqlModID);
+                                        $moderator = $modID["account_id"];
+
+                                        $sql = "SELECT id, name  FROM account WHERE role = 3";
+                                        $result = mysqli_query($conn, $sql);
+
+                                        while ($row = mysqli_fetch_assoc($result)) {
+                                            if ($moderator == $row["id"]) {
+                                                # code...
+                                                echo '<option value="'.$row["id"].'" selected>'.$row["name"].'</option>';
+                                            } else {
+                                                echo '<option value="'.$row["id"].'">'.$row["name"].'</option>';
+                                                # code...
+                                            }
+                                            
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input type="number" class="validate" id="ticket-number" name="ticket-number" value="<?php echo $numTicket ?>" required="">
+                                    <label>Số lượng vé</label>
+                                </div>
+
+                                <div class="input-field col s12">
+                                    <input id="place" type="text" name="place" value="<?php echo $place ?>" class="validate">
+                                    <label for="place">Địa điểm</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12 m6">
+                                    <input type="text" class="validate" id="start-time" name="start-time" value="<?php echo $startTime ?>" required="">
+                                    <label>Thời gian bắt đầu</label>
+                                </div>
+                                <div class="input-field col s12 m6">
+                                    <input type="text" class="validate" id="end-time" name="end-time" value="<?php echo $endTime ?>" required="">
+                                    <label>Thời gian kết thúc</label>
+                                </div>
+                            </div>
+                            
+                            <div class="row db-file-upload">
+                                <div class="file-field input-field">
+                                    <div class="db-up-btn"> <span>File</span>
+                                        <input type="file" id="cover-image" name="cover-image">
+                                        <input type="hidden" name="current-image" value="<?php echo $avatar ?>">
+                                    </div>
+                                    <div class="file-path-wrapper">
+                                        <input class="file-path validate" type="text" placeholder="Vui lòng chọn hình ảnh"> </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input type="text" class="validate" id="short-desc" name="short-desc" value="<?php echo $shortDesc ?>" required="">
+                                    <label>Mô tả ngắn</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <!-- <input type="text" class="validate" id="description" name="description"> -->
+                                    <textarea class="validate" id="description" name="description" ><?php echo $description; ?></textarea>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <input type="hidden" id="event-status" name="status">
+                                <input type="hidden" name="action" value="edit">
+
+                                <div class="input-field col s12 m12">
+                                    <a href="#" class="full-btn btn btn-info waves-light waves-effect" data-toggle="modal" data-target="#history-modal">Lịch sử duyệt</a>
+                                </div>
+
+                                <?php
+                                if ($status == 3) {
+                                ?>
+                                <div class="input-field col s12 m12">
+                                    <button type="submit" id="public-btn" class="full-btn btn btn-primary waves-light waves-effect"><i class="fa fa-globe" aria-hidden="true"></i> Đăng sự kiện</button>
+                                </div>
+                                <?php
+                                }
+                                 ?>
+
+                                <div class="input-field col s12 m4">
+                                    <button type="submit" id="submit-btn" class="full-btn btn btn-success waves-light waves-effect"><i class="fa fa-paper-plane" aria-hidden="true"></i> Gửi sự kiện</button>
+                                </div>
+                                <div class="input-field col s12 m4">
+                                    <button type="submit" id="save-btn" class="full-btn btn btn-warning waves-light waves-effect"><i class="fa fa-floppy-o" aria-hidden="true"></i> Lưu Nháp</button>
+                                </div>
+                                <div class="input-field col s12 m4">
+                                    <a href="my-events.php" class="full-btn btn btn-danger waves-light waves-effect"><i class="fa fa-ban" aria-hidden="true"></i> Huỷ</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History comment -->
+            <div id="history-modal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <form id="delete-product-form" method="POST" action="<?php  $_SERVER["PHP_SELF"] ?>">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title"> Lịch sử duyệt</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                            <table class="reponsive-table">
+                                <thead>
+                                    <tr>
+                                        <th>Người từ chối</th>
+                                        <th>Thời gian</th>
+                                        <th>Lí do</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php 
+                                    $resultComment = mysqli_query($conn, "SELECT name , comment, day_comment FROM review_comment r, account a WHERE event_id = ".$eventID." AND r.account_id = a.id");
+                                    if (mysqli_num_rows($resultComment) > 0) {
+                                        while ($rowComment = mysqli_fetch_assoc($resultComment)) {
+                                            ?>
+                                            <tr>
+                                                <td><?php echo $rowComment["name"] ?></td>
+                                                <td><?php echo date("H:i - d/m/Y", strtotime($rowComment["day_comment"])) ?></td>
+                                                <td><?php echo $rowComment["comment"] ?></td>
+                                            </tr>
+                                            <?php
+                                        }
+                                    } else {
+                                        ?>
+                                        <tr>
+                                            <td class="text-center" colspan="3">Bài đăng của bạn chưa có lịch sử bình luận</td>
+                                        </tr>
+                                        <?php
+
+                                    }
+                                    ?>
+                                    
+                                </tbody>
+                                
+                            </table>             
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-info" data-dismiss="modal">Đóng</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>              
+            </div>
+            <!-- End History comment -->
+
+            <!--RIGHT SECTION-->
+            <div class="db-3">
+                <h4>Thông tin cá nhân</h4>
+                <ul>
+                    <li>
+
+                        <a href="#!"> <img src="images/icon/dbr1.jpg" alt="" />
+                            <h5>Tuấn heo</h5>
+                            <p><i class="fa fa-th-large"></i> Công nghệ thông tin</p>
+                            <p><i class="fa fa-envelope"></i> tuanheotk@gmail.com</p>
+                            <p><i class="fa fa-phone"></i> 12356987</p>
+                            
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+            </div>
+        </div>
+    </section>
+    <!--END DASHBOARD-->
+<?php
+
+include('footer.php');
+?>
+
+<script type="text/javascript">
+    $(document).ready( function (){
+        $('#event-table').DataTable({
+            language: {
+                "sProcessing":   "Đang xử lý...",
+                "sLengthMenu":   "Xem _MENU_ mục",
+                "sZeroRecords":  "Không có kết quả",
+                "sInfo":         "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
+                "sInfoEmpty":    "Đang xem 0 đến 0 trong tổng số 0 mục",
+                "sInfoFiltered": "(được lọc từ _MAX_ mục)",
+                "sInfoPostFix":  "",
+                "sSearch":       "",
+                "searchPlaceholder": "Tìm kiếm sự kiện",
+                "sUrl":          "",
+                "oPaginate": {
+                    "sFirst":    "Đầu",
+                    "sPrevious": "«",
+                    "sNext":     "»",
+                    "sLast":     "Cuối"
+                }
+            },
+            "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "Tất cả"]]
+        });
+    });
+
+    ClassicEditor
+        .create( document.querySelector( '#description' ), {
+            // toolbar: [ 'heading', '|', 'bold', 'italic', 'link' ]
+            placeholder: 'Chi tiết sự kiện'
+        } )
+        .then( editor => {
+            window.editor = editor;
+
+        } )
+        .catch( err => {
+            console.error( err.stack );
+        } );
+
+    // editorData = editor.getData();
+
+    $('#submit-btn').click(function(){
+        $('#event-status').val('1');
+        // alert('Sự kiện đã được gửi cho người kiểm duyệt');
+    })
+    $('#save-btn').click(function(){
+        $('#event-status').val('0');
+        // alert('Đã lưu sự kiện');
+    })
+    $('#public-btn').click(function(){
+        $('#event-status').val('4');
+        // alert('Sự kiện đã được công khai');
+    })
+
+
+    // dont alow special character
+    $('#event-name, #place, #short-desc').on('keydown keyup', function(){
+        $(this).val($(this).val().replace(/[@#$%^&*()><|\/]+/g,''));
+    })
+
+
+    // ticket number
+    $('#ticket-number').on('keydown keyup', function(){
+        // don't allow start with 0
+        if ($(this).val() == "0") {
+            $(this).val($(this).val().replace(/[^1-9]+/g, ''));
+        }
+
+        // only number
+        $(this).val($(this).val().replace(/[^0-9]+/g, ''));
+    })
+
+    $('#edit-event-form').submit(function(e){
+        e.preventDefault();
+        var name = $('#event-name').val();
+        var category = $('#category').val();
+        var faculty = $('#faculty').val();
+        var moderator = $('#moderator').val();
+        var numTicket = $('#ticket-number').val();
+        var place = $('#place').val();
+        var startTime = $('#start-time').val();
+        var endTime = $('#end-time').val();
+        var shortDesc = $('#short-desc').val();
+        var description = editor.getData();
+        // var status = $('#event-status').val();
+
+        if (name.replace(/\s+/g, ' ').trim().length < 11) {
+            alert('Tên sự kiện tối thiểu 10 ký tự');
+            $('#event-name').focus();
+            return false;
+        }
+
+        if (category == null) {
+            alert('Vui lòng chọn danh mục');
+            $('#category').focus();
+            return false;
+        }
+        if (faculty == null) {
+            alert('Vui lòng chọn khoa');
+            return false;
+        }
+        if (moderator == null) {
+            alert('Vui lòng chọn người điểm danh');
+            return false;
+        }
+
+        if (place.replace(/\s+/g, ' ').trim().length < 11) {
+            alert('Địa chỉ tối thiểu 10 ký tự');
+            $('#place').focus();
+            return false;
+        }
+
+        // if ($('#cover-image').val() == '') {
+        //     alert('Vui lòng chọn hình ảnh');
+        //     return false;
+        // }
+
+        if (shortDesc.replace(/\s+/g, ' ').trim().length < 11) {
+            alert('Mô tả ngắn tối thiểu 10 ký tự');
+            $('#short-desc').focus();
+            return false;
+        }
+
+        
+        var eventForm = document.querySelector("#edit-event-form");
+        console.log(eventForm);
+
+        $.ajax({
+            url: 'my-event-process.php',
+            method: 'POST',
+            dataType: 'json',
+            // data: {
+            //     'action': 'edit',
+            //     'id': eventID,
+            //     'name': name,
+            //     'category': category,
+            //     'faculty': faculty,
+            //     'moderator': moderator,
+            //     'ticket-number': numTicket,
+            //     'place': place,
+            //     'start-time': startTime,
+            //     'end-time': endTime,
+            //     'short-desc': shortDesc,
+            //     'description': description,
+            //     'status': status
+            // }
+            processData: false,
+            contentType: false,
+            data: new FormData(eventForm)
+
+        }).done(function(data){
+            console.log(data);
+            if(data.result){
+                window.location = 'my-events.php';
+            }else {
+                console.log(data.error);
+                console.log(data.sql)
+            }
+        }).fail(function(jqXHR, statusText, errorThrown){
+            console.log("Fail:"+ jqXHR.responseText);
+            console.log(errorThrown);
+        })
+
+    })
+</script>

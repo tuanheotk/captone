@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Chi tiết sự kiện - EventBox & VLAsk</title>
+    <!--== META TAGS ==-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!--== FAV ICON ==-->
+    <link rel="shortcut icon" href="images/fav.ico">
+
+    <!-- GOOGLE FONTS -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600|Quicksand:300,400,500" rel="stylesheet">
+
+    <!-- FONT-AWESOME ICON CSS -->
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+
+    <!--== ALL CSS FILES ==-->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mob.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/materialize.css" />
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <!--== MAIN CONTRAINER ==-->
+    <div class="container-fluid sb1">
+        <div class="row">
+            <!--== LOGO ==-->
+            <div class="col-md-2 col-sm-3 col-xs-6 sb1-1">
+                <a href="#" class="btn-close-menu"><i class="fa fa-times" aria-hidden="true"></i></a>
+                <a href="#" class="atab-menu"><i class="fa fa-bars tab-menu" aria-hidden="true"></i></a>
+                <a href="index.html" class="logo"><img src="images/vlu.jpg" alt="" />
+                </a>
+            </div>
+            <!--== SEARCH ==-->
+            <div class="col-md-6 col-sm-6 mob-hide">
+                <!-- <form class="app-search">
+                    <input type="text" placeholder="Search..." class="form-control">
+                    <a href=""><i class="fa fa-search"></i></a>
+                </form> -->
+            </div>
+            <!--== NOTIFICATION ==-->
+            <div class="col-md-2 tab-hide">
+                
+            </div>
+            <!--== MY ACCCOUNT ==-->
+            <div class="col-md-2 col-sm-3 col-xs-6">
+                <!-- Dropdown Trigger -->
+                <a class='waves-effect dropdown-button top-user-pro' href='#' data-activates='top-menu'><img src="images/user/6.png" alt="" />My Account <i class="fa fa-angle-down" aria-hidden="true"></i>
+                </a>
+
+                <!-- Dropdown Structure -->
+                <ul id='top-menu' class='dropdown-content top-menu-sty'>
+                    <li><a href="setting.html" class="waves-effect"><i class="fa fa-cogs" aria-hidden="true"></i>Admin Setting</a>
+                    </li>
+                    
+                    </li>
+                    <li><a href="hotel-all.html" class="waves-effect"><i class="fa fa-building-o" aria-hidden="true"></i> Hotels</a>
+                    </li>
+                    <li><a href="package-all.html" class="waves-effect"><i class="fa fa-umbrella" aria-hidden="true"></i> Tour Packages</a>
+                    </li>
+                    <li><a href="event-all.html" class="waves-effect"><i class="fa fa-flag-checkered" aria-hidden="true"></i> Events</a>
+                    </li>
+                    <li><a href="offers.html" class="waves-effect"><i class="fa fa-tags" aria-hidden="true"></i> Offers</a>
+                    </li>
+                    <li><a href="user-add.html" class="waves-effect"><i class="fa fa-user-plus" aria-hidden="true"></i> Add New User</a>
+                    </li>
+                    <li><a href="#" class="waves-effect"><i class="fa fa-undo" aria-hidden="true"></i> Backup Data</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li><a href="#" class="ho-dr-con-last waves-effect"><i class="fa fa-sign-in" aria-hidden="true"></i> Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!--== BODY CONTNAINER ==-->
+    <div class="container-fluid sb2">
+        <div class="row">
+            <div class="sb2-1">
+                <!--== USER INFO ==-->
+                <div class="sb2-12">
+                    <ul>
+                        <li><img src="https://cf.shopee.vn/file/ddcb682a1e6c273a55b0d1fd9af83e06" alt="">
+                        </li>
+                        <li>
+                            <h5>Tôn Ngộ Không</h5>
+                        </li>
+                        <li></li>
+                    </ul>
+                </div>
+                <!--== LEFT MENU ==-->
+                <div class="sb2-13">
+                    <ul class="collapsible" data-collapsible="accordion">
+                        
+                        <li><a href="javascript:void(0)" class="collapsible-header active"><i class="fa fa-calendar-o" aria-hidden="true"></i> Sự kiện</a>
+                            <div class="collapsible-body left-sub-menu">
+                                <ul>
+                                    <li><a href="event-all.html">Danh sách sự kiện</a>
+                                    </li>
+                                    <li><a href="event-add.html">Thêm sự kiện</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    
+                    </ul>
+                </div>
+            </div>
+            <div class="sb2-2">
+                <div class="sb2-2-2">
+                    <!-- <ul>
+                        <li><a href="index.html"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
+                        </li>
+                        <li class="active-bre"><a href="#"> Add Event</a>
+                        </li>
+                        <li class="page-back"><a href="index.html"><i class="fa fa-backward" aria-hidden="true"></i> Back</a>
+                        </li>
+                    </ul> -->
+                </div>
+                <div class="sb2-2-add-blog sb2-2-1">
+                    <div class="box-inn-sp">
+                        <div class="inn-title">
+                            <h4>Cập nhật sự kiện</h4>
+                            <!-- <p>Airtport Hotels The Right Way To Start A Short Break Holiday</p> -->
+                        </div>
+                        <div class="bor">
+                            <form>
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <input id="list-title" type="text" value="Talk show with Hằng Nga" class="validate">
+                                        <label for="list-title">Tên sự kiện</label>
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <input id="list-title" type="text" value="00:00 - 24/12/2019" class="validate">
+                                        <label for="list-title">Thời gian bắt đầu</label>
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <input id="list-title" type="text" value="23:59 - 25/12/2019" class="validate">
+                                        <label for="list-title">Thời gian kết thúc</label>
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <input id="list-title" type="text" value="The Moon" class="validate">
+                                        <label for="list-title">Địa điểm</label>
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <!-- <label for="list-title">Hình ảnh</label> -->
+                                        <img src="https://ss-images.catscdn.vn/w500/2019/09/12/6028070/00.jpg">
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <div class="file-field">
+                                            <div class="btn">
+                                                <span>Chọn</span>
+                                                <input type="file">
+                                            </div>
+                                            <div class="file-path-wrapper">
+                                                <input class="file-path validate" type="text" placeholder="Hình ảnh">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <textarea id="textarea1" class="materialize-textarea">Chị Hằng hướng dẫn cách nuôi thỏ</textarea>
+                                        <label for="textarea1">Chi tiết sự kiện</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <select multiple>
+                                            <option value="" disabled selected>Chọn người điểm danh</option>
+                                            <option value="1" selected="">Đường Tăng</option>
+                                            <option value="1" selected="">Bát Giới</option>
+                                            <option value="1">Phật Tổ</option>
+                                            <option value="1">Ngưu Ma Vương</option>
+                                            <option value="1">Bạch Cốt Tinh</option>
+                                        </select>
+                                        <label>Người điểm danh</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <!-- <label for="table">Danh sách người tham dự</label> -->
+                                        <table class="table" id="table">
+                                            <thead>
+                                                <th>Danh sách người tham dự</th>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Trần Dần</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Jack</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>K-ICM</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <a href="event-all.html" class="waves-effect waves-light btn">Lưu</a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--======== SCRIPT FILES =========-->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/materialize.min.js"></script>
+    <script src="js/custom.js"></script>
+</body>
+
+</html>
