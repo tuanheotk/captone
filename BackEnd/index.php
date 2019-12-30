@@ -99,30 +99,32 @@ include('header.php');
 
     </section>
 
-     
+    
+    
 
-    <!--Danh Muc-->
-
+    
+    
+    <!--====== De Xuat ==========-->
     <section>
         <div class="rows pad-bot-redu tb-space">
-            <div class="container">
+            <div class="container events-1" id="inner-page-title">
                 <!-- TITLE & DESCRIPTION -->
                 <div class="spe-title">
-                    <h2>Danh mục <span>sự kiện</span></h2>
+                    <h2>Sự kiện <span>đề xuất</span></h2>
                     <div class="title-line">
                         <div class="tl-1"></div>
                         <div class="tl-2"></div>
                         <div class="tl-3"></div>
                     </div>
-                    <p>Hãy đến với trường đại học Văn Lang để tận hưởng những giây phút vui vẻ nhất!</p>
+                    <p>Các sự kiện hay theo danh mục</p>
                 </div>
                 <div class="col-md-4 wow slideInUp">
-                    <div id="myCarousel1" class="carousel slide" data-ride="carousel">
+                    <div id="myCarousel" class="carousel slide" data-ride="carousel">
                       <!-- Indicators -->
                       <ol class="carousel-indicators">
-                        <li data-target="#myCarousel1" data-slide-to="0" class="active"></li>
-                        <li data-target="#myCarousel1" data-slide-to="1"></li>
-                        <li data-target="#myCarousel1" data-slide-to="2"></li>
+                        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                        <li data-target="#myCarousel" data-slide-to="1"></li>
+                        <li data-target="#myCarousel" data-slide-to="2"></li>
                       </ol>
 
                       <!-- Wrapper for slides -->
@@ -155,11 +157,11 @@ include('header.php');
                       </div>
 
                       <!-- Left and right controls -->
-                      <a class="left carousel-control" href="#myCarousel1" data-slide="prev">
+                      <a class="left carousel-control" href="#myCarousel" data-slide="prev">
                         <span class="icon-prev"></span>
                         <span class="sr-only">Previous</span>
                       </a>
-                      <a class="right carousel-control" href="#myCarousel1" data-slide="next">
+                      <a class="right carousel-control" href="#myCarousel" data-slide="next">
                         <span class="icon-next"></span>
                         <span class="sr-only">Next</span>
                       </a>
@@ -265,82 +267,76 @@ include('header.php');
                       </a>
                     </div>
               </div>
+
+
             </div>
+
         </div>
+
     </section>
 
-<!--====== De Xuat ==========-->
+    <!--Danh Muc-->
+
     <section>
         <div class="rows pad-bot-redu tb-space">
-            <div class="container" id="inner-page-title">
+            <div class="container">
                 <!-- TITLE & DESCRIPTION -->
                 <div class="spe-title">
-                    <h2>Sự kiện <span>đề xuất</span></h2>
+                    <h2>Danh mục <span>sự kiện</span></h2>
                     <div class="title-line">
                         <div class="tl-1"></div>
                         <div class="tl-2"></div>
                         <div class="tl-3"></div>
                     </div>
-                    <p>Các sự kiện hay cần xem</p>
+                    <p>Hãy đến với trường đại học Văn Lang để tận hưởng những giây phút vui vẻ nhất!</p>
                 </div>
-                <div class="wow slideInUp">
-                    <div id="myCarousel4" class="carousel slide" data-ride="carousel">
-                      <!-- Indicators -->
-                      <ol class="carousel-indicators">
-                        <li data-target="#myCarousel3" data-slide-to="0" class="active"></li>
-                        <li data-target="#myCarousel3" data-slide-to="1"></li>
-                        <li data-target="#myCarousel3" data-slide-to="2"></li>
-                      </ol>
+                <div>
+                    <!-- TOUR PLACE 1 -->
+                    <div class="col-md-4 col-sm-6 col-xs-12 b_packages wow slideInUp" data-wow-duration="0.5s">
+                        <!-- IMAGE -->
+                        <div class="v_place_img v_place_img2"> <img src="images/t5.png" alt="Tour Booking" title="Tour Booking" /> </div>
+                        <!-- TOUR TITLE & ICONS -->
+                        <div class="b_pack rows">
+                            <!-- TOUR TITLE -->
+                            <div class="col-md-12 col-sm-12">
+                                <h4><a href="tour-details.html">Học thuật</a></h4>
 
-                      <!-- Wrapper for slides -->
-                      <div class="carousel-inner dexuat">
-
-                        <div class="item active">
-                          <img src="images/listing/home1.jpg" alt="Los Angeles">
-                          <div class="carousel-caption">
-                            <h3>Thể thao</h3>
-                            <p>Takewondo</p>
-                          </div>
+                            </div>
+                            
                         </div>
-
-                        <div class="item">
-                          <img src="images/listing/home2.jpg" alt="Chicago">
-                          <div class="carousel-caption">
-                            <h3>Thể thao</h3>
-                            <p>Vovinam</p>
-                          </div>
-                        </div>
-                      
-                        <div class="item">
-                          <img src="images/listing/home3.jpg" alt="New York">
-                          <div class="carousel-caption">
-                            <h3>Thể thao</h3>
-                            <p>Karate</p>
-                          </div>
-                        </div>
-                    
-                      </div>
-
-                      <!-- Left and right controls -->
-                      <a class="left carousel-control" href="#myCarousel4" data-slide="prev">
-                        <span class="icon-prev"></span>
-                        <span class="sr-only">Previous</span>
-                      </a>
-                      <a class="right carousel-control" href="#myCarousel4" data-slide="next">
-                        <span class="icon-next"></span>
-                        <span class="sr-only">Next</span>
-                      </a>
                     </div>
-              </div>
-                 
-
-                 
-                
+                    <!-- TOUR PLACE 2 -->
+                    <div class="col-md-4 col-sm-6 col-xs-12 b_packages wow slideInUp" data-wow-duration="0.5s">
+                        <!-- IMAGE -->
+                        <div class="v_place_img v_place_img2"> <img src="images/t6.png" alt="Tour Booking" title="Tour Booking" /> </div>
+                        <!-- TOUR TITLE & ICONS -->
+                        <div class="b_pack rows">
+                            <!-- TOUR TITLE -->
+                            <div class="col-md-12 col-sm-12">
+                                <h4><a href="tour-details.html">Văn hoá</a></h4>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <!-- TOUR PLACE 3 -->
+                    <div class="col-md-4 col-sm-6 col-xs-12 b_packages wow slideInUp" data-wow-duration="0.5s">
+                        <!-- IMAGE -->
+                        <div class="v_place_img v_place_img2"> <img src="images/t4.png" alt="Tour Booking" title="Tour Booking" /> </div>
+                        <!-- TOUR TITLE & ICONS -->
+                        <div class="b_pack rows">
+                            <!-- TOUR TITLE -->
+                            <div class="col-md-12 col-sm-12">
+                                <h4><a href="tour-details.html">Thể thao</a></h4>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                </div>
             </div>
-
         </div>
-
     </section>
+
     <!--HEADER SECTION-->
     <section class="conect">
         
@@ -364,8 +360,8 @@ include('header.php');
     <!--====== TIPS BEFORE TRAVEL ==========-->
    
     <!--====== FOOTER 1 ==========-->
-  
     
     <?php
+
 include('footer.php');
 ?>

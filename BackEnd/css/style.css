@@ -1451,24 +1451,12 @@
      position: relative;
      overflow: hidden;
      padding-bottom: 85px;
-}
-.foot-sec2 .row{
-    background-color: black;
-    border: 1px solid black;
-    opacity: 0.8;
-    filter: alpha(opacity=60); /* For IE8 and earlier */
-
-
-}
-.footernoop{
-     opacity: 1;
+     background-size: cover;
 }
  .footer h4 {
      color: #acadaf;
      text-transform: uppercase;
      padding-bottom: 15px;
-     font-size: 20px;
-
 }
  .foot-social {
 }
@@ -1509,7 +1497,6 @@
 }
  .foot-spec {
 }
-
  .foot-spec span {
      color: #acadaf;
      text-transform: uppercase;
@@ -4247,7 +4234,7 @@
      background: url(../images/consul-bg.jpg) no-repeat;
      position: relative;
      background-size: cover;
-     height: 800px;
+     height: 600px;
 }
  .tourz-search {
 }
@@ -4770,7 +4757,7 @@
  .db-2-main-com ul li a {
     /* text-align: left;
      */
-     /*display: block;*/
+     display: block;
      color: #333;
      font-size: 13.5px;
      padding-left: 14px;
@@ -7966,84 +7953,4 @@
 }
 .ck-editor__editable {
     min-height: 250px;
-}
-
-.event-status {
-     font-size: 12px !important;
-     color: #fff;
-     padding: 2px 4px;
-     border-radius: 3px;
-     text-transform: lowercase;
-     margin-left: 5px;
-}
-.event-draft {
-     background: #f0ad4e;
-}
-.event-wait {
-     background: #1a2d4e;
-}
-.event-reject {
-     background: #f93c3c;
-}
-.event-accept {
-     background: #5cb85c;
-}
-.event-public {
-     background: #5695ff;
-}
-
-.tour_head1 img{
-     width: 100%;
-}
-
-
-
-.multicarousel .item img{
-     width: 350px;
-}
-
-
-.dexuat .item img{
-     height: 500px !important;
-}
-.dexuat .carousel-caption h3{
-     font-size: 80px;
-}
-.dexuat .carousel-caption p{
-     font-size:30px;
-}
-
-@media (min-width: 992px) {
-    .item.active-next {
-        display: block !important;
-    }
-}
-
-.carousel-inner > .item.active,
-.carousel-inner > .item.active-next {
-  opacity: 1;
-  transition: all 0.3s ease;
-}
-
-.carousel-inner > .item:not(.active):not(.active-next) {
-  opacity: 0.5;
-  
-}
-
-.carousel-inner > .item.transitioning {
-   opacity: 0.2;
-   transition: all 0.4s ease;
-}
-
-.carousel-control.left,
-.carousel-control.right {
-    background-image: initial;
-}
-
-.carousel-inner > .item.active {
-  transform: translate3d(0,0,0);
-}
-.carousel-inner > .item.active.col-md-pull-4,
-.carousel-inner > .item.active.col-md-pull-8 {
-  left:initial;
 }

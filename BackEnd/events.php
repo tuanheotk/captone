@@ -31,7 +31,7 @@ include('header.php');
 
 						<div>
 						<div class='col-md-6 wow slideInUp'>
-		                <a href="event-detail.php?id=<?php echo $resultevent['id'] ?>">
+		                <a href='tour-details.html'>
 		                    <div class='tour-mig-like-com'>
 		                              <div class='tour-mig-lc-img'> <img src="<?php echo $resultevent["avatar"] ?>" alt=''> </div>
 		                              <div class='tour-mig-lc-con'>

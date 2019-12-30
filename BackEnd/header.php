@@ -34,7 +34,7 @@
 <body>
     <!-- Preloader -->
     <!-- <div id="preloader">
-        <div id="status">;</div>
+        <div id="status">&nbsp;</div>
     </div> -->
    
 

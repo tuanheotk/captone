@@ -1,5 +1,4 @@
 <?php
-$title = 'Đăng nhập';
 include('header.php');
 ?>
 
@@ -10,7 +9,7 @@ include('header.php');
 			<div class="tr-regi-form">
 				<h4>Đăng nhập</h4>
 				<p>Miễn phí và luôn như vậy.</p>
-				<form class="col s12" action="login.php">
+				<form class="col s12">
 					<div class="row">
 						<div class="input-field col s12">
 							<input type="text" class="validate">
@@ -25,18 +24,17 @@ include('header.php');
 					</div>
 					<div class="row">
 						<div class="input-field col s12">
-							<!-- <input type="submit" value="submit" class="waves-effect waves-light btn-large full-btn"> -->
-							<button type="submit" class="waves-effect waves-light btn-large full-btn">Đăng nhập</button>
-						</div>
+							<input type="submit" value="submit" class="waves-effect waves-light btn-large full-btn"> </div>
 					</div>
 				</form>
 				<p><a href="forgot-pass.html">Quên mật khẩu?</a> | <a href="register.html">Chưa có tài khoản?</a></p>
 				</p>
 				<div class="soc-login">
-					<h5>Đăng nhập bằng tài khoản khác</h5>
+					<h4>Đăng nhập bằng tài khoản khác</h4>
 					<ul>
-						<li><a href="#"><i class="fa fa-windows"></i> Microsoft</a> </li>
-						<!-- <button type="button" class="waves-effect waves-light btn-large full-btn"><i class="fa fa-windows"></i> Microsoft</button> -->
+						<li><a href="#"><i class="fa fa fb1"></i> Out Look</a> </li>
+                        <li><a href="#"><i class="fa fa-twitter tw1"></i> Twitter</a> </li>
+						<li><a href="#"><i class="fa fa-google-plus gp1"></i> Google</a> </li>
 					</ul>
 				</div>
 			</div>
@@ -46,11 +44,4 @@ include('header.php');
 <?php
 include('footer.php');
 ?>	
-
-<?php 
-	$myclient_id = "db6950e9-dd30-48f0-ba9d-6d250724b04b";
-	$myredirect_uri = "http://localhost/event/myredirect.php";
-	$myscopes = "wl.basic,wl.emails wl.signin,wl.offline_access ";
-	//coding to redirect to the Microsoft application just created.
-	header("Location: " . "https://login.live.com/oauth20_authorize.srf?client_id=" . $myclient_id . "&scope=" . $myscopes . "&response_type=token&redirect_uri=" . $myredirect_uri);
- ?>
+	

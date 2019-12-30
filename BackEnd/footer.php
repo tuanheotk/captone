@@ -5,7 +5,7 @@
                 <div class="container">
                     <div class="foot-sec2">
                         <div>
-                            <div class="row footernoop">
+                            <div class="row">
                                 <div class="col-sm-3 foot-spec foot-com">
                                     
                                     <div class="wed-logo2">
@@ -14,20 +14,19 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-3 foot-spec foot-com">
-                                    <h4>Địa chỉ & Thông tin liên hệ</h4>
+                                    <h4><span>Địa chỉ</span> & Thông tin liên hệ</h4>
                                     <p>45 Nguyễn Khắc Nhu, Phường Cô Giang, Quận 1, Hồ Chí Minh.</p>
-                                    <p><span class="strong">Số điện thoại: </span></p>
-                                    <p><span class="highlighted">028 3836 7933</span> </p>
+                                    <p> <span class="strong">Số điện thoại: </span> <span class="highlighted">028 3836 7933</span> </p>
                                 </div>
                                 <div class="col-sm-3 col-md-3 foot-spec foot-com">
-                                    <h4>Hỗ Trợ & Giúp đỡ</h4>
+                                    <h4><span>Hỗ Trợ</span> & Giúp đỡ</h4>
                                     <ul class="two-columns">
-                                        <li> <a href="#">Thông tin</a> </li>
-                                        <li> <a href="#">Liên hệ</a> </li>
+                                        <li> <a href="#">Thông tin chúng tôi</a> </li>
+                                        <li> <a href="#">Liên hệ với chúng tôi</a> </li>
                                     </ul>
                                 </div>
                                 <div class="col-sm-3 foot-social foot-spec foot-com">
-                                    <h4>Theo dõi chúng tôi</h4>
+                                    <h4><span>Theo dõi</span> chúng tôi</h4>
                                     
                                     <ul>
                                         <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a> </li>
@@ -50,7 +49,7 @@
 	<script src="js/wow.min.js"></script>
 	<script src="js/materialize.min.js"></script>
 	<script src="js/custom.js"></script>
-    
+
 
     <!-- Datatables -->
     <script type="text/javascript" src="vendor/DataTables/datatables.min.js"></script>

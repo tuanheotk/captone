@@ -171,7 +171,6 @@
     }
      .tourz-search-form div:nth-child(1) {
          width: 100%;
-         display: none;
     }
      .tourz-search-form div:nth-child(2) {
          width: 100%;
@@ -689,10 +688,11 @@
          display: table;
     }
      .carousel-inner > .item > img {
-         margin-top: 5px;
+         display: none;
     }
      .carousel-caption {
-         width: 70%;
+         width: 100%;
+         padding-bottom: 7%;
     }
      .carousel-inner1 > .item > img {
          display: block;

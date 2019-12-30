@@ -157,53 +157,6 @@ $(document).ready(function() {
 
 });
 
-$('#mySlider').on('slide.bs.carousel', function (e) {
-    
-  var $e = $(e.relatedTarget);
-  $e.removeClass('active-next');
-  
-  var $next = $e.next();
-  if ($next.length===0){
-      $next = $('.item').eq(0);
-  }
-  
-  var $nextnext = $e.next().next();
-  if ($nextnext.length===0){
-      $nextnext = $('.item').eq(1);
-  }
-  
-  console.log($('.item').length);
-  console.log($next.index());
-  
-  if ($next.index() == 1) {
-      $('.item').removeClass('col-md-push-4 col-md-push-8 col-md-pull-4 col-md-pull-8');
-  }
-  
-  if ($next.index() == 0) {
-      console.log("last");
-      $('.item').eq(0).toggleClass('col-md-push-8 col-md-push-4');
-      $('.item').eq(1).toggleClass('active-next col-md-push-4');
-      $('.item').eq($('.item').length-1).toggleClass('col-md-pull-4 col-md-pull-8');
-  }
-  else if ($next.index() < ($('.item').length-1)) {
-      $next.addClass('active-next');
-      $nextnext.addClass('active-next');
-  }
-  else {
-      console.log("2nd last");
-      $('.item').eq($next.index()-1).addClass('col-md-pull-4');
-      $next.addClass('active-next col-md-pull-4');
-      $('.item').eq(0).addClass('active-next col-md-push-8');
-  }
-  
-  $('.active,.active-next').addClass('transitioning');    
-  setTimeout(function(){
-      $('.transitioning').removeClass('transitioning');
-  },300)
-  
-});
-
-
 function myFunction() {
     var input, filter, table, tr, td, i;
     input = document.getElementById("myInput");
@@ -223,34 +176,34 @@ function myFunction() {
 }
 
 //DATE PICKER	
-// $(function() {
-//     var dateFormat = "mm/dd/yy",
-//         from = $("#from,#from-1,#from-2,#from-3,#from-4,#from-5")
-//         .datepicker({
-//             defaultDate: "+1w",
-//             changeMonth: false,
-//             numberOfMonths: 1
-//         })
-//         .on("change", function() {
-//             to.datepicker("option", "minDate", getDate(this));
-//         }),
-//         to = $("#to,#to-1,#to-2,#to-3,#to-4,#to-5").datepicker({
-//             defaultDate: "+1w",
-//             changeMonth: false,
-//             numberOfMonths: 1
-//         })
-//         .on("change", function() {
-//             from.datepicker("option", "maxDate", getDate(this));
-//         });
+$(function() {
+    var dateFormat = "mm/dd/yy",
+        from = $("#from,#from-1,#from-2,#from-3,#from-4,#from-5")
+        .datepicker({
+            defaultDate: "+1w",
+            changeMonth: false,
+            numberOfMonths: 1
+        })
+        .on("change", function() {
+            to.datepicker("option", "minDate", getDate(this));
+        }),
+        to = $("#to,#to-1,#to-2,#to-3,#to-4,#to-5").datepicker({
+            defaultDate: "+1w",
+            changeMonth: false,
+            numberOfMonths: 1
+        })
+        .on("change", function() {
+            from.datepicker("option", "maxDate", getDate(this));
+        });
 
-//     function getDate(element) {
-//         var date;
-//         try {
-//             date = $.datepicker.parseDate(dateFormat, element.value);
-//         } catch (error) {
-//             date = null;
-//         }
+    function getDate(element) {
+        var date;
+        try {
+            date = $.datepicker.parseDate(dateFormat, element.value);
+        } catch (error) {
+            date = null;
+        }
 
-//         return date;
-//     }
-// });
+        return date;
+    }
+});

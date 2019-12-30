@@ -38,64 +38,44 @@ include('header.php');
 			<div class="db-2">
 				<div class="db-2-com db-2-main">
 					<h4>Danh sách sự kiện</h4>
-                    <a href="add-event.php" class="btn btn-success waves-effect waves-light" style="margin: 10px 15px;">Thêm sự kiện</a>
+                    
 					<div class="db-2-main-com db-2-main-com-table">
 						<table class="table table-hover" id="event-table">
 							<thead>
 								<tr>
 									<th>#</th>
-									<th>Tên sự kiện</th>
-									<th>Thời gian bắt đầu</th>
+									<th>Mã sự kiện</th>
+									<th>Tên người tham dự</th>
 									<th>Trạng thái</th>
 									<th>Thao tác</th>
 								</tr>
 							</thead>
 							<tbody>
-                                <?php 
-                                require("database-config.php");
-                                $sql = "SELECT * FROM event";
-                                $result = mysqli_query($conn, $sql);
-                                $count = 0;
-                                while ($row = mysqli_fetch_assoc($result)) {
-                                    $count++;
-                                    $id = $row["id"];
-                                    $name = $row["title"];
-                                    $start = date("H:i - m/d/Y", strtotime($row["start_date"]));
-                                    // $end = date("H:i m-d-Y", strtotime($row["end_date"]));
-                                    switch ($row["status"]) {
-                                        case 0:
-                                            $status = 'Đã lưu';
-                                            break;
-                                        case 1:
-                                            $status = 'Chờ duyệt';
-                                            break;
-                                        case 2:
-                                            $status = 'Bị từ chối';
-                                            break;
-                                        case 3:
-                                            $status = 'Đã duyệt';
-                                            break;
-                                        case 4:
-                                            $status = 'Đã công khai';
-                                            break;
-                                    }
-
-                                    ?>
+                                
                                     <tr>
-                                        <td><?php echo $count ?></td>
-                                        <td><?php echo $name ?></td>
-                                        <td><?php echo $start ?></td>
-                                        <td><span class="db-done"><?php echo $status ?></span></td>
+                                        <td>1</td>
+                                        <td>ABC</td>
+                                        <td>Bui Trung Tuan</td>
+                                        <td><span class="db-done">đã quét</span></td>
                                         <td>
-                                            <a href="#" class="btn waves-effect waves-light btn-sm btn-info"><i class="fa fa-eye"></i></a>
-                                            <a href="#" class="btn waves-effect waves-light btn-sm btn-success"><i class="fa fa-pencil"></i></a>
+                                            
+                                            
+                                            <a href="#" class="btn waves-effect waves-light btn-sm btn-danger"  data-toggle="modal" data-target="#delete-event-modal"><i class="fa fa-trash-o" ></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>ABC</td>
+                                        <td>Nguyen Huu Kha</td>
+                                        <td><span class="db-not-done">chưa quét</span></td>
+                                        <td>
+                                            
+                                            
                                             <a href="#" class="btn waves-effect waves-light btn-sm btn-danger"  data-toggle="modal" data-target="#delete-event-modal"><i class="fa fa-trash-o" ></i></a>
                                         </td>
                                     </tr>
 
-                                <?php
-                                }
-                                 ?>                                
+                                                               
 							</tbody>
 						</table>
 					</div>
@@ -113,7 +93,7 @@ include('header.php');
                     </button>
                   </div>
                   <div class="modal-body">
-                    Bạn có muốn xoá sự kiện abc xyz igh?
+                    Bạn có muốn xoá người tham dự khỏi sự kiện này?
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-info" data-dismiss="modal">Hủy</button>
@@ -124,14 +104,15 @@ include('header.php');
             </div>           
 			<!--RIGHT SECTION-->
             <div class="db-3">
-                <h4>Thông tin cá nhân</h4>
+                <h4>Thông tin sự kiện</h4>
                 <ul>
                     <li>
 
                         <a href="#!"> <img src="images/icon/dbr1.jpg" alt="" />
-                            <h5>Tuấn heo</h5>
-                            <p><i class="fa fa-th-large"></i> Công nghệ thông tin</p>
-                            <p><i class="fa fa-envelope"></i> tuanheotk@gmail.com</p>
+                            <h5>AI Block Chain Khởi cmn Nghiệp</h5>
+                            <p><i class="fa fa-map-marker"></i> Toà nhà Trinh Công sơn</p>
+                            <p><i class="fa fa-hourglass-start"></i> 8:00 - 12/12/2020</p>
+                            <p><i class="fa fa-hourglass-end"></i> 17:00 - 12/12/2020</p>
                             <p><i class="fa fa-phone"></i> 12356987</p>
                             
                         </a>
