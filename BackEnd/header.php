@@ -1,8 +1,40 @@
+<?php 
+session_start();
+require('database-config.php');
+if (isset($_SESSION['user_email'])) {
+    $sqlUserInfo = "SELECT a.id, a.name, a.email, a.role, a.faculty_id, a.status, f.name AS faculty_name FROM account a, faculty f WHERE a.faculty_id = f.faculty_id AND email = '".$_SESSION['user_email']."'";
+    $resultUserInfo = mysqli_query($conn, $sqlUserInfo);
+    $rowInfo = mysqli_fetch_assoc($resultUserInfo);
+    $account_id = $rowInfo['id'];
+    $account_name = $rowInfo['name'];
+    $account_email = $rowInfo['email'];
+    $account_role = $rowInfo['role'];
+    $account_faculty_id = $rowInfo['faculty_id'];
+    $account_faculty_name = $rowInfo['faculty_name'];
+    $account_status = $rowInfo['status'];
+
+    // check require info
+    if ($account_faculty_id == 0 || $account_name == "") {
+        if ($_SERVER['REQUEST_URI'] != '/event/update-info.php') {
+            header("Location: update-info.php");
+        }
+    }
+
+    // disabled
+    if ($account_status == 0) {
+        if ($_SERVER['REQUEST_URI'] != '/event/block.php') {
+            header("Location: block.php");
+        }
+    }
+}
+ob_start();
+
+ ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title><?php echo $title ?> - Văn Lang</title>
+    <title><?php echo $title ?> - EventBox Văn Lang</title>
     <!--== META TAGS ==-->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -22,6 +54,8 @@
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/mob.css">
     <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="css/bootstrap-datetimepicker.css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -33,9 +67,9 @@
 
 <body>
     <!-- Preloader -->
-    <!-- <div id="preloader">
-        <div id="status">&nbsp;</div>
-    </div> -->
+    <div id="preloader">
+        <div id="status">;</div>
+    </div>
    
 
     <!-- MOBILE MENU -->
@@ -44,7 +78,7 @@
             <div class="ed-mob-menu-con">
                 <div class="ed-mm-left">
                     <div class="wed-logo">
-                        <a href="main.html"><img src="images/logo.png" alt="" />
+                        <a href="index.php"><img src="images/logo.png" alt="" />
                         </a>
                     </div>
                 </div>
@@ -53,25 +87,54 @@
                         <a href="#!" class="ed-micon"><i class="fa fa-bars"></i></a>
                         <div class="ed-mm-inn">
                             <a href="#!" class="ed-mi-close"><i class="fa fa-times"></i></a>
-                            <h4>Trang chủ</h4>
+                            <h4>EventBox</h4>
                             <ul>
-                                <li><a href="index.php">Trang Chủ</a></li>
+                                <li><a href="index.php">Trang chủ</a></li>
+                                <li><a href="events.php">Hội nghị - Sự kiện</a></li>
                                 
                             </ul>
                             
                             
-                            <h4>Trang quản lý</h4>
+                            <h4>Sự kiện của tôi</h4>
                             <ul>
-                                <li><a href="events.php">Hội nghị - Sự kiện</a></li>
                                 <li><a href="my-events.php">Sự kiện của tôi</a></li>
-                                <li><a href="my-profile.php">Thông tin cá nhân</a></li>                               
+                                <li><a href="my-registed-events.php">Sự kiện đăng ký tham gia</a></li>                              
                             </ul>
                             
-                            <h4 class="ed-dr-men-mar-top">Trang người dùng</h4>
+
+                            <?php 
+                                if (isset($account_role) && $account_role == 4) {
+                            ?>
+
+                            <h4>Quản Lý</h4>
                             <ul>
-                                <li><a href="register.php">Đăng Kí</a></li>
-                                <li><a href="login.php">Đăng nhập</a></li>
-                                <li><a href="forgot-pass.html">Quên mật khẩu?</a></li>
+                                <li><a href="manage-account.php">Tài khoản</a></li>
+                                <li><a href="manage-faculty.php">Khoa</a></li>                              
+                            </ul>
+
+                            <?php
+                                }
+                            ?>
+                            
+                            <h4>Tài khoản</h4>
+                            <ul>
+                                <?php 
+                                if (isset($_SESSION['user_email'])) {
+                                    ?>
+                                    <!-- Sign Out -->
+                                    <li><a href="my-profile.php">Thông tin cá nhân</a></li>
+                                    <li><a href="logout.php">Đăng xuất</a></li>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <!-- HTML login -->
+                                    <li><a href="login.php">Đăng nhập</a></li>
+                                    <li><a href="register.php">Đăng ký</a></li>
+
+                                    <?php
+                                }
+                                
+                                ?>
                             </ul>
                             
                         </div>
@@ -97,10 +160,25 @@
                         </div>
                         <div class="ed-com-t1-right">
                             <ul>
-                                <li><a href="login.php">Đăng nhập</a>
-                                </li>
-                                <li><a href="register.php">Đăng kí</a>
-                                </li>
+                                <!-- <li>Tên</li> -->
+                                <?php 
+                                if (isset($_SESSION['user_email'])) {
+                                    ?>
+                                    <!-- Sign Out -->
+                                    <li><a href="my-profile.php"><?php echo $_SESSION['user_email']?></a></li>
+                                    <li><a href="logout.php">Đăng xuất</a></li>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <!-- HTML login -->
+                                    <li><a href="login.php">Đăng nhập</a></li>
+                                    <li><a href="register.php">Đăng kí</a></li>
+
+                                    <?php
+                                }
+                                
+                                ?>
+                                
                             </ul>
                         </div>
                         <div class="ed-com-t1-social">
@@ -126,7 +204,7 @@
                             <a href="main.html"><img src="images/logo.png" alt="" />
                             </a>
                         </div>
-                        <div class="main-menu">
+                        <div class="main-menu dropdowncc">
                             <ul>
                                 <li><a href="index.php">Trang chủ</a>
                                 </li>
@@ -137,8 +215,42 @@
                                 
                                 <li><a href="my-events.php">Sự kiện của tôi</a>
                                 </li>
-                                <li><a href="my-profile.php">Thông tin cá nhân</a>
+
+                                <?php 
+                                if (isset($account_role) && $account_role == 4) {
+                                ?>
+                                <li class="cour-menu">
+                                    <a href="#!" class="mm-arr">Quản lý</a>
+                                    <!-- MEGA MENU 1 -->
+                                    <div class="mm-pos">
+                                        <div class="cour-mm m-menu">
+                                            <div class="m-menu-inn">
+                                                <div class="mm1-com mm1-cour-com mm1-s12">
+                                                    <h4>Quản lý</h4>
+                                                    <ul>
+                                                        <li><a href="manage-account.php">Tài Khoản</a></li>
+                                                        <li><a href="manage-faculty.php">Khoa</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </li>
+
+                                <?php
+                                }
+                                ?>
+
+
+
+                                <?php
+                                if (isset($_SESSION["user_email"])) {
+                                ?>
+                                <li><a href="my-profile.php">Thông tin cá nhân</a></li>
+                                <?php
+                                }
+                                ?>
+
                                 
                             </ul>
                         </div>

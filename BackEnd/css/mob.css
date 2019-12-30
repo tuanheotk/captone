@@ -171,6 +171,7 @@
     }
      .tourz-search-form div:nth-child(1) {
          width: 100%;
+         display: none;
     }
      .tourz-search-form div:nth-child(2) {
          width: 100%;
@@ -595,6 +596,7 @@
      .home_consul a {
          display: initial;
     }
+    
 }
 /*-------------------------------------------------------*/
 /* When the browser is between 0px and 481px wide,below css will be applied. 
@@ -657,6 +659,10 @@
          padding: 30px 25px 30px 25px;
          margin-top: 100px;
     }
+    .carousel-inner > .item > img {
+         /*margin-top: 5px;*/
+         height: 240px;
+    }
 }
 /*-------------------------------------------------------*/
 /* When the browser is between 0px and 1030px wide,below css will be applied. 
@@ -688,11 +694,11 @@
          display: table;
     }
      .carousel-inner > .item > img {
-         display: none;
+         /*margin-top: 5px;*/
+         /*height: 270px;*/
     }
      .carousel-caption {
-         width: 100%;
-         padding-bottom: 7%;
+         /*width: 100%;*/
     }
      .carousel-inner1 > .item > img {
          display: block;
@@ -755,6 +761,7 @@
     }
      .dl4 {
     }
+
 }
 /*-------------------------------------------------------*/
 /* When the browser is 992px or wider,below css will be applied. 

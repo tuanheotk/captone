@@ -5809,7 +5809,7 @@ select {
 .select-wrapper input.select-dropdown {
     position: relative;
     cursor: pointer;
-    background-color: transparent;
+    /*background-color: transparent;*/
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -5826,7 +5826,7 @@ select {
     font-size: 10px;
     line-height: 10px;
     color: #b1b1b1;
-    z-index: 0;
+    z-index: 99;
 }
 .select-wrapper span.caret.disabled {
     color: rgba(0, 0, 0, 0.26);

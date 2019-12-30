@@ -1,6 +1,9 @@
 <?php
 $title = 'Quản lý tài khoản';
 include('header.php');
+if (!isset($account_role) || $account_role != 4) {
+    header('Location: index.php');
+}
 ?>
 	<!--DASHBOARD-->
 	<section>
@@ -17,23 +20,11 @@ include('header.php');
                 <div class="db-l-2">
                     <ul>
                         <li>
-                            <a href="my-events.php"><i class="fa fa-calendar" aria-hidden="true"></i> Sự kiện của tôi</a>
-                        </li>
-                        
-                        <!-- <li>
-                            <a href="my-events.php"><i class="fa fa-hourglass-end" aria-hidden="true"></i> Sự kiện đang chờ</a>
-                        </li> -->
-                        <li>
-                            <a href="my-events.php"><i class="fa fa-check" aria-hidden="true"></i> Sự kiện đã đăng ký tham gia</a>
+                            <a href="manage-account.php"><i class="fa fa-users" aria-hidden="true"></i> Quản lý tài khoản</a>
                         </li>
                         <li>
-                            <a href="review-event.php"><i class="fa fa-hourglass-end" aria-hidden="true"></i> Duyệt sự kiện</a>
+                            <a href="manage-account.php"><i class="fa fa-th-large" aria-hidden="true"></i> Quản lý tài khoa</a>
                         </li>
-                        <li>
-                            <a href="manage-account.php"><i class="fa fa-cog" aria-hidden="true"></i> Quản lý tài khoản</a>
-                        </li>
-                        
-                        
                     </ul>
                 </div>
             </div>
@@ -41,30 +32,37 @@ include('header.php');
 			<div class="db-2">
 				<div class="db-2-com db-2-main">
 					<h4>Danh sách tài khoản</h4>
-                    <a href="add-event.php" class="btn btn-success waves-effect waves-light" style="margin: 10px 15px;">Thêm tài khoản</a>
 					<div class="db-2-main-com db-2-main-com-table">
 						<table class="table table-hover" id="event-table">
 							<thead>
 								<tr>
 									<th>#</th>
-                                    <th>Mã số</th>
+                                    <th>Mã tài khoản</th>
 									<th>Họ tên</th>
 									<th>Email</th>
                                     <th>Khoa</th>
                                     <th>Cấp bậc</th>
+                                    <th>Loại tài khoản</th>
+                                    <th>Trạng thái</th>
 									<th>Thao tác</th>
 								</tr>
 							</thead>
 							<tbody>
                                 <?php 
                                 require("database-config.php");
-                                $sql = "SELECT a.*, f.name AS faculty_name FROM account a, faculty f WHERE a.faculty_id = f.faculty_id";
+                                $sql = "SELECT a.*, f.name AS faculty_name FROM account a, faculty f WHERE a.faculty_id = f.faculty_id AND a.role < 4";
                                 $result = mysqli_query($conn, $sql);
                                 $count = 0;
                                 while ($row = mysqli_fetch_assoc($result)) {
                                     $count++;
                                     $id = $row["id"];
                                     $code = $row["code"];
+                                    if ($row["code"] == "") {
+                                        $code = "Không có";
+                                    } else {
+                                        $code = $row["code"];
+                                    }
+                                    
                                     $name = $row["name"];
                                     $email = $row["email"];
                                     $faculty = $row["faculty_name"];
@@ -75,13 +73,33 @@ include('header.php');
                                         case 2:
                                             $role = 'Người kiểm duyệt';
                                             break;
-                                        case 3:
-                                            $role = 'Người điểm danh';
-                                            break;
+                                        // case 3:
+                                        //     $role = 'Người điểm danh';
+                                        //     break;
                                         case 4:
-                                            $role = 'Quản trị';
+                                            $role = 'Quản trị viên';
                                             break;
                                     }
+
+                                    switch ($row["status"]) {
+                                        case 0:
+                                            $status = 'Vô hiệu hóa';
+                                            $colorStt = 'event-reject';
+                                            break;
+                                        case 1:
+                                            $status = 'Đang sử dụng';
+                                            $colorStt = 'event-accept';
+                                            break;
+                                    }
+
+                                    if ($row["code"] == "") {
+                                        $type = "Bên Ngoài";
+                                        $colorType = 'event-wait';
+                                    } else {
+                                        $type = "Văn Lang";
+                                        $colorType = 'event-reject';
+                                    }
+                                    
                                     
 
                                     ?>
@@ -92,6 +110,8 @@ include('header.php');
                                         <td><?php echo $email ?></td>
                                         <td><?php echo $faculty ?></td>
                                         <td><?php echo $role ?></td>
+                                        <td><span class="event-status <?php echo $colorType ?>"><?php echo $type ?></span></td>
+                                        <td><span class="event-status <?php echo $colorStt ?>"><?php echo $status ?></span></td>
                                         <td>
                                             <a href="edit-account.php?id=<?php echo $id ?>" class="btn waves-effect waves-light btn-sm btn-success" title="Sửa tài khoản"><i class="fa fa-pencil"></i></a>
                                         </td>
@@ -106,48 +126,18 @@ include('header.php');
 				</div>
 			</div>
 
-            <!-- Delete Event Event -->
-            <div id="delete-modal" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <!-- Modal content-->
-                    <form id="delete-product-form" method="POST" action="<?php  $_SERVER["PHP_SELF"] ?>">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title"> Xóa sự kiện</h4>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            </div>
-                            <div class="modal-body">
-                                <input type="hidden" name="id" id="did">
-                                <input type="hidden" name="dname" id="dname">
-                                <p>Bạn có muốn xóa sự kiện: <strong id="event-will-delete"></strong> ?</p>             
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
-                                <button type="button" class="btn btn-danger" id="delete-event-btn">Xóa</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>              
-            </div>
-            <!-- End Delete Event -->
-
-
 			<!--RIGHT SECTION-->
             <div class="db-3">
                 <h4>Thông tin cá nhân</h4>
                 <ul>
                     <li>
-
-                        <a href="#!"> <img src="images/icon/dbr1.jpg" alt="" />
-                            <h5>Tuấn heo</h5>
-                            <p><i class="fa fa-th-large"></i> Công nghệ thông tin</p>
-                            <p><i class="fa fa-envelope"></i> tuanheotk@gmail.com</p>
-                            <p><i class="fa fa-phone"></i> 12356987</p>
+                        <a href="my-profile.php"> <img src="images/icon/dbr1.jpg" alt="" />
+                            <h5><?php echo $account_name ?></h5>
+                            <p><i class="fa fa-envelope"></i> <?php echo $account_email ?></p>
+                            <p><i class="fa fa-th-large"></i> <?php echo $account_faculty_name ?></p>
                             
                         </a>
                     </li>
-                    
-                    
                 </ul>
             </div>
 		</div>
@@ -184,29 +174,5 @@ include('footer.php');
         });
     });
 
-    $('tbody').on('click', '.delete-event', function(){
-        var id = $(this).parents('tr').attr('id');
-        if (id == undefined) var id = $(this).parents('tr').prev().attr('id');
-        var name = $(this).parents('tr').find('.event-name').text();
-        if (name == '') var name = $(this).parents('tr').prev().find('.event-name').text();
-
-        $('#did').val(id);
-        $('#event-will-delete').html(name);
-    })
-
-    $('#delete-event-btn').click(function(){
-        var id = $('#did').val();
-        $.ajax({
-            url: 'my-event-process.php',
-            method: 'POST',
-            dataType: 'json',
-            data: {'action': 'delete', 'id': id}
-        }).done(function(data){
-            if(data.result){
-                alert('Sự kiện đã được xóa');
-                location.reload();
-            }
-        })
-    })
 
 </script>

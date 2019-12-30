@@ -1,6 +1,35 @@
 <?php
 $title = 'Sửa sự kiện';
 include('header.php');
+if (isset($_GET["id"])) {
+    $event_id = $_GET["id"];
+    $sqlCheckAuthor = "SELECT id FROM event WHERE id = ".$event_id." AND status != 5 AND account_id = '".$account_id."'";
+    $resultCheckAuthor = mysqli_query($conn, $sqlCheckAuthor);
+
+    if (mysqli_num_rows($resultCheckAuthor) > 0) {
+        $sql = "SELECT * FROM event WHERE id = ".$event_id;
+        $result = mysqli_query($conn, $sql);
+        while ($row = mysqli_fetch_assoc($result)) {
+            $name = $row["title"];
+            $category = $row["category_id"];
+            $faculty = $row["faculty_id"];
+            $numTicket = $row["ticket_number"];
+            $place = $row["place"];
+            // $startTime = $row["start_date"];
+            $startTime = date("Y/m/d H:i", strtotime($row["start_date"]));
+            // $endTime = $row["end_date"];
+            $endTime = date("Y/m/d H:i", strtotime($row["end_date"]));
+            $shortDesc = $row["short_desc"];
+            $description = $row["description"];
+            $status = $row["status"];
+            $avatar = $row["avatar"];
+        }
+    } else {
+        header("Location: my-events.php");
+    }
+} else {
+    header("Location: my-events.php");
+}
 ?>
     <!--DASHBOARD-->
     <section>
@@ -19,15 +48,20 @@ include('header.php');
                         <li>
                             <a href="my-events.php"><i class="fa fa-calendar" aria-hidden="true"></i> Sự kiện của tôi</a>
                         </li>
-                        
-                        <!-- <li>
-                            <a href="my-events.php"><i class="fa fa-hourglass-end" aria-hidden="true"></i> Sự kiện đang chờ</a>
-                        </li> -->
                         <li>
-                            <a href="my-events.php"><i class="fa fa-check" aria-hidden="true"></i> Sự kiện đã đăng ký tham gia</a>
+                            <a href="my-registed-events.php"><i class="fa fa-check" aria-hidden="true"></i> Sự kiện đã đăng ký tham gia</a>
                         </li>
-                        
-                        
+
+                        <?php 
+                        if (isset($account_role) && $account_role == 2) {
+                        ?>
+
+                        <li>
+                            <a href="review-event.php"><i class="fa fa-hourglass-end" aria-hidden="true"></i> Duyệt sự kiện</a>
+                        </li>
+                        <?php
+                        }
+                        ?>
                     </ul>
                 </div>
             </div>
@@ -35,42 +69,23 @@ include('header.php');
             <div class="db-2">
                 <div class="db-2-com db-2-main">
 
-                    <?php 
-                    require"database-config.php";
-                    $eventID = $_GET["id"];
-                    $sql = "SELECT * FROM event WHERE id = ".$eventID;
-                    $result = mysqli_query($conn, $sql);
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        $name = $row["title"];
-                        $category = $row["category_id"];
-                        $faculty = $row["faculty_id"];
-                        $numTicket = $row["ticket_number"];
-                        $place = $row["place"];
-                        $startTime = $row["start_date"];
-                        $endTime = $row["end_date"];
-                        $shortDesc = $row["short_desc"];
-                        $description = $row["description"];
-                        $status = $row["status"];
-                        $avatar = $row["avatar"];
-                    }
-                     ?>
+                    
 
                     <h4>Thông tin sự kiện</h4>
                     <div class="db-2-main-com db2-form-pay db2-form-com">
                         <form class="col s12" id="edit-event-form" method="POST" enctype="multipart/form-data">
                             <div class="row">
                                 <div class="input-field col s12">
-                                    <input type="hidden" id="event-id" name="id" value="<?php echo $eventID ?>">
-                                    <input type="text" class="validate" id="event-name" name="name" value="<?php echo $name ?>" required="">
+                                    <input type="hidden" id="event-id" name="id" value="<?php echo $event_id ?>">
+                                    <input type="text" class="validate" id="event-name" name="name" value="<?php echo $name ?>" maxlength="100" title="Tên sự kiện" required>
                                     <label for="event-name">Tên sự kiện</label>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="input-field col s12">
+                                <div class="input-field col s12 fix-select">
                                     <select name="category" id="category">
                                         <option selected disabled>Vui lòng chọn danh mục...</option>
-                                        <?php 
-                                        require("database-config.php");
+                                        <?php
                                         $sql = "SELECT * FROM category";
                                         $result = mysqli_query($conn, $sql);
                                         while ($row = mysqli_fetch_assoc($result)) {
@@ -89,11 +104,10 @@ include('header.php');
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="input-field col s12">
+                                <div class="input-field col s12 fix-select">
                                     <select name="faculty" id="faculty">
                                         <option selected disabled>Vui lòng chọn khoa...</option>
-                                        <?php 
-                                        require("database-config.php");
+                                        <?php
                                         $sql = "SELECT * FROM faculty WHERE status = 1";
                                         $result = mysqli_query($conn, $sql);
                                         while ($row = mysqli_fetch_assoc($result)) {
@@ -110,51 +124,25 @@ include('header.php');
                                     </select>
                                 </div>
                             </div>
+                            
                             <div class="row">
                                 <div class="input-field col s12">
-                                    <select name="moderator" id="moderator">
-                                        <option selected disabled>Vui lòng chọn người điểm danh...</option>
-                                        <?php 
-                                        // require("database-config.php");
-                                        $sqlModID = mysqli_query($conn, "SELECT account_id FROM moderator WHERE status = 0 AND event_id =".$eventID);
-                                        $modID = mysqli_fetch_assoc($sqlModID);
-                                        $moderator = $modID["account_id"];
-
-                                        $sql = "SELECT id, name  FROM account WHERE role = 3";
-                                        $result = mysqli_query($conn, $sql);
-
-                                        while ($row = mysqli_fetch_assoc($result)) {
-                                            if ($moderator == $row["id"]) {
-                                                # code...
-                                                echo '<option value="'.$row["id"].'" selected>'.$row["name"].'</option>';
-                                            } else {
-                                                echo '<option value="'.$row["id"].'">'.$row["name"].'</option>';
-                                                # code...
-                                            }
-                                            
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="input-field col s12">
-                                    <input type="number" class="validate" id="ticket-number" name="ticket-number" value="<?php echo $numTicket ?>" required="">
+                                    <input type="number" class="validate" id="ticket-number" name="ticket-number" value="<?php echo $numTicket ?>" title="Số lượng vé" required="">
                                     <label>Số lượng vé</label>
                                 </div>
 
                                 <div class="input-field col s12">
-                                    <input id="place" type="text" name="place" value="<?php echo $place ?>" class="validate">
+                                    <input id="place" type="text" name="place" value="<?php echo $place ?>" class="validate" maxlength="100" title="Địa điểm" required>
                                     <label for="place">Địa điểm</label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="input-field col s12 m6">
-                                    <input type="text" class="validate" id="start-time" name="start-time" value="<?php echo $startTime ?>" required="">
+                                    <input type="text" class="validate" id="start-time" name="start-time" value="<?php echo $startTime ?>"  title="Thời gian bắt đầu" required="">
                                     <label>Thời gian bắt đầu</label>
                                 </div>
                                 <div class="input-field col s12 m6">
-                                    <input type="text" class="validate" id="end-time" name="end-time" value="<?php echo $endTime ?>" required="">
+                                    <input type="text" class="validate" id="end-time" name="end-time" value="<?php echo $endTime ?>" title="Thời gian kết thúc" required="">
                                     <label>Thời gian kết thúc</label>
                                 </div>
                             </div>
@@ -172,7 +160,7 @@ include('header.php');
 
                             <div class="row">
                                 <div class="input-field col s12">
-                                    <input type="text" class="validate" id="short-desc" name="short-desc" value="<?php echo $shortDesc ?>" required="">
+                                    <input type="text" class="validate" id="short-desc" name="short-desc" value="<?php echo $shortDesc ?>" maxlength="100"  title="Mô tả ngắn" required="">
                                     <label>Mô tả ngắn</label>
                                 </div>
                             </div>
@@ -208,7 +196,7 @@ include('header.php');
                                     <button type="submit" id="save-btn" class="full-btn btn btn-warning waves-light waves-effect"><i class="fa fa-floppy-o" aria-hidden="true"></i> Lưu Nháp</button>
                                 </div>
                                 <div class="input-field col s12 m4">
-                                    <a href="my-events.php" class="full-btn btn btn-danger waves-light waves-effect"><i class="fa fa-ban" aria-hidden="true"></i> Huỷ</a>
+                                    <a href="my-events.php" class="full-btn btn btn-danger waves-light waves-effect"><i class="fa fa-times" aria-hidden="true"></i> Huỷ</a>
                                 </div>
                             </div>
                         </form>
@@ -237,7 +225,7 @@ include('header.php');
                                 </thead>
                                 <tbody>
                                     <?php 
-                                    $resultComment = mysqli_query($conn, "SELECT name , comment, day_comment FROM review_comment r, account a WHERE event_id = ".$eventID." AND r.account_id = a.id");
+                                    $resultComment = mysqli_query($conn, "SELECT name , comment, day_comment FROM review_comment r, account a WHERE event_id = ".$event_id." AND r.account_id = a.id");
                                     if (mysqli_num_rows($resultComment) > 0) {
                                         while ($rowComment = mysqli_fetch_assoc($resultComment)) {
                                             ?>
@@ -276,17 +264,13 @@ include('header.php');
                 <h4>Thông tin cá nhân</h4>
                 <ul>
                     <li>
-
-                        <a href="#!"> <img src="images/icon/dbr1.jpg" alt="" />
-                            <h5>Tuấn heo</h5>
-                            <p><i class="fa fa-th-large"></i> Công nghệ thông tin</p>
-                            <p><i class="fa fa-envelope"></i> tuanheotk@gmail.com</p>
-                            <p><i class="fa fa-phone"></i> 12356987</p>
+                        <a href="my-profile.php"> <img src="images/icon/dbr1.jpg" alt="" />
+                            <h5><?php echo $account_name ?></h5>
+                            <p><i class="fa fa-envelope"></i> <?php echo $account_email ?></p>
+                            <p><i class="fa fa-th-large"></i> <?php echo $account_faculty_name ?></p>
                             
                         </a>
                     </li>
-                    
-                    
                 </ul>
             </div>
         </div>
@@ -373,7 +357,7 @@ include('footer.php');
         var name = $('#event-name').val();
         var category = $('#category').val();
         var faculty = $('#faculty').val();
-        var moderator = $('#moderator').val();
+        // var moderator = $('#moderator').val();
         var numTicket = $('#ticket-number').val();
         var place = $('#place').val();
         var startTime = $('#start-time').val();
@@ -397,10 +381,11 @@ include('footer.php');
             alert('Vui lòng chọn khoa');
             return false;
         }
-        if (moderator == null) {
-            alert('Vui lòng chọn người điểm danh');
-            return false;
-        }
+
+        // if (moderator == null) {
+        //     alert('Vui lòng chọn người điểm danh');
+        //     return false;
+        // }
 
         if (place.replace(/\s+/g, ' ').trim().length < 11) {
             alert('Địa chỉ tối thiểu 10 ký tự');
@@ -421,10 +406,9 @@ include('footer.php');
 
         
         var eventForm = document.querySelector("#edit-event-form");
-        console.log(eventForm);
 
         $.ajax({
-            url: 'my-event-process.php',
+            url: 'process-my-event.php',
             method: 'POST',
             dataType: 'json',
             // data: {
@@ -460,4 +444,11 @@ include('footer.php');
         })
 
     })
+
+    $(function () {
+        $('#start-time, #end-time').datetimepicker({
+          // format: "hh:ii - dd/mm/yyyy"
+          format: "yyyy/mm/dd hh:ii"
+        });
+    });
 </script>

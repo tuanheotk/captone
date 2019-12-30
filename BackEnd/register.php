@@ -11,19 +11,10 @@ include('header.php');
 				<p>Miễn phí và luôn như vậy.</p>
 				<form class="col s12">
 					<div class="row">
-						<div class="input-field col m6 s12">
-							<input type="text" class="validate">
-							<label>Họ</label>
-						</div>
-						<div class="input-field col m6 s12">
-							<input type="text" class="validate">
-							<label>Tên</label>
-						</div>
-					</div>
-					<div class="row">
+						
 						<div class="input-field col s12">
-							<input type="number" class="validate">
-							<label>Số điện thoại</label>
+							<input type="text" class="validate">
+							<label>Họ & Tên</label>
 						</div>
 					</div>
 					<div class="row">
@@ -49,7 +40,7 @@ include('header.php');
 							<input type="submit" value="Tạo" class="waves-effect waves-light btn-large full-btn"> </div>
 					</div>
 				</form>
-				<p>Bạn đã là thành viên? <a href="login.html">Click để đăng nhập</a>
+				<p>Bạn đã là thành viên? <a href="login.php">Click để đăng nhập</a>
 				</p>
 			</div>
 		</div>

@@ -1,12 +1,23 @@
 <?php
 $title = 'Danh sách tham dự';
 include('header.php');
+if (isset($_GET["id"])) {
+    $event_id = $_GET["id"];
+    $sqlCheckAuthor = "SELECT id FROM event WHERE id = ".$event_id." AND account_id = '".$account_id."'";
+    $resultCheckAuthor = mysqli_query($conn, $sqlCheckAuthor);
+
+    if (mysqli_num_rows($resultCheckAuthor) == 0) {
+        header("Location: my-events.php");
+    }
+} else {
+    header("Location: my-events.php");
+}
 ?>
-	<!--DASHBOARD-->
-	<section>
-		<div class="db">
-			<!--LEFT SECTION-->
-			<div class="db-l">
+    <!--DASHBOARD-->
+    <section>
+        <div class="db">
+            <!--LEFT SECTION-->
+            <div class="db-l">
                 <div class="db-l-1">
                     <ul>
                         <li><img src="images/db-profile.jpg" alt="" />
@@ -19,50 +30,55 @@ include('header.php');
                         <li>
                             <a href="my-events.php"><i class="fa fa-calendar" aria-hidden="true"></i> Sự kiện của tôi</a>
                         </li>
-                        
-                        <!-- <li>
-                            <a href="my-events.php"><i class="fa fa-hourglass-end" aria-hidden="true"></i> Sự kiện đang chờ</a>
-                        </li> -->
                         <li>
                             <a href="my-events.php"><i class="fa fa-check" aria-hidden="true"></i> Sự kiện đã đăng ký tham gia</a>
                         </li>
+
+                        <?php 
+                        if (isset($account_role) && $account_role == 2) {
+                        ?>
+
                         <li>
-                            <a href="my-events.php"><i class="fa fa-hourglass-end" aria-hidden="true"></i> Sự kiện cần duyệt</a>
+                            <a href="review-event.php"><i class="fa fa-hourglass-end" aria-hidden="true"></i> Duyệt sự kiện</a>
                         </li>
-                        
-                        
+                        <?php
+                        }
+                        ?>
                     </ul>
                 </div>
             </div>
-			<!--CENTER SECTION-->
-			<div class="db-2">
-				<div class="db-2-com db-2-main">
-					<h4>Danh sách người tham dự</h4>
+            <!--CENTER SECTION-->
+            <div class="db-2">
+                <div class="db-2-com db-2-main">
+                    <h4>Danh sách người tham dự</h4>
                     
-					<div class="db-2-main-com db-2-main-com-table">
-						<table class="table table-hover" id="attendee-table">
-							<thead>
-								<tr>
-									<th>#</th>
-									<th>Email người tham dự</th>
-									<th>Trạng thái</th>
-								</tr>
-							</thead>
-							<tbody>
+                    <div class="db-2-main-com db-2-main-com-table">
+                        <table class="table table-hover" id="attendee-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Tên người tham dự</th>
+                                    <th>Email</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                                 <?php 
                                 require("database-config.php");
                                 $eventID = $_GET["id"];
-                                $sqlAttendee = "SELECT email FROM `attendee` WHERE event_id = ".$eventID;
+                                $sqlAttendee = "SELECT ac.name, at.email FROM attendee AS at, account AS ac WHERE at.email = ac.email AND event_id = ".$eventID;
                                 $resultAtt = mysqli_query($conn, $sqlAttendee);
                                 if (mysqli_num_rows($resultAtt) > 0) {
                                     $count = 0;
                                     while ($rowAtt = mysqli_fetch_assoc($resultAtt)) {
+                                        $name = $rowAtt["name"];
                                         $email = $rowAtt["email"];
                                         $count++;
 
                                         ?>
                                         <tr>
                                             <td><?php echo $count ?></td>
+                                            <td><?php echo $name ?></td>
                                             <td><?php echo $email ?></td>
                                             <td><span class="db-not-done">Chưa điểm danh</span></td>
                                         </tr>
@@ -91,11 +107,11 @@ include('header.php');
                                     </tr> -->
 
                                                                
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
            <!-- Modal -->
             <div class="modal fade" id="delete-event-modal" tabindex="-1" role="dialog" aria-labelledby="delete-event-modalLabel" aria-hidden="true">
@@ -117,7 +133,7 @@ include('header.php');
                 </div>
               </div>
             </div>           
-			<!--RIGHT SECTION-->
+            <!--RIGHT SECTION-->
             <div class="db-3">
                 <h4>Thông tin sự kiện</h4>
                 <ul>
@@ -141,9 +157,9 @@ include('header.php');
                     
                 </ul>
             </div>
-		</div>
-	</section>
-	<!--END DASHBOARD-->
+        </div>
+    </section>
+    <!--END DASHBOARD-->
 <?php
 
 include('footer.php');
