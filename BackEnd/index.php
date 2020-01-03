@@ -4,14 +4,16 @@ include('header.php');
 
 $sqlFeature = "SELECT e.id, e.title, e.avatar, e.start_date, e.place, COUNT(a.event_id) AS total FROM event e LEFT JOIN attendee a ON e.id = a.event_id WHERE e.status = 4 GROUP BY e.id ORDER BY total DESC LIMIT 4";
 
-$sqlAcademic = "SELECT e.id, e.title, e.avatar, c.name FROM event e, category c WHERE e.category_id = c.id AND c.id = 1 AND e.status = 4 ORDER BY e.id DESC";
-$sqlCulture = "SELECT e.id, e.title, e.avatar, c.name FROM event e, category c WHERE e.category_id = c.id AND c.id = 2 AND e.status = 4 ORDER BY e.id DESC";
-$sqlSport = "SELECT e.id, e.title, e.avatar, c.name FROM event e, category c WHERE e.category_id = c.id AND c.id = 3 AND e.status = 4 ORDER BY e.id DESC";
+$sqlAcademic = "SELECT e.id, e.title, e.avatar, c.name FROM event e, category c WHERE e.category_id = c.id AND c.id = 1 AND e.status = 4 ORDER BY e.public_at DESC";
+$sqlCulture = "SELECT e.id, e.title, e.avatar, c.name FROM event e, category c WHERE e.category_id = c.id AND c.id = 2 AND e.status = 4 ORDER BY e.public_at DESC";
+$sqlSport = "SELECT e.id, e.title, e.avatar, c.name FROM event e, category c WHERE e.category_id = c.id AND c.id = 3 AND e.status = 4 ORDER BY e.public_at DESC";
+$sqlRecommend = "SELECT title, avatar, MAX(id) as id FROM event WHERE status = 4 GROUP BY faculty_id";
 
 $resultFeature = mysqli_query($conn, $sqlFeature);
 $resultAcademic = mysqli_query($conn, $sqlAcademic);
 $resultCulture = mysqli_query($conn, $sqlCulture);
 $resultSport = mysqli_query($conn, $sqlSport);
+$resultRecommend = mysqli_query($conn, $sqlRecommend);
 
 
 ?>
@@ -227,10 +229,10 @@ $resultSport = mysqli_query($conn, $sqlSport);
 	                    	$count = 0;
 	                    	while ($rowSport = mysqli_fetch_assoc($resultSport)) {
 	                    		$count++;
-								$sport_event_id = $rowSport["id"];
-								$sport_event_name = $rowSport["title"];
-								$sport_event_avatar = $rowSport["avatar"];
-								$sport_category_name = $rowSport["name"];
+          								$sport_event_id = $rowSport["id"];
+          								$sport_event_name = $rowSport["title"];
+          								$sport_event_avatar = $rowSport["avatar"];
+          								$sport_category_name = $rowSport["name"];
 	                    ?>
 	                    	<div class="item <?php if ($count == 1) {echo 'active';} ?>">
 		                        <a href="event-detail.php?id=<?php echo $academic_event_id ?>">
@@ -287,49 +289,88 @@ $resultSport = mysqli_query($conn, $sqlSport);
                     <p>Các sự kiện hay cần xem</p>
                 </div>
                 <div class="wow slideInUp">
-                    <div id="myCarousel4" class="carousel slide" data-ride="carousel">
+                    <div id="carousel-recommend" class="carousel slide" data-ride="carousel">
                       <!-- Indicators -->
                       <ol class="carousel-indicators">
-                        <li data-target="#myCarousel3" data-slide-to="0" class="active"></li>
-                        <li data-target="#myCarousel3" data-slide-to="1"></li>
-                        <li data-target="#myCarousel3" data-slide-to="2"></li>
+
+                        <?php
+                          if (mysqli_num_rows($resultRecommend) > 1) {
+                            $count = 0;
+                            for ($i=0; $i < mysqli_num_rows($resultRecommend); $i++) {
+                              $count++;
+                              ?>
+
+                                <li data-target="#carousel-recommend" data-slide-to="<?php echo $i ?>" class="<?php if ($count == 1) echo 'active' ?>"></li>
+
+                              <?php
+                            }
+                          }
+                        ?>
+
+                        <!-- <li data-target="#carousel-recommend" data-slide-to="0" class="active"></li>
+                        <li data-target="#carousel-recommend" data-slide-to="1"></li> -->
+                      
+
                       </ol>
 
                       <!-- Wrapper for slides -->
                       <div class="carousel-inner dexuat">
 
-                        <div class="item active">
-                          <img src="images/listing/home1.jpg" alt="Los Angeles">
-                          <div class="carousel-caption">
-                            <h3>Thể thao</h3>
-                            <p>Takewondo</p>
-                          </div>
+                        <?php
+                          if (mysqli_num_rows($resultRecommend) > 0) {
+                            $count = 0;
+                            while ($rowRecommend = mysqli_fetch_assoc($resultRecommend)) {
+                              $count++;
+                              $recommend_event_id = $rowRecommend['id'];
+                              $recommend_event_name = $rowRecommend['title'];
+                              $recommend_event_avatar = $rowRecommend['avatar'];
+                          ?>
+                        <div class="item <?php if ($count == 1 ) echo 'active' ?>">
+                          <a href="event-detail.php?id=<?php echo $recommend_event_id ?>">
+                            <img src="<?php echo $recommend_event_avatar ?>" alt="Văn Lang">
+                            <div class="carousel-caption">
+                              <h3><?php echo $recommend_event_name ?></h3>
+                            </div>
+                          </a>
                         </div>
 
-                        <div class="item">
-                          <img src="images/listing/home2.jpg" alt="Chicago">
-                          <div class="carousel-caption">
-                            <h3>Thể thao</h3>
-                            <p>Vovinam</p>
-                          </div>
+                          <?php
+                            }
+                          } else {
+                          ?>
+                        <div class="item active">
+                          <a href="event-detail.php">
+                            <img src="images/listing/home.jpg" alt="Văn Lang">
+                            <div class="carousel-caption">
+                              <h3>Chưa có sự kiện</h3>
+                            </div>
+                          </a>
                         </div>
+
+                          <?php
+                          }
+                        ?>
+
+
+                        <!-- <div class="item active">
+                          <a href="event-detail.php?id=">
+                            <img src="images/listing/home1.jpg" alt="Los Angeles">
+                            <div class="carousel-caption">
+                              <h3>Thể thao</h3>
+                            </div>
+                          </a>
+                        </div> -->
+
                       
-                        <div class="item">
-                          <img src="images/listing/home3.jpg" alt="New York">
-                          <div class="carousel-caption">
-                            <h3>Thể thao</h3>
-                            <p>Karate</p>
-                          </div>
-                        </div>
                     
                       </div>
 
                       <!-- Left and right controls -->
-                      <a class="left carousel-control" href="#myCarousel4" data-slide="prev">
+                      <a class="left carousel-control" href="#carousel-recommend" data-slide="prev">
                         <span class="icon-prev"></span>
                         <span class="sr-only">Previous</span>
                       </a>
-                      <a class="right carousel-control" href="#myCarousel4" data-slide="next">
+                      <a class="right carousel-control" href="#carousel-recommend" data-slide="next">
                         <span class="icon-next"></span>
                         <span class="sr-only">Next</span>
                       </a>
@@ -370,6 +411,6 @@ $resultSport = mysqli_query($conn, $sqlSport);
     <!--====== FOOTER 1 ==========-->
   
     
-    <?php
+<?php
 include('footer.php');
 ?>

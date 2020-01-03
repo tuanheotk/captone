@@ -5,8 +5,10 @@ require "database-config.php";
 
 $action = $_POST["action"];
 
-if ($action == "get-category-for-dropdown") {
-	$sql = "SELECT * FROM category";
+if ($action == "get-mod-list-cfg-event") {
+	$event_id = $_POST["event-id"];
+	$email_host = $_POST["email-host"];
+	$sql = "SELECT id, event_id, email FROM moderator WHERE email != '".$email_host."' AND event_id = ".$event_id;
 	$result = mysqli_query($conn, $sql);
 	if(!$result){
 		$data["result"] = false;
@@ -15,33 +17,34 @@ if ($action == "get-category-for-dropdown") {
 		    while($row = mysqli_fetch_assoc($result)) {
 		       $json[] = $row;
 		    }
-		    $data["category"] = $json;
+		    $data["moderator"] = $json;
 		    $data["result"] = true;
 		}else{
 			$data["result"] = false;
-			$data["messages"] = "0 category";
+			$data["messages"] = "0 mod";
 		}
 	}
 }
-
-if ($action == "get-faculty-for-dropdown") {
-	$sql = "SELECT * FROM faculty WHERE status = 1";
+if ($action == "add-mod-cfg-event") {
+	$event_id = $_POST["event-id"];
+	$email_mod = $_POST["email-mod"];
+	$sql = "INSERT INTO moderator (event_id, email) VALUES (".$event_id.", '".$email_mod."')";
 	$result = mysqli_query($conn, $sql);
-	if(!$result){
-		$data["result"] = false;
+	if($result){
+		$data["result"] = true;
 	}else{
-		if (mysqli_num_rows($result) > 0) {
-		    while($row = mysqli_fetch_assoc($result)) {
-		       $json[] = $row;
-		    }
-		    $data["faculty"] = $json;
-		    $data["result"] = true;
-		}else{
-			$data["result"] = false;
-			$data["messages"] = "0 faculty";
-		}
+		$data["result"] = false;
 	}
-
+}
+if ($action == "delete-mod-cfg-event") {
+	$id_table_mod = $_POST["id-table-mod"];
+	$sql = "DELETE FROM moderator WHERE id = ".$id_table_mod;
+	$result = mysqli_query($conn, $sql);
+	if($result){
+		$data["result"] = true;
+	}else{
+		$data["result"] = false;
+	}
 }
 
 if ($action == "add") {
@@ -64,7 +67,7 @@ if ($action == "add") {
     } else{
         $target_file = $target_dir.date("YmdHis").basename($_FILES["cover-image"]["name"]);
     }
-    move_uploaded_file($_FILES["cover-image"]["tmp_name"], $target_file);
+    // move_uploaded_file($_FILES["cover-image"]["tmp_name"], $target_file);
 
 
     function generateCode()
@@ -98,8 +101,8 @@ if ($action == "add") {
 
 	// Insert event
 	$sqlInsertEvent = "INSERT INTO event(title, account_id, code, place, ticket_number, start_date, end_date, short_desc, description, faculty_id, category_id, status, avatar) VALUES('".$title."', '".$account_id."', '".$code."', '".$place."', ".$ticketNumber." ,'".$startTime."' , '".$endTime."', '".$shortDesc."', '".$description."', ".$faculty.", ".$category.", ".$status.", '".$target_file."')";
-	$insertEvent = mysqli_query($conn, $sqlInsertEvent);
-	// $insertEvent = true;
+	$resultInsertEvent = mysqli_query($conn, $sqlInsertEvent);
+	// $resultInsertEvent = true;
 
 	$getMaxID = mysqli_query($conn, "SELECT MAX(id) from event");
     if (mysqli_num_rows($getMaxID) == 0) {
@@ -110,11 +113,15 @@ if ($action == "add") {
     }
 
     $sqlInsertMod = "INSERT INTO moderator(email, event_id) VALUES('".$_SESSION["user_email"]."', ".$event_id.")";
-    $insertMod = mysqli_query($conn, $sqlInsertMod);
-    // $insertMod = true;
+    $resultInsertMod = mysqli_query($conn, $sqlInsertMod);
+    $resultInsertMod = true;
 
-    if($insertEvent && $insertMod){
-        $data["result"] = true;
+    if($resultInsertEvent){
+    	move_uploaded_file($_FILES["cover-image"]["tmp_name"], $target_file);
+    	$resultInsertMod = mysqli_query($conn, $sqlInsertMod);
+    	if ($resultInsertMod) {
+        	$data["result"] = true;
+    	}
     }else{
         $data["result"] = false;
         $data["error"] = "Error: ".mysqli_error($conn);
@@ -144,8 +151,12 @@ if ($action == "add") {
     }
     move_uploaded_file($_FILES["cover-image"]["tmp_name"], $target_file);
 
-
-	$sqlUpdateEvent = "UPDATE event SET title = '".$title."', category_id = '".$category."', place = '".$place."', ticket_number = '".$ticketNumber."', start_date = '".$startTime."', end_date = '".$endTime."', short_desc = '".$shortDesc."', description = '".$description."', faculty_id = '".$faculty."', status ='".$status."', avatar = '".$target_file."' WHERE id = ".$eventID;
+    if ($status == 4) {
+		$sqlUpdateEvent = "UPDATE event SET title = '".$title."', category_id = '".$category."', place = '".$place."', ticket_number = '".$ticketNumber."', start_date = '".$startTime."', end_date = '".$endTime."', short_desc = '".$shortDesc."', description = '".$description."', faculty_id = '".$faculty."', status ='".$status."', avatar = '".$target_file."', public_at = NOW() WHERE id = ".$eventID;
+    } else {
+    	$sqlUpdateEvent = "UPDATE event SET title = '".$title."', category_id = '".$category."', place = '".$place."', ticket_number = '".$ticketNumber."', start_date = '".$startTime."', end_date = '".$endTime."', short_desc = '".$shortDesc."', description = '".$description."', faculty_id = '".$faculty."', status ='".$status."', avatar = '".$target_file."', last_modified = NOW() WHERE id = ".$eventID;
+    }
+    
 	$updateEvent = mysqli_query($conn, $sqlUpdateEvent);
 	// $updateEvent = true;
 

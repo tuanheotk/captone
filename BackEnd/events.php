@@ -23,7 +23,7 @@ include('header.php');
 				<div>
 					<?php
 					require('database-config.php');
-					$sql = "SELECT * FROM event where status=4 ";
+					$sql = "SELECT * FROM event where status=4 ORDER BY public_at DESC";
 					 $result=mysqli_query($conn,$sql);
 						 while($resultevent=mysqli_fetch_assoc($result)){
 
@@ -36,7 +36,7 @@ include('header.php');
 		                              <div class='tour-mig-lc-img'> <img src="<?php echo $resultevent["avatar"] ?>" alt=''> </div>
 		                              <div class='tour-mig-lc-con'>
 		                                <h5><?php echo $resultevent["title"] ?></h5>
-		                                 <p><span><?php echo $resultevent["start_date"] ?></span><?php echo $resultevent["place"] ?></p>
+		                                 <p><span><?php echo date("H:i - d/m/Y", strtotime($resultevent["start_date"])); ?></span><?php echo $resultevent["place"] ?></p>
 		                             </div>
 		                           </div>
 		                     </a>

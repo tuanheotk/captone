@@ -2,28 +2,28 @@
 session_start();
 require('database-config.php');
 if (isset($_SESSION['user_email'])) {
-    $sqlUserInfo = "SELECT a.id, a.name, a.email, a.role, a.faculty_id, a.status, f.name AS faculty_name FROM account a, faculty f WHERE a.faculty_id = f.faculty_id AND email = '".$_SESSION['user_email']."'";
+    $sqlUserInfo = "SELECT a.id, a.name, a.email, a.code, a.role, a.faculty_id, a.status, f.name AS faculty_name FROM account a, faculty f WHERE a.faculty_id = f.faculty_id AND email = '".$_SESSION['user_email']."'";
     $resultUserInfo = mysqli_query($conn, $sqlUserInfo);
     $rowInfo = mysqli_fetch_assoc($resultUserInfo);
     $account_id = $rowInfo['id'];
     $account_name = $rowInfo['name'];
     $account_email = $rowInfo['email'];
+    $account_code = $rowInfo['code'];
     $account_role = $rowInfo['role'];
     $account_faculty_id = $rowInfo['faculty_id'];
     $account_faculty_name = $rowInfo['faculty_name'];
     $account_status = $rowInfo['status'];
 
-    // check require info
-    if ($account_faculty_id == 0 || $account_name == "") {
-        if ($_SERVER['REQUEST_URI'] != '/event/update-info.php') {
-            header("Location: update-info.php");
-        }
-    }
-
     // disabled
     if ($account_status == 0) {
         if ($_SERVER['REQUEST_URI'] != '/event/block.php') {
             header("Location: block.php");
+        }
+    } else
+    // check require info
+    if ($account_faculty_id == -1 || $account_name == "") {
+        if ($_SERVER['REQUEST_URI'] != '/event/update-info.php') {
+            header("Location: update-info.php");
         }
     }
 }
@@ -84,9 +84,9 @@ ob_start();
                 </div>
                 <div class="ed-mm-right">
                     <div class="ed-mm-menu">
-                        <a href="#!" class="ed-micon"><i class="fa fa-bars"></i></a>
+                        <a href="javascript:void(0)" class="ed-micon"><i class="fa fa-bars"></i></a>
                         <div class="ed-mm-inn">
-                            <a href="#!" class="ed-mi-close"><i class="fa fa-times"></i></a>
+                            <a href="javascript:void(0)" class="ed-mi-close"><i class="fa fa-times"></i></a>
                             <h4>EventBox</h4>
                             <ul>
                                 <li><a href="index.php">Trang chủ</a></li>
@@ -98,7 +98,15 @@ ob_start();
                             <h4>Sự kiện của tôi</h4>
                             <ul>
                                 <li><a href="my-events.php">Sự kiện của tôi</a></li>
-                                <li><a href="my-registed-events.php">Sự kiện đăng ký tham gia</a></li>                              
+                                <li><a href="my-registered-events.php">Sự kiện đăng ký tham gia</a></li>
+                                <?php 
+                                if (isset($account_role) && $account_role == 2) {
+                                ?>
+
+                                <li><a href="review-event.php"> Duyệt sự kiện</a></li>
+                                <?php
+                                }
+                                ?>                              
                             </ul>
                             
 
@@ -152,9 +160,9 @@ ob_start();
                     <div class="col-md-12">
                         <div class="ed-com-t1-left">
                             <ul>
-                                <li><a href="#">Contact: 45 Nguyễn Khắc Nhu, Phường Cô Giang, Quận 1, Hồ Chí Minh.</a>
+                                <li><a href="http://vanlanguni.edu.vn/trang-chu/ban-do-den-van-lang" target="_blank">Địa chỉ: 45 Nguyễn Khắc Nhu, Phường Cô Giang, Quận 1, Hồ Chí Minh.</a>
                                 </li>
-                                <li><a href="#">Phone: 028 3836 7933</a>
+                                <li><a href="tel:02838367933">Điện thoại: 028 3836 7933</a>
                                 </li>
                             </ul>
                         </div>
@@ -165,7 +173,7 @@ ob_start();
                                 if (isset($_SESSION['user_email'])) {
                                     ?>
                                     <!-- Sign Out -->
-                                    <li><a href="my-profile.php"><?php echo $_SESSION['user_email']?></a></li>
+                                    <li><a href="my-profile.php"><?php echo $account_email?></a></li>
                                     <li><a href="logout.php">Đăng xuất</a></li>
                                     <?php
                                 } else {
@@ -181,7 +189,7 @@ ob_start();
                                 
                             </ul>
                         </div>
-                        <div class="ed-com-t1-social">
+                        <!-- <div class="ed-com-t1-social">
                             <ul>
                                 
                                 <li><a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a>
@@ -189,7 +197,7 @@ ob_start();
                                 <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
                                 </li>
                             </ul>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -201,7 +209,7 @@ ob_start();
                 <div class="row">
                     <div class="col-md-12">
                         <div class="wed-logo">
-                            <a href="main.html"><img src="images/logo.png" alt="" />
+                            <a href="index.php"><img src="images/logo.png" alt="" />
                             </a>
                         </div>
                         <div class="main-menu dropdowncc">
@@ -220,7 +228,7 @@ ob_start();
                                 if (isset($account_role) && $account_role == 4) {
                                 ?>
                                 <li class="cour-menu">
-                                    <a href="#!" class="mm-arr">Quản lý</a>
+                                    <a href="javascript:void(0)" class="mm-arr">Quản lý</a>
                                     <!-- MEGA MENU 1 -->
                                     <div class="mm-pos">
                                         <div class="cour-mm m-menu">

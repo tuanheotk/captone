@@ -32,7 +32,7 @@ include('header.php');
                             <a href="my-events.php"><i class="fa fa-calendar" aria-hidden="true"></i> Sự kiện của tôi</a>
                         </li>
                         <li>
-                            <a href="my-registed-events.php"><i class="fa fa-check" aria-hidden="true"></i> Sự kiện đã đăng ký tham gia</a>
+                            <a href="my-registered-events.php"><i class="fa fa-check" aria-hidden="true"></i> Sự kiện đã đăng ký tham gia</a>
                         </li>
 
                         <?php 
@@ -161,7 +161,7 @@ include('header.php');
                                  else {
                                     ?>
                                     <tr>
-                                        <td colspan="5" class="text-center">Bạn chưa có sự kiện</td>
+                                        <td colspan="6" class="text-center">Bạn chưa có sự kiện</td>
                                     </tr>
                                     <?php
                                 }

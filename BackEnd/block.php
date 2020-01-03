@@ -1,15 +1,28 @@
-<?php  
-  $title = "Bị khóa";
-  include 'header.php';
-  if ($account_status != 0 || !isset($_SESSION["user_email"])) {
-  	header('Location: index.php');
-  }
+<?php
+	$title = "Bị khóa";
+	include 'header.php';
+	if ($account_status != 0 || !isset($_SESSION["user_email"])) {
+		header('Location: index.php');
+	}
 ?>
-	<h2>
-		tài khoản bạn bị khóa
-	</h2>
-	<a href="logout.php">Đăng xuất</a>
+    <!--END HEADER SECTION-->
 	
-<?php  
-  include 'footer.php';
+	
+	<!--====== PLACES ==========-->
+	<section>
+		<div class="tr-register">
+			<div class="tr-regi-form v2-search-form">
+				<h4><span>Thông báo</span></h4>
+				<hr>
+				<p>Tài khoản của bạn đã bị tạm khóa</p>
+				<p>Liên hệ quản trị viên để được hổ trợ</p>
+				<br>
+				<a href="logout.php" class="btn btn-danger">Đăng xuất</a>
+						
+			</div>
+
+		</div>
+	</section>
+	<?php
+include('footer.php');
 ?>

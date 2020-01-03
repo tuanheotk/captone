@@ -32,21 +32,33 @@ if (isset($_GET["id"])) {
     <section>
         <div class="db">
             <!--LEFT SECTION-->
-            <div class="db-l">
-                <div class="db-l-1">
+            <div class="db-l db-2-com">
+                <?php
+                if (isset($_SESSION["user_email"])) {
+                ?>
+                <h4>Thông tin cá nhân</h4>
+                <div class="db-l-2 info-fix-top">
                     <ul>
-                        <li><img src="images/db-profile.jpg" alt="" />
+                        <li>
+                            <p><?php echo $account_name ?></p>
+                            <p><i class="fa fa-envelope"></i> <?php echo $account_email ?></p>
+                            <p><i class="fa fa-th-large"></i> <?php echo $account_faculty_name ?></p>
                         </li>
                         
                     </ul>
                 </div>
-                <div class="db-l-2">
+                <?php
+                }
+                ?>
+
+
+                <div class="db-l-2 <?php if (!isset($_SESSION['user_email'])) echo 'info-fix-top';?>">
                     <ul>
                         <li>
                             <a href="my-events.php"><i class="fa fa-calendar" aria-hidden="true"></i> Sự kiện của tôi</a>
                         </li>
                         <li>
-                            <a href="my-registed-events.php"><i class="fa fa-check" aria-hidden="true"></i> Sự kiện đã đăng ký tham gia</a>
+                            <a href="my-registered-events.php"><i class="fa fa-check" aria-hidden="true"></i> Sự kiện đã đăng ký tham gia</a>
                         </li>
 
                         <?php 
@@ -137,22 +149,23 @@ if (isset($_GET["id"])) {
             <div id="moderator-modal" class="modal fade" role="dialog">
                 <div class="modal-dialog">
                     <!-- Modal content-->
-                    <form id="" method="POST" action="<?php  $_SERVER["PHP_SELF"] ?>">
+                    <form id="add-moderator-form" method="POST" action="<?php  $_SERVER["PHP_SELF"] ?>">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h4 class="modal-title"> Thêm người hổ trợ</h4>
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
                             <div class="modal-body">
-                                <input type="hidden" name="event-id" id="">
-
                                 <div class="row">
                                     <div class="input-field col s12 m9">
-                                        <input type="hidden" id="event-id" name="id" value="">
-                                        <input type="text" class="validate" id="moderator-email" name="name" value="" required="" style="height: 36px;">
+                                        <input type="email" class="validate" id="email-mod" placeholder="Email người hổ trợ" title="Email người hổ trợ" maxlength="50" required="" style="height: 36px; padding-left: 10px;">
+
+
                                     </div>
                                     <div class="input-field col s12 m3">
-                                        <button type="button" class="full-btn btn btn-primary waves-light waves-effect">Thêm</button>
+                                        <input type="hidden" id="event-id" name="event-id" value="<?php echo $event_id ?>">
+                                        <input type="hidden" name="email-host" id="email-host" value="<?php echo $account_email ?>">
+                                        <button type="submit" class="full-btn btn btn-primary waves-light waves-effect" id="btn-add-moderator">Thêm</button>
                                     </div>
                                 </div>
                                 <hr>
@@ -162,21 +175,42 @@ if (isset($_GET["id"])) {
                                         <tr>
                                             <th>#</th>
                                             <th>Email</th>
-                                            <th>Thao tác</th>
+                                            <th>Xóa</th>
                                         </tr>
 
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>tuanheotk@gmail.com</td>
-                                            <td><button type="button" class="btn btn-danger delete-moderator" id="" title="Xoá người hổ trợ"><i class="fa fa-trash-o"></i></button></td>
+                                    <tbody id="moderator-list">
+                                        <?php
+                                        $sqlGetMod = "SELECT * FROM moderator WHERE email != '".$account_email."' AND event_id = ".$event_id;
+                                        $resultMod = mysqli_query($conn, $sqlGetMod);
+                                        $count = 0;
+
+                                        if (mysqli_num_rows($resultMod) > 0) {
+                                            while ($rowMod = mysqli_fetch_assoc($resultMod)) {
+                                                $count++;
+                                                $id_table_mod = $rowMod["id"];
+                                                $email_mod = $rowMod["email"];
+
+
+                                        ?>
+                                        <tr id="<?php echo $id_table_mod ?>">
+                                            <td><?php echo $count ?></td>
+                                            <td><?php echo $email_mod ?></td>
+                                            <td><button type="button" class="btn btn-danger btn-sm delete-moderator" title="Xoá người hổ trợ"><i class="fa fa-trash-o"></i></button></td>
                                         </tr>
+
+                                        <?php
+                                            }
+                                        } else {
+                                        ?>
                                         <tr>
-                                            <td>2</td>
-                                            <td>tuanheo2@gmail.com</td>
-                                            <td><button type="button" class="btn btn-danger delete-moderator" id="" title="Xoá người hổ trợ"><i class="fa fa-trash-o"></i></button></td>
+                                            <td colspan="3" class="text-center">Chưa có người hổ trợ</td>
                                         </tr>
+
+                                        <?php
+                                        }
+                                        ?>
+
                                     </tbody>
                                 </table>
 
@@ -235,8 +269,79 @@ include('footer.php');
     })
 
 
-    $('.delete-moderator').click(function(e) {
+    $('#add-moderator-form').submit(function (e) {
         e.preventDefault();
-        alert('Đụ má xoá r đó')
+        var email_mod = $('#email-mod').val();
+        $.ajax({
+            method: 'POST',
+            dataType: 'json',
+            url: 'process-my-event.php',
+            data: {'action' : 'add-mod-cfg-event', 'event-id' : event_id, 'email-mod': email_mod},
+        }).done(function(data){
+            if(data.result){
+                $('#email-mod').val('');
+                getModList();
+            }
+        }).fail(function(jqXHR, statusText, errorThrown){
+            console.log("Fail:"+ jqXHR.responseText);
+            console.log(errorThrown);
+        }).always(function(){
+            // do something
+        })
+    })
+
+
+    $('tbody#moderator-list').on('click', '.delete-moderator', function(e) {
+        e.preventDefault();
+        var id_table_mod = $(this).parents('tr').attr('id');
+        $.ajax({
+            method: 'POST',
+            dataType: 'json',
+            url: 'process-my-event.php',
+            data: {'action' : 'delete-mod-cfg-event', 'id-table-mod' : id_table_mod},
+        }).done(function(data){
+            if(data.result){
+                getModList();
+            }
+        }).fail(function(jqXHR, statusText, errorThrown){
+            console.log("Fail:"+ jqXHR.responseText);
+            console.log(errorThrown);
+        }).always(function(){
+            // do something
+        })
     });
+
+    var event_id = $('#event-id').val();
+    var email_host = $('#email-host').val();
+
+    // getModList(event_id, email_host);
+
+    function getModList(){
+        $.ajax({
+            method: 'POST',
+            dataType: 'json',
+            url: 'process-my-event.php',
+            data: {'action' : 'get-mod-list-cfg-event', 'event-id' : event_id, 'email-host' : email_host},
+        }).done(function(data){
+            if(data.result){
+                var rows = '';
+                $.each(data.moderator, function(index, mod){
+                    var count = index + 1;
+                    rows += '<tr id="'+mod.id+'">';
+                    rows += '<td>'+count+'</td>';
+                    rows += '<td>'+mod.email+'</td>';
+                    rows += '<td><button type="button" class="btn btn-danger btn-sm delete-moderator" title="Xoá người hổ trợ"><i class="fa fa-trash-o"></i></button></td>';
+                    rows += '</tr>';
+                })
+            }else {
+                rows = '<tr><td colspan="3" class="text-center">Chưa có người hổ trợ</td></tr>';
+            }
+            $("tbody#moderator-list").html(rows);
+        }).fail(function(jqXHR, statusText, errorThrown){
+            console.log("Fail:"+ jqXHR.responseText);
+            console.log(errorThrown);
+        }).always(function(){
+            // do something
+        })
+    }
 </script>

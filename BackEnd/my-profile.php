@@ -1,34 +1,29 @@
 <?php
 $title = 'Thông tin cá nhân';
 include('header.php');
-
-$sqlGetInfo = "SELECT a.name, a.code, a.email, f.name AS faculty_name FROM account a, faculty f WHERE a.faculty_id = f.faculty_id AND email = '".$_SESSION['user_email']."'";
-$resultGetInfo = mysqli_query($conn, $sqlGetInfo);
-$row = mysqli_fetch_assoc($resultGetInfo);
-$name = $row['name'];
-$code = $row['code'];
-$email = $row['email'];
-$faculty = $row['faculty_name'];
+if (!isset($_SESSION["user_email"])) {
+    header("Location: index.php");
+}
 ?>
     <!--DASHBOARD-->
     <section>
         <div class="db">
             <!--LEFT SECTION-->
             <div class="db-l">
-                <div class="db-l-1">
+                <!-- <div class="db-l-1">
                     <ul>
                         <li><img src="images/db-profile.jpg" alt="" />
                         </li>
                         
                     </ul>
-                </div>
-                <div class="db-l-2">
+                </div> -->
+                <div class="db-l-2 info-fix-top">
                     <ul>
                         <li>
                             <a href="my-events.php"><i class="fa fa-calendar" aria-hidden="true"></i> Sự kiện của tôi</a>
                         </li>
                         <li>
-                            <a href="my-registed-events.php"><i class="fa fa-check" aria-hidden="true"></i> Sự kiện đã đăng ký tham gia</a>
+                            <a href="my-registered-events.php"><i class="fa fa-check" aria-hidden="true"></i> Sự kiện đã đăng ký tham gia</a>
                         </li>
                         
                         <?php 
@@ -54,20 +49,29 @@ $faculty = $row['faculty_name'];
 
                                 <div class="input-field col s12">
 
-                                    <input type="text" class="validates" id="name" name="name" title="Họ & Tên" value="<?php echo $name ?>" readonly="" >
+                                    <input type="text" class="validates" id="name" name="name" title="Họ & Tên" value="<?php echo $account_name ?>" readonly="" >
                                     <label for="name"></label>
                                 </div>
 
+                                <?php
+                                if ($account_code != '') {
+                                ?>
                                 <div class="input-field col s12">
-                                    <input type="text" class="validates" id="code" name="code" title="Mã số sinh viên" value="<?php echo $code ?>" readonly>
+                                    <input type="text" class="validates" id="code" name="code" title="Mã số sinh viên" value="<?php echo $account_code ?>" readonly>
                                     <label for="code"></label>
                                 </div>
+
+                                <?php
+                                }
+                                ?>
+
+
                                 <div class="input-field col s12">
-                                    <input type="text" class="validates" id="email" name="email" title="Email" value="<?php echo $email ?>" readonly>
+                                    <input type="text" class="validates" id="email" name="email" title="Email" value="<?php echo $account_email ?>" readonly>
                                     <label for="email"></label>
                                 </div>
                                 <div class="input-field col s12">
-                                    <input type="text" class="validates" id="faculty" name="faculty" title="Khoa" value="<?php echo $faculty ?>" readonly>
+                                    <input type="text" class="validates" id="faculty" name="faculty" title="Khoa" value="<?php echo $account_faculty_name ?>" readonly>
                                     <label for="faculty"></label>
                                 </div>
                             </div>

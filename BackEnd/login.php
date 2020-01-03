@@ -20,33 +20,31 @@ if (!$loggedIn) {
 		<div class="tr-register">
 			<div class="tr-regi-form">
 				<h4>Đăng nhập</h4>
-				<p>Miễn phí và luôn như vậy.</p>
-				<form class="col s12" action="login.php">
+				<!-- <p>Miễn phí và luôn như vậy</p> -->
+				<form class="col s12" id="login-form" method="POST">
 					<div class="row">
 						<div class="input-field col s12">
-							<input type="text" class="validate">
+							<input type="email" class="validate" id="email" name="email" maxlength="50" required="">
 							<label>Email</label>
 						</div>
 					</div>
 					<div class="row">
 						<div class="input-field col s12">
-							<input type="password" class="validate">
+							<input type="password" class="validate" id="pass" name="password" maxlength="50" required="">
 							<label>Mật khẩu</label>
 						</div>
 					</div>
 					<div class="row">
 						<div class="input-field col s12">
-							<!-- <input type="submit" value="submit" class="waves-effect waves-light btn-large full-btn"> -->
-							<button type="submit" class="waves-effect waves-light btn-large full-btn">Đăng nhập</button>
+							<input type="hidden" name="action" value="login">
+							<button type="submit" class="waves-effect waves-light btn-large full-btn" id="btn-login">Đăng nhập</button>
 						</div>
 					</div>
 				</form>
 				<p><a href="register.php">Chưa có tài khoản?</a></p>
-				</p>
 				<div class="soc-login">
 					<ul>
 						<li><a href="<?php echo oAuthService::getLoginUrl($redirectUri) ?>" class="waves-effect waves-light">Đăng nhập bằng email Văn Lang</a> </li>
-						<!-- <button type="button" class="waves-effect waves-light btn-large full-btn"><i class="fa fa-windows"></i> Microsoft</button> -->
 					</ul>
 				</div>
 			</div>
@@ -72,3 +70,51 @@ if (!$loggedIn) {
 <?php
 include('footer.php');
 ?>
+
+<script type="text/javascript">
+
+	$('#email').on('keydown keyup', function(){
+        $(this).val($(this).val().replace(/[!#$%^&*()+={}\[\]><|\/\\]+/g,''));
+    })
+
+	$('#email').blur(function () {
+    	if ($(this).val().includes('@vanlanguni.vn') || email.includes('@vanlanguni.edu.vn')) {
+    		alert('Nếu bạn có tài khoản Văn Lang. Xin vui lòng chọn "Đăng nhập bằng email Văn Lang" ở phía dưới');
+    	}
+	})
+
+    $('#login-form').on('submit', function(e){
+		e.preventDefault();
+		var email = $('#email').val();
+    	if (email.includes('@vanlanguni.vn') || email.includes('@vanlanguni.edu.vn')) {
+    		alert('Nếu bạn có tài khoản Văn Lang. Xin vui lòng chọn "Đăng nhập bằng email Văn Lang" ở phía dưới');
+    		return false;
+    	}
+
+		$('#btn-login').html('<i class="fa fa-spinner fa-spin"></i> Vui lòng đợi');
+        loginForm = document.querySelector('#login-form');
+        
+        $.ajax({
+            url: 'process-manage-account.php',
+            method: 'POST',
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            data: new FormData(loginForm)
+
+        }).done(function(data){
+            if(data.result){
+				$('#btn-login').html('<i class="fa fa-check"></i> Thành công');
+                window.location = 'index.php';
+            }else {
+                alert(data.message);
+                $('#btn-login').html('Đăng nhập');
+            }
+        }).fail(function(jqXHR, statusText, errorThrown){
+            console.log("Fail:"+ jqXHR.responseText);
+            console.log(errorThrown);
+        })
+
+	})
+
+</script>

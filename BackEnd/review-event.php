@@ -1,28 +1,43 @@
-<?php 
-    include "header.php";
- ?>
-
 <?php
-    require "database-config.php" ;
-    $sql = "SELECT id, title, start_date, place, status from event where status IN (1,2,3) order by id desc";
+    $title = "Duyệt sự kiện";
+    include "header.php";
+    if (!isset($account_role) || $account_role != 2) {
+        header("Location: my-events.php");
+    }
+
+    // $sql = "SELECT id, title, start_date, place, status from event e, reviewer r where  status IN (1,2,3) and faculty_id = ".$account_faculty_id." UNION SELECT id, title, start_date, place, status from event e, reviewer r where e.id = r.event_id and e.status in (1,2,3) and  email = '".$account_email."' ";
+
+    $sql = "SELECT id, title, start_date, place, status FROM event WHERE status IN (1,2,3) AND faculty_id = ".$account_faculty_id." OR id IN (SELECT event_id FROM reviewer WHERE email = '".$account_email."')";
+    
     $result = mysqli_query($conn, $sql);
+   
  ?>
 	
 	<!--DASHBOARD-->
 	<section>
 		<div class="db">
 			<!--LEFT SECTION-->
-			<div class="db-l">
-                <div class="db-l-1">
+			<div class="db-l db-2-com">
+                <?php
+                if (isset($_SESSION["user_email"])) {
+                ?>
+                <h4>Thông tin cá nhân</h4>
+                <div class="db-l-2 info-fix-top">
                     <ul>
-                        <li><img src="images/lisa.jpg" alt="" />
+                        <li>
+                            <p><?php echo $account_name ?></p>
+                            <p><i class="fa fa-envelope"></i> <?php echo $account_email ?></p>
+                            <p><i class="fa fa-th-large"></i> <?php echo $account_faculty_name ?></p>
                         </li>
-                       
-
-                        <!--  -->
+                        
                     </ul>
                 </div>
-                  <div class="db-l-2">
+                <?php
+                }
+                ?>
+
+
+                <div class="db-l-2 <?php if (!isset($_SESSION['user_email'])) echo 'info-fix-top';?>">
                     <ul>
                         <li>
                             <a href="my-events.php"><i class="fa fa-calendar" aria-hidden="true"></i> Sự kiện của tôi</a>
@@ -42,12 +57,12 @@
 			<!--CENTER SECTION-->
 			<div class="db-2">
 				<div class="db-2-com db-2-main">
-					<h4>Danh sách sự kiện cần Review</h4>
+					<h4>Danh sách sự kiện cần duyệt</h4>
 					<div class="db-2-main-com db-2-main-com-table">
 						<table class="" id="review-table">
 							<thead>
 								<tr>
-									<th>ID</th>
+									<th>#</th>
 									<th>Tên sự kiện</th>
 									<th>Thời gian</th>
 									<th>Địa điểm</th>
@@ -57,8 +72,11 @@
 								</tr>
 							</thead>
 							<tbody id="tbodylistevent">
-                                <?php while($resultreview=mysqli_fetch_assoc($result)){?>
+                                <?php
+                                $count = 0;
+                                while($resultreview=mysqli_fetch_assoc($result)){?>
                                     <?php
+                                    $count++;
                                         $status = $resultreview["status"];
 
                                         switch ($status) {
@@ -77,7 +95,7 @@
                                         }
                                     ?>
                                     <tr>
-                                       <td><?php echo $resultreview["id"] ?></td>
+                                       <td><?php echo $count ?></td>
                                       <td><?php echo $resultreview["title"] ?></td>
                                        <td><?php echo date ("H:i - d/m/Y", strtotime($resultreview["start_date"])) ?></td>
                                        <td><?php echo $resultreview["place"] ?></td>
@@ -147,25 +165,7 @@
 				</div>
 
 			</div>
-            <div class="db-3">
-                <h4>Thông báo</h4>
-                <ul>
-                    <li>
 
-                        <a href="#!"> <img src="images/icon/dbr1.jpg" alt="" />
-                            <h5>Honeymoon Tailand</h5>
-                            <p>Tuan Heo Accept</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#!"> <img src="images/icon/dbr3.jpg" alt="" />
-                            <h5>Dubai</h5>
-                            <p>Phan Tu Reject</p>
-                        </a>
-                    </li>
-                    
-                </ul>
-            </div>
 
            <!-- Modal -->
                      

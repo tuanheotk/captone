@@ -1,12 +1,30 @@
 <?php 
-    require "header.php";
+    include "header.php";
+    if (!isset($account_role) && $account_role != 2) {
+        header("Location: my-events.php");
+    }
  ?>
-		
-	<!--====== BANNER ==========-->
+    
+  <!--====== BANNER ==========-->
 
     <?php 
         require 'database-config.php';
-    
+        $event_id = $_GET["id"];
+       $sqlCheck = "SELECT id from event e, reviewer r where  status IN (1,2,3) and faculty_id = ".$account_faculty_id." UNION SELECT id from event e, reviewer r where e.id = r.event_id and e.status in (1,2,3) and  email = '".$account_email."' ";
+      $count=0;
+      $result = mysqli_query($conn, $sqlCheck);
+      while($resultCheck=mysqli_fetch_assoc($result)){
+        if($resultCheck["id"]==$event_id){
+          $count++;
+        }
+      }
+
+      if($count==0){
+        header("Location:review-event.php");
+      }
+      
+
+
         if(isset($_GET["id"])){
         $event_id=$_GET["id"];
         }else{
@@ -15,179 +33,111 @@
         $result=mysqli_query($conn,"select * from event where id = ".$event_id);
 
     ?>
-	<section>
+  <section>
         <?php while($resultevent=mysqli_fetch_assoc($result)){?>
-		<div class="rows inner_banner inner_banner_4" style="background-image: url(<?php echo $resultevent['avatar'] ?>);">
-			<div class="container">
+    <div class="rows inner_banner inner_banner_4" style="background-image: url(<?php echo $resultevent['avatar'] ?>);">
+      <div class="container">
                 
-				<h2><span><?php echo $resultevent["title"];   ?></span> </h2>
-				
-				<p></p>
-			</div>
-		</div>
-	</section>
-	<!--====== TOUR DETAILS - BOOKING ==========-->
-	<section>
-		<div class="rows banner_book" id="inner-page-title">
-			<div class="container">
-				<div class="banner_book_1">
-					<ul>
-						<li class="dl1"><a data-toggle="modal" data-target="#CommentModal" class="cancel_button" >Lịch sử duyệt</a></li>
-                        <li class="" ><a class="addmod_button" data-toggle="modal" data-target="#reviewerModal">Thêm Reviewer</a></li>
-                        <li class="dl3"><a class="accept_button" data-toggle="modal" data-target="#exampleModal">Duyệt</a></li>
+        <h2><span><?php echo $resultevent["title"];   ?></span> </h2>
+        
+        <p></p>
+      </div>
+    </div>
+  </section>
+  <!--====== TOUR DETAILS - BOOKING ==========-->
+  <section>
+    <div class="rows banner_book" id="inner-page-title">
+      <div class="container">
+        <div class="banner_book_1">
+          <ul>
+            <li class="dl4"><a data-toggle="modal" data-target="#CommentModal" class="cancel_button" style="background: #eaaa0a;" >Lịch sử duyệt</a></li>
+                        <li class="dl4" ><a class="addmod_button" data-toggle="modal" data-target="#reviewerModal" style="background: #1aa5d8;">Thêm Reviewer</a></li>
+                        <li class="dl4" ><a class="accept_button" data-toggle="modal" data-target="#exampleModal" style="background: green;">Duyệt</a></li>
                         <li class="dl4"><a data-toggle="modal" data-target="#exampleModal1" class="cancel_button" >Từ chối</a> </li>
-				</div>
-			</div>
-		</div>
-	</section>
-	<!--====== TOUR DETAILS ==========-->
-	<section>
-		<div class="rows inn-page-bg com-colo">
-			<div class="container inn-page-con-bg tb-space">
-				<div class="col-md-9">
-					<!--====== TOUR TITLE ==========-->
-					<!-- <div class="tour_head">
-						<h2>The Best of Brazil & Argentina <span class="tour_star"><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star-half-o" aria-hidden="true"></i></span><span class="tour_rat">4.5</span></h2> </div> -->
-					<!--====== TOUR DESCRIPTION ==========-->
-					<div class="tour_head1">
-						<h3>Nội dung sự kiện</h3>
-						<p><?php echo $resultevent["description"]; ?></p>
-						<!-- <p>Brazil’s view takes you through clouds of mist and the opportunity to see these 275 falls, spanning nearly two miles! Argentina’s side allows you to walk along the boardwalk network and embark on a jungle train through the forest for unforgettable views. Hear the deafening roar and admire the brilliant rainbows created by the clouds of spray, and take in the majesty of this wonder of the world. From vibrant cities to scenic beauty, this vacation to Rio de Janeiro, Iguassu Falls, and Buenos Aires will leave you with vacation memories you’ll cherish for life.</p> -->
-					</div>
-					<!--====== ROOMS: HOTEL BOOKING ==========-->
-					
-					<!--====== TOUR LOCATION ==========-->
-					<!-- <div class="tour_head1 tout-map map-container">
-						<h3>Location</h3>
-						<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6290415.157581651!2d-93.99661009218904!3d39.661150926343694!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x880b2d386f6e2619%3A0x7f15825064115956!2sIllinois%2C+USA!5e0!3m2!1sen!2sin!4v1467884030780" allowfullscreen></iframe>
-					</div> -->
-					
-					<!--====== DURATION ==========-->
-					
-					<div>
-						
-					</div>
-				</div>
-				<div class="col-md-3 tour_r">
-					<!--====== SPECIAL OFFERS ==========-->
-					<!-- <div class="tour_right tour_offer">
-						<div class="band1"><img src="images/offer.png" alt="" /> </div>
-						<p>Special Offer</p>
-						<h4>$500<span class="n-td">
-								<span class="n-td-1">$800</span>
-								</span>
-							</h4> <a href="booking.html" class="link-btn">Book Now</a> </div> -->
-					<!--====== TRIP INFORMATION ==========-->
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--====== TOUR DETAILS ==========-->
+  <section>
+    <div class="rows inn-page-bg com-colo">
+      <div class="container inn-page-con-bg tb-space">
+        <div class="col-md-9">
+          <!--====== TOUR TITLE ==========-->
+          <!-- <div class="tour_head">
+            <h2>The Best of Brazil & Argentina <span class="tour_star"><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star-half-o" aria-hidden="true"></i></span><span class="tour_rat">4.5</span></h2> </div> -->
+          <!--====== TOUR DESCRIPTION ==========-->
+          <div class="tour_head1">
+            <h3>Nội dung sự kiện</h3>
+            <p><?php echo $resultevent["description"]; ?></p>
+            <!-- <p>Brazil’s view takes you through clouds of mist and the opportunity to see these 275 falls, spanning nearly two miles! Argentina’s side allows you to walk along the boardwalk network and embark on a jungle train through the forest for unforgettable views. Hear the deafening roar and admire the brilliant rainbows created by the clouds of spray, and take in the majesty of this wonder of the world. From vibrant cities to scenic beauty, this vacation to Rio de Janeiro, Iguassu Falls, and Buenos Aires will leave you with vacation memories you’ll cherish for life.</p> -->
+          </div>
+          <!--====== ROOMS: HOTEL BOOKING ==========-->
+          
+          <!--====== TOUR LOCATION ==========-->
+          <!-- <div class="tour_head1 tout-map map-container">
+            <h3>Location</h3>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6290415.157581651!2d-93.99661009218904!3d39.661150926343694!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x880b2d386f6e2619%3A0x7f15825064115956!2sIllinois%2C+USA!5e0!3m2!1sen!2sin!4v1467884030780" allowfullscreen></iframe>
+          </div> -->
+          
+          <!--====== DURATION ==========-->
+          
+          <div>
+            
+          </div>
+        </div>
+        <div class="col-md-3 tour_r">
+          <!--====== SPECIAL OFFERS ==========-->
+          <!-- <div class="tour_right tour_offer">
+            <div class="band1"><img src="images/offer.png" alt="" /> </div>
+            <p>Special Offer</p>
+            <h4>$500<span class="n-td">
+                <span class="n-td-1">$800</span>
+                </span>
+              </h4> <a href="booking.html" class="link-btn">Book Now</a> </div> -->
+          <!--====== TRIP INFORMATION ==========-->
                     
 
-					<div class="tour_right tour_incl tour-ri-com">
-						<h3>Thông tin sự kiện</h3>
-						<ul>
+          <div class="tour_right tour_incl tour-ri-com">
+            <h3>Thông tin sự kiện</h3>
+            <ul>
                            <!--  <?php $start_date = date ('d/m/Y', strtotime($resultcomment['start']));  ?> -->
-							<li>Địa điểm : <?php echo $resultevent["place"] ?></li>
-							<li>Ngày bắt đầu: <?php echo date ("H:i d/m/Y", strtotime($resultevent["start_date"])) ?></li>
-							<li>Số lượng vé: <?php echo $resultevent["ticket_number"] ?></li>
-						
-						</ul>
-					</div>
-					<!--====== PACKAGE SHARE ==========-->
-					<div class="tour_right head_right tour_social tour-ri-com">
-						<h3>Chia sẻ</h3>
-						<ul>
-							<li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a> </li>
-							<li><a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a> </li>
-							<li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a> </li>
-							<li><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a> </li>
-							<li><a href="#"><i class="fa fa-whatsapp" aria-hidden="true"></i></a> </li>
-						</ul>
-					</div>
-					<!--====== HELP PACKAGE ==========-->
-					<div class="tour_right head_right tour_help tour-ri-com">
-						<h3>Liên hệ hỗ trợ</h3>
-						<div class="tour_help_1">
-							<h4 class="tour_help_1_call">Thầy Hoà</h4>
-							<h4><i class="fa fa-phone" aria-hidden="true"></i> 0933.999.000</h4> </div>
-					</div>
-					<!--====== PUPULAR TOUR PACKAGES ==========-->
-					
-				</div>
-			</div>
-		</div>
-	</section>
+              <li>Địa điểm : <?php echo $resultevent["place"] ?></li>
+              <li>Ngày bắt đầu: <?php echo date ("H:i d/m/Y", strtotime($resultevent["start_date"])) ?></li>
+              <li>Số lượng vé: <?php echo $resultevent["ticket_number"] ?></li>
+            
+            </ul>
+          </div>
+          <!--====== PACKAGE SHARE ==========-->
+          <div class="tour_right head_right tour_social tour-ri-com">
+            <h3>Chia sẻ</h3>
+            <ul>
+              <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a> </li>
+              <li><a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a> </li>
+              <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a> </li>
+              <li><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a> </li>
+              <li><a href="#"><i class="fa fa-whatsapp" aria-hidden="true"></i></a> </li>
+            </ul>
+          </div>
+          <!--====== HELP PACKAGE ==========-->
+          <div class="tour_right head_right tour_help tour-ri-com">
+            <h3>Liên hệ hỗ trợ</h3>
+            <div class="tour_help_1">
+              <h4 class="tour_help_1_call">Thầy Hoà</h4>
+              <h4><i class="fa fa-phone" aria-hidden="true"></i> 0933.999.000</h4> </div>
+          </div>
+          <!--====== PUPULAR TOUR PACKAGES ==========-->
+          
+        </div>
+      </div>
+    </div>
+  </section>
    
-	<!--====== TIPS BEFORE TRAVEL ==========-->
-	
-	<!--====== FOOTER 2 ==========-->
-	<section>
-		<div class="rows">
-			<div class="footer">
-				<div class="container">
-					<div class="foot-sec2">
-						<div>
-							<div class="row">
-								<div class="col-sm-3 foot-spec foot-com">
-									<h4><span>Holiday</span> Tour & Travels</h4>
-									<p>World's leading tour and travels Booking website,Over 30,000 packages worldwide.</p>
-								</div>
-								<div class="col-sm-3 foot-spec foot-com">
-									<h4><span>Address</span> & Contact Info</h4>
-									<p>28800 Orchard Lake Road, Suite 180 Farmington Hills, U.S.A. Landmark : Next To Airport</p>
-									<p> <span class="strong">Phone: </span> <span class="highlighted">+101-1231-1231</span> </p>
-								</div>
-								<div class="col-sm-3 col-md-3 foot-spec foot-com">
-									<h4><span>SUPPORT</span> & HELP</h4>
-									<ul class="two-columns">
-										<li> <a href="#">About Us</a> </li>
-										<li> <a href="#">FAQ</a> </li>
-										<li> <a href="#">Feedbacks</a> </li>
-										<li> <a href="#">Blog </a> </li>
-										<li> <a href="#">Use Cases</a> </li>
-										<li> <a href="#">Advertise us</a> </li>
-										<li> <a href="#">Discount</a> </li>
-										<li> <a href="#">Vacations</a> </li>
-										<li> <a href="#">Branding Offers </a> </li>
-										<li> <a href="#">Contact Us</a> </li>
-									</ul>
-								</div>
-								<div class="col-sm-3 foot-social foot-spec foot-com">
-									<h4><span>Follow</span> with us</h4>
-									<p>Join the thousands of other There are many variations of passages of Lorem Ipsum available</p>
-									<ul>
-										<li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a> </li>
-										<li><a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a> </li>
-										<li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a> </li>
-										<li><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a> </li>
-										<li><a href="#"><i class="fa fa-youtube" aria-hidden="true"></i></a> </li>
-									</ul>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-	<!--====== FOOTER - COPYRIGHT ==========-->
-	<section>
-		<div class="rows copy">
-			<div class="container">
-				<p>Copyrights © 2017 Company Name. All Rights Reserved</p>
-			</div>
-		</div>
-	</section>
-	<section>
-		<div class="icon-float">
-			<ul>
-				<li><a href="#" class="sh">1k <br> Share</a> </li>
-				<li><a href="#" class="fb1"><i class="fa fa-facebook" aria-hidden="true"></i></a> </li>
-				<li><a href="#" class="gp1"><i class="fa fa-google-plus" aria-hidden="true"></i></a> </li>
-				<li><a href="#" class="tw1"><i class="fa fa-twitter" aria-hidden="true"></i></a> </li>
-				<li><a href="#" class="li1"><i class="fa fa-linkedin" aria-hidden="true"></i></a> </li>
-				<li><a href="#" class="wa1"><i class="fa fa-whatsapp" aria-hidden="true"></i></a> </li>
-				<li><a href="#" class="sh1"><i class="fa fa-envelope-o" aria-hidden="true"></i></a> </li>
-			</ul>
-		</div>
-	</section>
+  <!--====== TIPS BEFORE TRAVEL ==========-->
+  
+  <?php 
+    include "footer.php"
+  ?>
 
 
 
@@ -225,8 +175,9 @@
       </div>
       <form action="updateEventReview.php" method="post">
       <div class="modal-body">
-        <input type="text" id="reason" style="width: 450px; height: 40px;" name="comment" cols="40" rows="3" placeholder="Nhập lí do từ chối"></textarea>
+        <input type="text" id="reason" style="width: 450px; height: 40px;" name="comment" cols="40" rows="3" placeholder="Nhập lí do từ chối" required></textarea>
         <input type="hidden" name="id" value="<?php echo $resultevent['id']; ?>">
+         <input type="hidden" name="account_id" value="<?php echo $account_id; ?>">
       </div>
       <div class="modal-footer">
         <button type="submit" class="btn btn-danger">Từ chối</button>
@@ -240,7 +191,7 @@
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Xác nhận</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Thêm người kiểm duyệt</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
@@ -284,7 +235,9 @@
                   <?php 
                     $result1=mysqli_query($conn,"select name , account_id, comment, day_comment from review_comment r, account a where event_id = ".$event_id." and r.account_id = a.id ");
                   ?>
+
                   <div class="modal-body">
+                    <p>Sửa lần cuối: <?php echo date ("H:i d/m/Y", strtotime($resultevent["last_modified"])) ?></p>
                     <table class="responsive-table" >
                             <thead>
                                 <tr>
@@ -317,13 +270,92 @@
               </div>
             </div>  
  <?php } ?>
-	<!--========= Scripts ===========-->
-	<script src="js/jquery-latest.min.js"></script>
-	<script src="js/bootstrap.js"></script>
-	<script src="js/wow.min.js"></script>
-	<script src="js/materialize.min.js"></script>
-	<script src="js/custom.js"></script>
-      <script src="js/script.js"></script>
+  <!--========= Scripts ===========-->
+  <script src="js/jquery-latest.min.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script src="js/wow.min.js"></script>
+  <script src="js/materialize.min.js"></script>
+  <script src="js/custom.js"></script>
+      <!-- <script src="js/script.js"></script> -->
 </body>
 
 </html>
+
+
+<script type="text/javascript">
+  $(document).ready(function(){
+ 
+
+  getReviewer();
+ 
+ 
+
+}) 
+
+
+function getReviewer(){
+  var formData = $("#add-reviewer-form").serialize();
+  console.log(formData);
+ $.ajax({
+  url: 'getReviewer.php',
+  method: 'POST',
+  dataType: 'json',
+  data: formData ,
+  // data: 
+ }).done(function(data){
+  console.log(data);
+
+  
+  if(data.result){
+   var rows = "";
+  
+
+   $.each(data.reviewers, function(index, reviewers){
+   
+     // rows += "<option disabled hidden selected>chon loai</option>
+     
+     // alert($date_format);
+     // rows+= $date_format;
+     rows += "<tr>"
+       rows += "            <td>"+reviewers.email+"</td>"
+               rows += "          <td><a href=''><span class='db-cancel'>Xoá</span></a>&nbsp;&nbsp;</td>"
+        
+           rows += "      </tr>"
+
+   
+   })
+ 
+   $("#tbodylistreviewer").html(rows);
+
+  }
+ }).fail(function(jqXHR, statusText, errorThrown){
+  console.log("Fail:"+ jqXHR.responseText);
+  console.log(errorThrown);
+ }).always(function(){
+ 
+ })
+}
+
+////////////////////////////
+$("#btn-add-mod").click(function(event){
+  var formData = $("#add-reviewer-form").serialize();
+  console.log(formData);
+  $.ajax({
+   method: "POST",
+   url: "add_reviewer.php",
+   dataType: 'json',
+   data: formData ,
+  }).done(function(dataad){
+   if(dataad.result){
+    getReviewer();
+      $("#reviewerModal").modal("hide");
+   }else{
+    //TODO Thông báo lỗi
+    alert("loi tat");
+   }
+  }).fail(function(jqXHR, statusText, errorThrown){
+   console.log("Fail:"+ jqXHR.responseText);
+   console.log(errorThrown);
+  })
+ })
+</script>

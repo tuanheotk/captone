@@ -8,11 +8,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     echo "string";
  if(isset($_POST["id"])){
         echo "co";
-         
+        $account_id = $_POST["account_id"];
         $id=$_POST["id"];
         $comment = $_POST["comment"];
         $sql = "UPDATE event SET status = 2 where id=".$id;
-        $sqlAddComment = "INSERT INTO review_comment(event_id, account_id, comment, day_comment) VALUES(".$id.",1,'".$comment."', NOW())";
+        $sqlAddComment = "INSERT INTO review_comment(event_id, account_id, comment, day_comment) VALUES(".$id.",'".$account_id."','".$comment."', NOW())";
         $resultComment = mysqli_query($conn, $sqlAddComment);
 
         $result = mysqli_query($conn, $sql);

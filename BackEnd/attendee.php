@@ -1,5 +1,5 @@
 <?php
-$title = 'Danh sách tham dự';
+$title = 'Danh sách người tham dự';
 include('header.php');
 if (isset($_GET["id"])) {
     $event_id = $_GET["id"];
@@ -17,15 +17,29 @@ if (isset($_GET["id"])) {
     <section>
         <div class="db">
             <!--LEFT SECTION-->
-            <div class="db-l">
-                <div class="db-l-1">
+            <div class="db-l db-2-com">
+                <?php
+                if (isset($_SESSION["user_email"])) {
+                ?>
+                <h4>Thông tin cá nhân</h4>
+                <div class="db-l-2 info-fix-top">
                     <ul>
-                        <li><img src="images/db-profile.jpg" alt="" />
+                        <li>
+                            <p><?php echo $account_name ?></p>
+                            <p><i class="fa fa-envelope"></i> <?php echo $account_email ?></p>
+                            <p><i class="fa fa-th-large"></i> <?php echo $account_faculty_name ?></p>
+
+                            
                         </li>
                         
                     </ul>
                 </div>
-                <div class="db-l-2">
+                <?php
+                }
+                ?>
+
+
+                <div class="db-l-2 <?php if (!isset($_SESSION['user_email'])) echo 'info-fix-top';?>">
                     <ul>
                         <li>
                             <a href="my-events.php"><i class="fa fa-calendar" aria-hidden="true"></i> Sự kiện của tôi</a>
@@ -59,6 +73,8 @@ if (isset($_GET["id"])) {
                                     <th>#</th>
                                     <th>Tên người tham dự</th>
                                     <th>Email</th>
+                                    <th>Mã tài khoản</th>
+                                    <th>Loại tài khoản</th>
                                     <th>Trạng thái</th>
                                 </tr>
                             </thead>
@@ -66,21 +82,55 @@ if (isset($_GET["id"])) {
                                 <?php 
                                 require("database-config.php");
                                 $eventID = $_GET["id"];
-                                $sqlAttendee = "SELECT ac.name, at.email FROM attendee AS at, account AS ac WHERE at.email = ac.email AND event_id = ".$eventID;
+                                $sqlAttendee = "SELECT ac.name, ac.code, at.id, at.email, at.status FROM attendee AS at, account AS ac WHERE at.email = ac.email AND event_id = ".$eventID;
                                 $resultAtt = mysqli_query($conn, $sqlAttendee);
                                 if (mysqli_num_rows($resultAtt) > 0) {
                                     $count = 0;
                                     while ($rowAtt = mysqli_fetch_assoc($resultAtt)) {
+                                        $count++;
+                                        $id = $rowAtt["id"];
                                         $name = $rowAtt["name"];
                                         $email = $rowAtt["email"];
-                                        $count++;
+                                        $code = $rowAtt["code"];
+
+                                        if ($rowAtt["code"] == "") {
+                                            $code = "######";
+                                            $type = "Bên Ngoài";
+                                            $colorType = 'event-wait';
+                                        } else {
+                                            $code = $rowAtt["code"];
+                                            $type = "Văn Lang";
+                                            $colorType = 'event-reject';
+                                        }
+
+                                        switch ($rowAtt["status"]) {
+                                            case 0:
+                                                $status = "Chưa điểm danh";
+                                                $colorStatus = "event-reject";
+                                                $modal = "";
+                                                break;
+                                            case 1:
+                                                $status = "Đã điểm danh";
+                                                $colorStatus = "event-accept";
+                                                $modal = "";
+                                                break;
+                                            case 2:
+                                                $status = "Chờ duyệt vé";
+                                                $colorStatus = "event-wait";
+                                                $modal = 'data-toggle="modal" data-target="#send-ticket-modal"';
+                                                break;
+                                        }
+                                        
 
                                         ?>
-                                        <tr>
+                                        <tr id="<?php echo $id ?>">
                                             <td><?php echo $count ?></td>
-                                            <td><?php echo $name ?></td>
-                                            <td><?php echo $email ?></td>
-                                            <td><span class="db-not-done">Chưa điểm danh</span></td>
+                                            <td class="attendee-name"><?php echo $name ?></td>
+                                            <td class="attendee-email"><?php echo $email ?></td>
+                                            <td><?php echo $code ?></td>
+                                            <td><span class="event-status <?php echo $colorType ?>"><?php echo $type ?></span></td>
+                                            <!-- <td><span class="event-status <?php echo $colorStatus ?>"<?php $modal ?>><?php echo $status ?></span></td> -->
+                                            <td><span class="event-status <?php echo $colorStatus ?> send-ticket" <?php echo $modal ?> ><?php echo $status ?></span></td>
                                         </tr>
 
                                         <?php
@@ -112,27 +162,7 @@ if (isset($_GET["id"])) {
                     </div>
                 </div>
             </div>
-
-           <!-- Modal -->
-            <div class="modal fade" id="delete-event-modal" tabindex="-1" role="dialog" aria-labelledby="delete-event-modalLabel" aria-hidden="true">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="delete-event-modalLabel">Xác nhận</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    Bạn có muốn xoá người tham dự khỏi sự kiện này?
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-info" data-dismiss="modal">Hủy</button>
-                    <button type="button" class="btn btn-danger">Xoá</button>&nbsp; &nbsp;
-                  </div>
-                </div>
-              </div>
-            </div>           
+        
             <!--RIGHT SECTION-->
             <div class="db-3">
                 <h4>Thông tin sự kiện</h4>
@@ -157,6 +187,30 @@ if (isset($_GET["id"])) {
                     
                 </ul>
             </div>
+            <!-- Send Ticket -->
+            <div id="send-ticket-modal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <form id="" method="POST" action="<?php  $_SERVER["PHP_SELF"] ?>">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Duyệt vé</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" id="id-table-attendee">
+                                <input type="hidden" name="dname" id="dname">
+                                <p>Bạn có muốn gửi vé tham dự sự kiện cho: <strong id="attendee-info"></strong> ?</p>             
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                <button type="button" class="btn btn-success" data-dismiss="modal" id="btn-send-ticket">Gửi vé</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>              
+            </div>
+            <!-- End Send Ticket -->
         </div>
     </section>
     <!--END DASHBOARD-->
@@ -190,4 +244,37 @@ include('footer.php');
             "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "Tất cả"]]
         });
     });
+
+    $('tbody').on('click', '.send-ticket', function(){
+        var id = $(this).parents('tr').attr('id');
+        if (id == undefined) var id = $(this).parents('tr').prev().attr('id');
+        var name = $(this).parents('tr').find('.attendee-name').text();
+        if (name == '') var name = $(this).parents('tr').prev().find('.attendee-name').text();
+        var email = $(this).parents('tr').find('.attendee-email').text();
+        if (email == '') var email = $(this).parents('tr').prev().find('.attendee-email').text();
+
+        $('#attendee-info').html(name + " (" + email +")");
+        $('#id-table-attendee').val(id);
+    })
+
+    $('#btn-send-ticket').click(function(){
+        var id = $('#id-table-attendee').val();
+        location.reload();
+        $.ajax({
+            url: 'send-ticket.php',
+            method: 'POST',
+            dataType: 'json',
+            data: {'id-table-attendee': id}
+        }).done(function(data){
+            if(data.result){
+                alert('Gửi vé thành công');
+                location.reload();
+            } else {
+                console.log(data.error);
+            }
+        }).fail(function(jqXHR, statusText, errorThrown){
+            console.log("Fail:"+ jqXHR.responseText);
+            console.log(errorThrown);
+        })
+    })
 </script>

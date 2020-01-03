@@ -1476,6 +1476,7 @@
      list-style-type: none;
      float: left;
      padding-right: 10px;
+     margin-bottom: 10px;
 }
  .foot-social ul li i {
      font-size: 20px;
@@ -5074,7 +5075,7 @@
  .tr-regi-form input[type="submit"] {
      padding: 0px;
      font-size: 18px !important;
-	 width:100%;
+      width:100%;
 }
  .tr-regi-form label {
 }
@@ -5194,10 +5195,11 @@
      border: 1px solid #efefef;
 }
  .v2-hom-search {
-     background: url(../images/slider/1.jpg) no-repeat;
+     /*background: url(../images/slider/1.jpg) no-repeat;*/
+     background: url('../images/update-info-bg.jpg') no-repeat;
      position: relative;
      background-size: cover;
-     padding: 100px 0px;
+     padding: 150px 0px;
 }
  .v2-hom-search:before {
      content: '';
@@ -5673,7 +5675,7 @@
 .alert-success {
     text-align: center;
     font-size: 18px;
-}	
+}    
 /*--======================================================================--*/
  .wed-logo{
      float: left;
@@ -8061,18 +8063,29 @@
      width: 350px;
 }
 
-@media screen and (min-width: 1148px) {
+/*@media screen and (min-width: 1148px) {
      .dexuat .item img{
-     height: 500px;
-
+          min-height: 40vw;
+          max-height: 40vw;
+          height: 40vw;
      }
      .dexuat .carousel-caption h3{
-     font-size: 80px;
+          font-size: 1vw;
 
      }
      .dexuat .carousel-caption p{
-     font-size:30px;
+          font-size:30px;
      }
+}*/
+
+.dexuat .item img{
+     min-height: 40vw;
+     max-height: 40vw;
+     height: 40vw;
+}
+.dexuat .carousel-caption h3{
+     font-size: 4vw;
+
 }
 
 
@@ -8170,6 +8183,7 @@
 }
 .category-fix-img{
      margin-top: 10px;
+     /*background-image:linear-gradient(to bottom, rgba(245, 246, 252, 0.52), rgba(117, 19, 93, 0.73));*/
 }
 .category-fix-img .item img {
      height: 215px !important;
@@ -8177,3 +8191,23 @@
 .category-fix-img .carousel-caption h3{
      font-size: 30px;
 }
+
+.cancel_button {
+     background: #1aa5d8;
+     background: #f4364f;
+     background: linear-gradient(to bottom,#f4364f,#dc2039);
+}
+
+.accept_button a{
+     background: #1aa5d8;
+     background: green;
+     
+}
+
+.addmod_button {
+     background: #1aa5d8;
+     background: #f4a321;
+     
+}
+
+

@@ -9,21 +9,33 @@ if (!isset($account_role) || $account_role != 4) {
 	<section>
 		<div class="db">
 			<!--LEFT SECTION-->
-			<div class="db-l">
-                <div class="db-l-1">
+			<div class="db-l db-2-com">
+                <?php
+                if (isset($_SESSION["user_email"])) {
+                ?>
+                <h4>Thông tin cá nhân</h4>
+                <div class="db-l-2 info-fix-top">
                     <ul>
-                        <li><img src="images/db-profile.jpg" alt="" />
+                        <li>
+                            <p><?php echo $account_name ?></p>
+                            <p><i class="fa fa-envelope"></i> <?php echo $account_email ?></p>
+                            <p><i class="fa fa-th-large"></i> <?php echo $account_faculty_name ?></p>
                         </li>
                         
                     </ul>
                 </div>
-                <div class="db-l-2">
+                <?php
+                }
+                ?>
+
+
+                <div class="db-l-2 <?php if (!isset($_SESSION['user_email'])) echo 'info-fix-top';?>">
                     <ul>
                         <li>
                             <a href="manage-account.php"><i class="fa fa-users" aria-hidden="true"></i> Quản lý tài khoản</a>
                         </li>
                         <li>
-                            <a href="manage-account.php"><i class="fa fa-th-large" aria-hidden="true"></i> Quản lý tài khoa</a>
+                            <a href="manage-faculty.php"><i class="fa fa-th-large" aria-hidden="true"></i> Quản lý tài khoa</a>
                         </li>
                     </ul>
                 </div>
@@ -127,19 +139,6 @@ if (!isset($account_role) || $account_role != 4) {
 			</div>
 
 			<!--RIGHT SECTION-->
-            <div class="db-3">
-                <h4>Thông tin cá nhân</h4>
-                <ul>
-                    <li>
-                        <a href="my-profile.php"> <img src="images/icon/dbr1.jpg" alt="" />
-                            <h5><?php echo $account_name ?></h5>
-                            <p><i class="fa fa-envelope"></i> <?php echo $account_email ?></p>
-                            <p><i class="fa fa-th-large"></i> <?php echo $account_faculty_name ?></p>
-                            
-                        </a>
-                    </li>
-                </ul>
-            </div>
 		</div>
 	</section>
 	<!--END DASHBOARD-->

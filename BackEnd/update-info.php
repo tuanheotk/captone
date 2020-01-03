@@ -2,7 +2,7 @@
 $title = 'Cập nhật thông tin';
 include('header.php');
 
-if (!isset($_SESSION["user_email"])) {
+if (!isset($_SESSION["user_email"]) || ($account_faculty_id != -1 && $account_name != "")) {
     header("Location: index.php");
 }
 ?>
@@ -84,7 +84,7 @@ include('footer.php');
 <script type="text/javascript">
     // dont alow special character
     $('#name').on('keydown keyup', function(){
-        $(this).val($(this).val().replace(/[@#$%^&*()><|\/]+/g,''));
+        $(this).val($(this).val().replace(/[0123456789?,.!@#$%^&*()\-_+={}\[\]><|\/\\]+/g,''));
     })
 
 

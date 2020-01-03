@@ -9,7 +9,7 @@
                                 <div class="col-sm-3 foot-spec foot-com">
                                     
                                     <div class="wed-logo2">
-                                        <a href="main.html"><img src="images/preloader.png" alt="" />
+                                        <a href="index.php"><img src="images/preloader.png" alt="" />
                                         </a>
                                     </div>
                                 </div>
