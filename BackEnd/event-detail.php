@@ -1,42 +1,44 @@
-<?php 
-$title = "Chi tiết sự kiện";
+<?php
+
+if (isset($_GET["id"])) {
+	require("database-config.php");
+	$sql = "SELECT title FROM event WHERE id = ".$_GET["id"];
+	$result = mysqli_query($conn, $sql);
+	$row = mysqli_fetch_assoc($result);
+	$title = $row["title"];
+}
     include "header.php";
- ?>
-    
 
 
-    <?php 
-
-        require 'database-config.php';
+    if (isset($account_email)) {
         if((strstr($account_email,"@") == "@vanlanguni.vn") || (strstr($account_email,"@") == "@vanlanguni.edu.vn") )
         {   
-            $mail_vlu=1;
-          echo "dung";
+        	$mail_vlu=1;
            
         }else{
-          $mail_vlu=0;
-          echo "sai";
+        	$mail_vlu=0;
         }
+    }
 
         if(isset($_GET["id"])){
-          $event_id=$_GET["id"];
-              if(isset($account_email)){
-            $email=$account_email;
-            $check_reg_sql = "select id from attendee where email= '".$email."' and id=".$event_id;
-            $resultCheck = mysqli_query($conn,$check_reg_sql);
-            $count_reg=mysqli_num_rows($resultCheck);
-          }
+        	$event_id=$_GET["id"];
+        	if(isset($account_email)){
+        		$email=$account_email;
+	            $check_reg_sql = "select id from attendee where email= '".$email."' and id=".$event_id;
+	            $resultCheck = mysqli_query($conn,$check_reg_sql);
+	            $count_reg=mysqli_num_rows($resultCheck);
+	        }
         
 
 
-          $sqlCheckStatus = "SELECT status FROM event WHERE id = ".$event_id;
-          $resultCheckStatus = mysqli_query($conn, $sqlCheckStatus);
-          $row = mysqli_fetch_assoc($resultCheckStatus);
-          $statusEvent = $row['status'];
+			$sqlCheckStatus = "SELECT status FROM event WHERE id = ".$event_id;
+			$resultCheckStatus = mysqli_query($conn, $sqlCheckStatus);
+			$row = mysqli_fetch_assoc($resultCheckStatus);
+			$statusEvent = $row['status'];
 
-          if ($statusEvent != 4) {
-              header('Location: events.php');
-          }
+			if ($statusEvent != 4) {
+			  header('Location: events.php');
+			}
         }else{
             $event_id=0;
             header("Location: events.php");
@@ -44,7 +46,7 @@ $title = "Chi tiết sự kiện";
         $result=mysqli_query($conn,"select * from event where id = ".$event_id);
         
 
-         $sql_count_ticket = "SELECT COUNT(a.event_id) AS total_attendee FROM event e, attendee a WHERE e.id = a.event_id AND e.id = ".$event_id." AND a.status=0";
+         $sql_count_ticket = "SELECT COUNT(a.event_id) AS total_attendee FROM event e, attendee a WHERE e.id = a.event_id AND e.id = ".$event_id." AND a.status!=2";
         $resultCount = mysqli_query($conn, $sql_count_ticket);
         $rowCount = mysqli_fetch_assoc($resultCount);
         $ticket_assign = $rowCount["total_attendee"];

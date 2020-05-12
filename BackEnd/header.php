@@ -173,7 +173,7 @@ ob_start();
                                 if (isset($_SESSION['user_email'])) {
                                     ?>
                                     <!-- Sign Out -->
-                                    <li><a href="my-profile.php"><?php echo $account_email?></a></li>
+                                    <li><a href="my-profile.php"><?php echo $account_name?></a></li>
                                     <li><a href="logout.php">Đăng xuất</a></li>
                                     <?php
                                 } else {

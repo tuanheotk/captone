@@ -13,6 +13,19 @@ if (isset($_GET["id"])) {
     header("Location: my-events.php");
 }
 ?>
+<style>
+	#canvas {
+		width: 80%;
+		margin: 0 auto;
+		border: 10px double #f79259;
+		/*filter: brightness(1.4) grayscale(1) contrast(1.8);*/
+	}
+
+    #error-checkin {
+        min-height: 20px;
+    }
+
+</style>
     <!--DASHBOARD-->
     <section>
         <div class="db">
@@ -65,6 +78,7 @@ if (isset($_GET["id"])) {
             <div class="db-2">
                 <div class="db-2-com db-2-main">
                     <h4>Danh sách người tham dự</h4>
+                    <a href="#" data-toggle="modal" data-target="#check-in-modal" class="btn btn-success waves-effect waves-light" style="margin: 10px 15px;">Điểm danh</a>
                     
                     <div class="db-2-main-com db-2-main-com-table">
                         <table class="table table-hover" id="attendee-table">
@@ -138,7 +152,7 @@ if (isset($_GET["id"])) {
                                 } else {
                                     ?>
                                     <tr>
-                                        <td class="text-center" colspan="3">Chưa có người tham dự</td>
+                                        <td class="text-center" colspan="6">Chưa có người tham dự</td>
                                     </tr>
 
                                     <?php
@@ -211,6 +225,42 @@ if (isset($_GET["id"])) {
                 </div>              
             </div>
             <!-- End Send Ticket -->
+
+             <!-- Check in -->
+            <div id="check-in-modal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title"> Điểm danh</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-field col s12 m3 text-center">
+                                <input type="hidden" id="event-id" value="<?php echo $event_id ?>">
+                                <p class="text-danger" id="no-internet" hidden>Không có kết nối internet không thể điểm danh</p>
+                                <div id="loadingMessage">🎥 Vui lòng cho phép truy cập camera</div>
+
+								<canvas id="canvas" hidden></canvas>
+                                <p class="text-danger" id="error-checkin"></p>
+								<div id="output" hidden>
+
+									<!-- <div id="outputMessage">No QR code detected.</div> -->
+
+									<!-- <div hidden><b>Data:</b> <span id="outputData"></span></div> -->
+
+								</div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                        </div>
+                    </div>
+                </div>              
+            </div>
+            <!-- End check in -->
+
+
         </div>
     </section>
     <!--END DASHBOARD-->
@@ -218,11 +268,11 @@ if (isset($_GET["id"])) {
 
 include('footer.php');
 ?>
-
+<script src="vendor/jsQR/jsQR.js"></script>
 <script type="text/javascript">
     $(document).ready( function (){
         $('#attendee-table').DataTable({
-            responsive: false,
+            responsive: true,
             language: {
                 "sProcessing":   "Đang xử lý...",
                 "sLengthMenu":   "Xem _MENU_ mục",
@@ -277,4 +327,126 @@ include('footer.php');
             console.log(errorThrown);
         })
     })
+
+
+    // check in
+
+    var video = document.createElement("video");
+    var canvasElement = document.getElementById("canvas");
+    var canvas = canvasElement.getContext("2d");
+    var loadingMessage = document.getElementById("loadingMessage");
+    var outputContainer = document.getElementById("output");
+    // var outputMessage = document.getElementById("outputMessage");
+    // var outputData = document.getElementById("outputData");
+
+    function drawLine(begin, end, color) {
+        canvas.beginPath();
+        canvas.moveTo(begin.x, begin.y);
+        canvas.lineTo(end.x, end.y);
+        canvas.lineWidth = 8;
+        canvas.strokeStyle = color;
+        canvas.stroke();
+    }
+
+    // Use facingMode: environment to attemt to get the front camera on phones
+    function startCheckIn(){
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
+            video.srcObject = stream;
+            video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+            video.play();
+            requestAnimationFrame(tick);
+        });
+    }
+
+    function stopCheckIn(e) {
+        var stream = video.srcObject;
+        var tracks = stream.getTracks();
+        for (var i = 0; i < tracks.length; i++) {
+            var track = tracks[i];
+            track.stop();
+        }
+        video.srcObject = null;
+    }
+
+    function tick() {
+        loadingMessage.innerText = "⌛ Đang tải..."
+        if (video.readyState === video.HAVE_ENOUGH_DATA) {
+            loadingMessage.hidden = true;
+            canvasElement.hidden = false;
+            outputContainer.hidden = false;
+
+            canvasElement.height = video.videoHeight;
+            canvasElement.width = video.videoWidth;
+            canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+            var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+            var code = jsQR(imageData.data, imageData.width, imageData.height, {
+            inversionAttempts: "dontInvert",
+            });
+            if (code) {
+                drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
+                drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
+                drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
+                drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
+
+                // Show result
+                // outputMessage.hidden = true;
+                // outputData.parentElement.hidden = false;
+                // outputData.innerText = code.data;
+                // alert('Đã thấy vé');
+                // console.log(code.data)
+
+                var event_id = $('#event-id').val();
+
+                if (window.navigator.onLine == true) {
+                    $.ajax({
+    		            url: 'process-my-event.php',
+    		            method: 'POST',
+    		            dataType: 'json',
+    		            data: {'action': 'checkin','event-id': event_id, 'ticket-code': code.data}
+    		        }).done(function(data){
+    		            if(data.result){
+    		                alert(data.message);
+                            $('#error-checkin').text('');
+    		            } else {
+    		                // alert(data.message);
+                            $('#error-checkin').text(data.message);
+                            setTimeout(function(){
+                                $('#error-checkin').text('');
+                            }, 1500)
+    		            }
+    		        }).fail(function(jqXHR, statusText, errorThrown){
+    		            console.log("Fail:"+ jqXHR.responseText);
+    		            console.log(errorThrown);
+    		        })
+                }
+
+
+
+            } else {
+                // outputMessage.hidden = false;
+                // outputData.parentElement.hidden = true;
+                // console.log('Not Found');
+            }
+        }
+        requestAnimationFrame(tick);
+    }
+
+
+    $('#check-in-modal').on('shown.bs.modal', function(){
+    	startCheckIn();
+	});
+    $('#check-in-modal').on('hidden.bs.modal', function(){
+    	stopCheckIn();
+        $('#error-checkin').text('');
+	});
+
+    setInterval(function(){
+        if (window.navigator.onLine == true) {
+            $('#no-internet').hide();
+        } else {
+            $('#no-internet').show();
+        }
+    },1000)
+
+
 </script>

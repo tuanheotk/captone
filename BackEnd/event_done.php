@@ -13,7 +13,7 @@ include('header.php');
 				<p>Bạn đã đăng ký sự kiện này rồi</p>
 				<hr>
 				<p>
-					Vui lòng kiểm tra lại vé tại mục <a href="my-registered-events.php">Sự kiện đã đăng ký tham gia</a>
+					Vui lòng kiểm tra lại vé tại mục
 				</p>
 				<br>
 				<a href="my-registered-events.php" class="btn btn-danger">Sự kiện đã đăng ký tham gia</a>

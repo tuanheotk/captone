@@ -8062,6 +8062,32 @@
 .multicarousel .item img{
      width: 350px;
 }
+@media screen and (min-width: 1148px) {
+     .dexuat .item img{
+     height: 500px;
+
+     }
+     .dexuat .carousel-caption h3{
+     font-size: 40px;
+     }
+}
+@media screen and (max-width: 1148px) {
+     .dexuat .item img{
+     height: 400px;
+     }
+     .dexuat .carousel-caption h3{
+     font-size: 30px;
+     }
+}
+@media screen and (max-width: 400px) {
+     .dexuat .item img{
+     height: 200px;
+
+     }
+     .dexuat .carousel-caption h3{
+     font-size: 20px;
+     }
+}
 
 /*@media screen and (min-width: 1148px) {
      .dexuat .item img{
@@ -8078,7 +8104,8 @@
      }
 }*/
 
-.dexuat .item img{
+
+/*.dexuat .item img{
      min-height: 40vw;
      max-height: 40vw;
      height: 40vw;
@@ -8086,7 +8113,7 @@
 .dexuat .carousel-caption h3{
      font-size: 4vw;
 
-}
+}*/
 
 
 
@@ -8210,4 +8237,95 @@
      
 }
 
+
+
+
+.tourz-search-10 {
+     padding: 0px 0px 100px 0px;
+     width: 70%;
+     margin: 0 auto;
+     text-align: center;
+     position: relative;
+}
+.tourz-search-10 h1{
+    font-size: 36px;
+    font-weight: 600;
+    font-family: 'Quicksand', sans-serif;
+}
+.tourz-search-10 span{
+     color: #f4364f;
+    font-size: 36px;
+    font-weight: 600;
+    font-family: 'Quicksand', sans-serif;
+}
+.tourz-search-10 #select-search
+{
+     border: 1px solid;
+     border-radius: 30px;
+     border-color: #C0C0C0;
+}
+
+
+.totalaskquestion{
+     border: 1px solid;
+     border-color: #C0C0C0;
+     box-shadow: 1px;
+}
+
+
+.askquestion{
+
+     border-bottom: 1px solid;
+     padding: 5px 20px;
+     border-color: #f2f2f2;
+     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+.askquestion:hover {
+    background-color: #f2f2f2;
+}
+.modal-footer .form-control{
+     margin: 6px 0;
+}
+
+.modal-header .askquestion{
+     background-color: #f2f2f2;
+}
+
+.manage-askquestion-border{
+    border: 1px solid #bfbfbf;
+    height: 600px;
+    overflow: auto;
+    border-radius: 10px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding-top: 10px;
+}
+
+.askquestion .btn-light{
+     border: 2px solid #bfbfbf;
+     color: black;
+}
+.askquestion .btn-light:hover{
+     background-color:#bfbfbf;
+     color: white;
+}
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
 

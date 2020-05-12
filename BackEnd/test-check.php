@@ -2,11 +2,11 @@
 <head>
 	<meta charset="utf-8">
 	<title>TEST QR</title>
-	<link href="https://fonts.googleapis.com/css?family=Ropa+Sans" rel="stylesheet">
+	<!-- <link href="https://fonts.googleapis.com/css?family=Ropa+Sans" rel="stylesheet"> -->
 
 	<style>
 		body {
-			font-family: 'Ropa Sans', sans-serif;
+			font-family: sans-serif;
 			color: #333;
 			max-width: 640px;
 			margin: 0 auto;
@@ -55,8 +55,9 @@
 </head>
 
 <body>
-	<h1>jsQR Demo</h1>
-	<a id="githubLink" href="https://github.com/cozmo/jsQR">View documentation on Github</a>
+	<h1>Điểm Danh</h1>
+	<button onclick="stopVideo()">PAUSE</button>
+	<button onclick="play()">CONTINUE</button>
 	<p>Pure JavaScript QR code decoding library.</p>
 	<div id="loadingMessage">🎥 Unable to access video stream (please make sure you have a webcam enabled)</div>
 
@@ -67,6 +68,7 @@
 		<div id="outputMessage">No QR code detected.</div>
 
 		<div hidden><b>Data:</b> <span id="outputData"></span></div>
+
 	</div>
 
 
@@ -91,12 +93,14 @@
 		}
 
 		// Use facingMode: environment to attemt to get the front camera on phones
-		navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
-			video.srcObject = stream;
-			video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
-			video.play();
-			requestAnimationFrame(tick);
-		});
+		function play(){
+			navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
+				video.srcObject = stream;
+				video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+				video.play();
+				requestAnimationFrame(tick);
+			});
+		}
 
 		function tick() {
 			loadingMessage.innerText = "⌛ Loading video..."
@@ -120,6 +124,8 @@
 					outputMessage.hidden = true;
 					outputData.parentElement.hidden = false;
 					outputData.innerText = code.data;
+
+					alert('Điểm danh thành công');
 				} else {
 					outputMessage.hidden = false;
 					outputData.parentElement.hidden = true;

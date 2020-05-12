@@ -76,7 +76,7 @@ if (isset($_POST["id-table-attendee"])) {
         $content ="<b>Thân gửi bạn!</b><br>
         Vé mời của bạn đã được đính kèm trong email này. Xin vui lòng mang vé tới sự kiện để được điểm danh<br>
         Cảm ơn bạn đã đăng ký tham gia sự kiện!
-            -----------------------------------------
+        <br>-----------------------------------------
             <br>
             <table>
               
@@ -108,4 +108,4 @@ if (isset($_POST["id-table-attendee"])) {
 
 mysqli_close($conn);
 echo json_encode($data);
-?>?>
+?>

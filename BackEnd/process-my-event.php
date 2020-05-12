@@ -114,7 +114,7 @@ if ($action == "add") {
 
     $sqlInsertMod = "INSERT INTO moderator(email, event_id) VALUES('".$_SESSION["user_email"]."', ".$event_id.")";
     $resultInsertMod = mysqli_query($conn, $sqlInsertMod);
-    $resultInsertMod = true;
+    // $resultInsertMod = true;
 
     if($resultInsertEvent){
     	move_uploaded_file($_FILES["cover-image"]["tmp_name"], $target_file);
@@ -149,7 +149,7 @@ if ($action == "add") {
     } else{
         $target_file = $target_dir.date("YmdHis").basename($_FILES["cover-image"]["name"]);
     }
-    move_uploaded_file($_FILES["cover-image"]["tmp_name"], $target_file);
+    // move_uploaded_file($_FILES["cover-image"]["tmp_name"], $target_file);
 
     if ($status == 4) {
 		$sqlUpdateEvent = "UPDATE event SET title = '".$title."', category_id = '".$category."', place = '".$place."', ticket_number = '".$ticketNumber."', start_date = '".$startTime."', end_date = '".$endTime."', short_desc = '".$shortDesc."', description = '".$description."', faculty_id = '".$faculty."', status ='".$status."', avatar = '".$target_file."', public_at = NOW() WHERE id = ".$eventID;
@@ -166,6 +166,7 @@ if ($action == "add") {
     // $updateMod = true;
 
     if($updateEvent){
+    	move_uploaded_file($_FILES["cover-image"]["tmp_name"], $target_file);
         $data["result"] = true;
     }else{
         $data["result"] = false;
@@ -210,6 +211,38 @@ if ($action == "add") {
 	} else {
 		$data["result"] = false;
 	}
+	
+} else if ($action == "checkin") {
+	$event_id = $_POST["event-id"];
+	$ticket_code = $_POST["ticket-code"];
+
+	$sqlCheckStatus = "SELECT status FROM attendee WHERE ticket_code = '".$ticket_code."' AND event_id = ".$event_id;
+	$resultCheckStatus = mysqli_query($conn, $sqlCheckStatus);
+	
+	if (mysqli_num_rows($resultCheckStatus) > 0) {
+		$row = mysqli_fetch_assoc($resultCheckStatus);
+
+		$status = $row["status"];
+
+		if ($status == 0) {
+			$sqlCheckIn = "UPDATE attendee SET status = 1 WHERE status = 0 AND ticket_code = '".$ticket_code."' AND event_id = ".$event_id;
+			$resultCheckIn = mysqli_query($conn, $sqlCheckIn);
+			$data["result"] = true;
+			$data["message"] = "Điểm danh thành công";
+		} else if ($status == 1) {
+			$data["result"] = false;
+			$data["message"] = "Vé này đã được điểm danh";
+		} else if ($status == 2) {
+			$data["result"] = false;
+			$data["message"] = "Vé của bạn chưa được duyệt nên không thể điểm danh";
+		}
+	} else {
+		$data["result"] = false;
+		$data["message"] = "Vé không hợp lệ";
+	}
+	
+
+	
 	
 }
 

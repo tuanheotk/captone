@@ -149,7 +149,7 @@ include('footer.php');
 <script type="text/javascript">
     $(document).ready( function (){
         $('#event-table').DataTable({
-            responsive: true,
+            responsive: false,
             language: {
                 "sProcessing":   "Đang xử lý...",
                 "sLengthMenu":   "Xem _MENU_ mục",

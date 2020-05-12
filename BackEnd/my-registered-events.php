@@ -64,32 +64,52 @@ include('header.php');
                                     <th>#</th>
                                     <th>Tên sự kiện</th>
                                     <th>Thời gian bắt đầu</th>
+                                    <th>Trạng thái</th>
                                     <th>Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php 
                                 require("database-config.php");
-                                $sql = "SELECT a.event_id , e.title, e.start_date, a.ticket_code FROM attendee a, event e WHERE a.event_id = e.id AND a.email = '".$_SESSION["user_email"]."'";
+                                $sql = "SELECT a.event_id , e.title, e.start_date, a.ticket_code, a.status FROM attendee a, event e WHERE e.status = 4 AND a.event_id = e.id AND a.email = '".$_SESSION["user_email"]."'";
                                 $result = mysqli_query($conn, $sql);
                                 $count = 0;
                                 if (mysqli_num_rows($result) > 0) {
-                                    # code...
                                     while ($row = mysqli_fetch_assoc($result)) {
                                     $count++;
                                     $event_id = $row["event_id"];
                                     $name = $row["title"];
                                     $ticket_code = $row["ticket_code"];
                                     $start = date("H:i - d/m/Y", strtotime($row["start_date"]));
-                                    // $end = date("H:i m-d-Y", strtotime($row["end_date"]));
+                                    $status = $row["status"];
+
+                                    switch ($status) {
+                                        case 0:
+                                            $status_text = 'Chưa điểm danh';
+                                            $color = 'event-reject';
+                                            break;
+                                        case 1:
+                                            $status_text = 'Đã điểm danh';
+                                            $color = 'event-accept';
+                                            break;
+                                        case 2:
+                                            $status_text = 'Chờ duyệt vé';
+                                            $color = 'event-wait';
+                                            break;
+                                        
+                                        default:
+                                            break;
+                                    }
                                 
                                 
                                     ?>
-                                    <tr id="<?php echo $ticket_code ?>">
+                                    <tr id="<?php if ($status != 2) echo $ticket_code ?>">
                                         <td><?php echo $count ?></td>
                                         <td class="event-name"><?php echo $name ?></td>
                                         <td><?php echo $start ?></td>
+                                        <td><span class="event-status <?php echo $color ?>"><?php echo $status_text ?></span></td>
                                         <td>
+                                            <input type="hidden" class="status" value="<?php echo $status ?>">
                                             <a href="event-detail.php?id=<?php echo $event_id ?>" target="_blank" class="btn waves-effect waves-light btn-sm btn-info" title="Chi tiết sự kiện"><i class="fa fa-info-circle"></i></a>
                                             <a href="#" class="btn waves-effect waves-light btn-sm btn-success qr-code" data-toggle="modal" data-target="#qr-modal" title="Xem vé"><i class="fa fa-qrcode"></i></a>
                                         </td>
@@ -134,7 +154,8 @@ include('header.php');
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
                             <div class="modal-body">
-                                <img src="" id="src-qr">             
+                                <img src="" id="src-qr">
+                                <p id="alert-wait" hidden>Vé của bạn đang được duyệt</p>          
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
@@ -184,12 +205,21 @@ include('footer.php');
     });
 
     $('tbody').on('click', '.qr-code', function(){
-        var id = $(this).parents('tr').attr('id');
-        if (id == undefined) var id = $(this).parents('tr').prev().attr('id');
+        var ticket_code = $(this).parents('tr').attr('id');
+        if (ticket_code == undefined) var ticket_code = $(this).parents('tr').prev().attr('id');
 
-        link = 'https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl='+id+'&choe=UTF-8';
-        $('#src-qr').attr('src', link);
-        $('#link-qr').attr('href', link);
+        var status = $(this).parents('tr').find('.status').val();
+        if (status == '') var status = $(this).parents('tr').prev().find('.status').val();
+
+        if (status == 2) {
+            $('#alert-wait').attr('hidden', false);
+        } else {
+            $('#alert-wait').attr('hidden', true);
+            link = 'https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl='+ticket_code+'&choe=UTF-8';
+            $('#src-qr').attr('src', link);
+            $('#link-qr').attr('href', link);
+        }
+
     })
 
     $('#qr-modal').on('hidden.bs.modal', function(){
