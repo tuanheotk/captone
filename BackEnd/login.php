@@ -111,13 +111,14 @@ include('footer.php');
         }).done(function(data){
             if(data.result){
 				$('#btn-login').html('<i class="fa fa-check"></i> Thành công');
-                // window.location = 'index.php';
+                window.location = 'index.php';
+                
                 // window.history.back();
-                if (document.referrer.includes('register.php')) {
-                	window.history.go(-2);
-                } else {
-                	window.history.go(-1);
-                }
+                // if (document.referrer.includes('register.php')) {
+                // 	window.history.go(-2);
+                // } else {
+                // 	window.history.go(-1);
+                // }
             }else {
                 alert(data.message);
                 $('#btn-login').html('Đăng nhập');

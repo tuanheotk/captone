@@ -484,8 +484,8 @@
      -moz-transition: all 0.3s ease-out;
      -webkit-transition: all 0.3s ease-out;
      margin-bottom: 30px;
-     border-bottom-left-radius: 7px;
-     border-bottom-right-radius: 7px;
+     border-bottom-left-radius: 0px;
+     border-bottom-right-radius: 0px;
 }
  .b_pack h4 {
      font-size: 14px;
@@ -518,7 +518,7 @@
      overflow: hidden;
 }
  .v_place_img img {
-     width: 100% !important;
+     /*width: 100% !important;*/
 }
 .v_place_img2 img{
      height: 230px;
@@ -4162,7 +4162,7 @@
 /*-------------------------------------------------*/
  .tour-mig-like {
 }
- .tour-mig-like-com {
+.tour-mig-like-com {
      position: relative;
      border-radius: 10px;
      margin-bottom: 20px;
@@ -4234,7 +4234,8 @@
      padding-bottom: 10px;
 }
  .tour-mig-lc-con p {
-     color: #c1c1c1;
+     /*color: #c1c1c1;*/
+     color: #eee;
 }
  .tour-mig-lc-con p span {
      text-align: left;
@@ -8088,7 +8089,7 @@
      height: 40vw;
 }
 .dexuat .carousel-caption h3{
-     font-size: 50px;
+     font-size: 4vw;
 
 }
 
@@ -8185,15 +8186,47 @@
      margin-top: 0;
      padding: 0 20px;
 }
+
+.category-title {
+     background-color: #f4364f;
+     color: #fff;
+     margin: 0;
+     padding: 10px 0;
+     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6)
+}
+
 .category-fix-img{
-     margin-top: 10px;
+     /*margin-top: 10px;*/
      /*background-image:linear-gradient(to bottom, rgba(245, 246, 252, 0.52), rgba(117, 19, 93, 0.73));*/
 }
+
 .category-fix-img .item img {
      height: 215px !important;
+     border-radius: 0;
 }
 .category-fix-img .carousel-caption h3{
      font-size: 30px;
+}
+.category-fix-img .tour-mig-like-com:before {
+     /*background: linear-gradient(to top, rgba(0, 0, 0, 0.91) 10%, rgba(208, 105, 105, 0.66) 80%);*/
+     background: linear-gradient(to top, rgba(139, 66, 66, 0.88) 20%, rgba(255, 255, 255, 0) 80%);
+     border-radius: 0;
+}
+
+.category-fix-img .tour-mig-like-com:hover img {
+     -webkit-transition: all 0.5s ease;
+     -moz-transition: all 0.5s ease;
+     -o-transition: all 0.5s ease;
+     transition: all 0.5s ease;
+     opacity: 1;
+}
+.category-fix-img .tour-mig-lc-con {
+     background-color: transparent;
+     margin-top: -90px;
+}
+.category-fix-img .tour-mig-lc-con p{
+     color: #fff;
+     text-shadow: 0 0 20px #fff;
 }
 
 .cancel_button {
@@ -8459,6 +8492,10 @@
      color: #f00;
 }
 
+#btn-send-question {
+     width: 100%;
+}
+
 .card .card-title {
      font-family: 'Quicksand', sans-serif;
      font-size: 17px !important;
@@ -8549,12 +8586,33 @@ hr {
      width: 100%;
      max-height: 300px;
 }
-.fix-background-category .carousel-caption {
-     background-color: #0000006e;
+
+
+.carousel-caption h3 {
+     background: #f4364f;
+     width: 100%;
 }
-.dm_background{
+
+.v_place_img img {
+     width: 100%;
+     /*height: auto;*/
+     height: 18vh;
+}
+.slider-recommend h4 {
+     color: #333;
+}
+.slick-prev:before, .slick-next:before {
+     color: #f4364f !important;
+}
+
+#section-category {
+     /*background-image: url('https://jooinn.com/images/abstract-background-280.jpg');*/
+     background-image: url('https://media.idownloadblog.com/wp-content/uploads/2019/07/iOS-13-wallpaper-iphone-ipad-ar72014-dark-red.jpeg');
      background-repeat: no-repeat;
-     background-attachment: fixed;
      background-position: center;
-     background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url("../images/vlu.jpg");
+     background-size: cover;
+}
+
+#section-category h2, #section-category p {
+     color: #fff;
 }

@@ -1,6 +1,8 @@
 <?php
 // echo round(10/3, 2);
 // echo count($_SESSION['user_email']);
+$e = file_get_contents('test.php');
+echo $e;
 ?>
 <input type="text" name="" id="test">
 <button>send</button>
@@ -14,31 +16,30 @@
 
 
 
+
 	// var txt_arr = new Array();
 
-	// function readTextFile(file) {
-	//     var rawFile = new XMLHttpRequest();
-	//     rawFile.open("GET", file, false);
-	//     rawFile.onreadystatechange = function () {
-	//         if(rawFile.readyState === 4) {
-	//             if(rawFile.status === 200 || rawFile.status == 0) {
-	//                 var allText = rawFile.responseText;
-	//                 // alert(allText);
-	//                 // console.log(allText);
-	//                 // txt_arr = allText.split(/\n|\r/g);
-	//                 txt_arr = allText.split('\n');
-	//             }
-	//         }
-	//     }
-	//     rawFile.send(null);
-	// }
+	function readTextFile(file) {
+	    var rawFile = new XMLHttpRequest();
+	    rawFile.open("GET", file, false);
+	    rawFile.onreadystatechange = function () {
+	        if(rawFile.readyState === 4) {
+	            if(rawFile.status === 200 || rawFile.status == 0) {
+	                var allText = rawFile.responseText;
+	                // alert(allText);
+	                // console.log(allText);
+	                // txt_arr = allText.split(/\n|\r/g);
+	                txt_arr = allText.split('\n');
+	            }
+	        }
+	    }
+	    rawFile.send(null);
+	}
 
-	// readTextFile('temp/text.txt');
-	// // txt_arr.length = 10;
-	// // txt_arr = ["a", "ai", "am", "an", "ang", "anh", "ao", "au", "à", "ào", "á", "ác", "ách", "ái", "ám", "án", "áng", "ánh", "áo", "áp", "át", "áy", "âm", "ân"];
+	readTextFile('temp/eng3.txt');
 	// console.log(txt_arr);
 
-	// $('#out').text(txt_arr);
+	$('#out').text(txt_arr);
 
 	
 

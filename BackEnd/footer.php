@@ -55,6 +55,8 @@
 
     <!-- Datatables -->
     <script type="text/javascript" src="vendor/DataTables/datatables.min.js"></script>
+    <!-- Slick -->
+    <script type="text/javascript" src="vendor/slick/slick.min.js"></script>
     <!-- CKEditor -->
     <script type="text/javascript" src="vendor/ckeditor5/ckeditor.js"></script>
     <!-- Pusher -->

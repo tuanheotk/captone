@@ -273,6 +273,7 @@ if (isset($_GET["id"])) {
 
     // Prepare text
     vi_arr = string_vi.split(',');
+    en_arr = string_en.split(',');
     obscene_arr = string_obscene.split(',');
 
     function set_cookie(cname, cvalue, exdays) {
@@ -371,8 +372,6 @@ if (isset($_GET["id"])) {
         var user_fullname = $('#user-fullname').val();
         var question_content = $('#select-search5').val().trim().replace(/  +/g, ' ');
 
-        var check_question = check_question_content(question_content);
-        console.log(check_question)
 
         if (question_content.replace(/\s+/g, ' ').trim().length < 10) {
             alert('Nội dung câu hỏi tối thiểu 10 ký tự');
@@ -381,6 +380,7 @@ if (isset($_GET["id"])) {
         }
 
 
+        var check_question = check_question_content(question_content);
         if (check_question.valid == false) {
             alert(check_question.error);
             return false;
@@ -420,8 +420,10 @@ if (isset($_GET["id"])) {
         // content = content.toLowerCase().trim();
         // content = content.replace(/  +/g, ' ');
 
-        content = (content.replace(/[0123456789?,.:;"`~!@#$%^&*()\-_+={}\[\]><|\/\\\']+/g,'')).toLowerCase();
-        var input_text_arr = content.split(' ');
+        // content = (content.replace(/[0123456789?,.:;"`~!@#$%^&*()\-_+={}\[\]><|\/\\\']+/g,'')).toLowerCase();
+        content = content.toLowerCase();
+
+        var input_text_arr = content.split(/\s+/);
         // console.log(input_text_arr);
 
         var correct_word = 0;
@@ -429,36 +431,56 @@ if (isset($_GET["id"])) {
 
         var no_obscene_word = true;
         var enough_correct_word = true;
+        var no_length_word = true;
         var no_duplicate = true;
 
         var error = null;
         var obscene_used = new Array();
 
         for (var i = 0; i < input_text_arr.length; i++) {
-            if (vi_arr.includes(input_text_arr[i])) {
+            if (vi_arr.includes(input_text_arr[i]) || en_arr.includes(input_text_arr[i])) {
                 correct_word++;
             }
             if (obscene_arr.includes(input_text_arr[i])) {
                 no_obscene_word = false;
                 obscene_used.push(input_text_arr[i]);
             }
+            if (input_text_arr[i].length > 6) {
+                no_length_word = false;
+                error = 'Vui lòng dùng từ hợp lý hơn';
+            }
         }
 
         if (correct_word/ input_text_arr.length <= 0.7) {
             enough_correct_word = false;
-            error = 'Đặt câu hỏi hợp lý hơn';
+            error = 'Vui lòng dùng từ hợp lý hơn';
         }
 
         let find_duplicate = arr => arr.filter((item, index) => arr.indexOf(item) != index)
         // console.log(find_duplicate(input_text_arr)) // All duplicates
-        if (find_duplicate(input_text_arr).length/ input_text_arr.length > 0.5) {
+
+        const unique = (value, index, self) => {
+          return self.indexOf(value) === index
+        }
+        
+        if (find_duplicate(input_text_arr).length/ input_text_arr.length > 0.5 || find_duplicate(input_text_arr).length > 5) {
             no_duplicate = false;
-            error = 'Đặt câu hỏi hợp lý hơn';
+            error = 'Không dùng quá nhiều từ: '+find_duplicate(input_text_arr).filter(unique).join(', ');
         }
 
-        if (!no_obscene_word) error = 'Vui lòng không dùng các từ: ' + obscene_used.toString();
 
-        if (!enough_correct_word || !no_obscene_word || !no_duplicate) valid = false;
+
+        if (!no_obscene_word) {
+            const unique_obscene_used = obscene_used.filter(unique);
+
+            if (unique_obscene_used.length > 1) {
+                error = 'Vui lòng không dùng các từ: ' + unique_obscene_used.join(', ');
+            } else {
+                error = 'Vui lòng không dùng từ: ' + unique_obscene_used.join(', ');
+            }
+        }
+
+        if (!enough_correct_word || !no_obscene_word || !no_duplicate || !no_length_word) valid = false;
 
 
         var result = {valid: valid, error: error, obscene_used: obscene_used};
@@ -549,6 +571,14 @@ if (isset($_GET["id"])) {
             $('#reply-content').focus();
             return false;
         }
+
+
+        var check_question = check_question_content(reply_content);
+        if (check_question.valid == false) {
+            alert(check_question.error);
+            return false;
+        }
+
 
 
         $.ajax({

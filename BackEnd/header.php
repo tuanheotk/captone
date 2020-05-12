@@ -62,6 +62,10 @@ ob_start();
 
     <!-- Datatables -->  
     <link href="vendor/DataTables/datatables.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Slick -->
+    <link href="vendor/slick/slick.css" rel="stylesheet" type="text/css">
+    <link href="vendor/slick/slick-theme.css" rel="stylesheet" type="text/css">
     
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

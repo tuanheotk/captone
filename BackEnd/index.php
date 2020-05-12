@@ -7,6 +7,7 @@ $sqlFeature = "SELECT e.id, e.title, e.avatar, e.start_date, e.place, COUNT(a.ev
 $sqlAcademic = "SELECT e.id, e.title, e.avatar, c.name FROM event e, category c WHERE e.category_id = c.id AND c.id = 1 AND e.status = 4 ORDER BY e.public_at DESC";
 $sqlCulture = "SELECT e.id, e.title, e.avatar, c.name FROM event e, category c WHERE e.category_id = c.id AND c.id = 2 AND e.status = 4 ORDER BY e.public_at DESC";
 $sqlSport = "SELECT e.id, e.title, e.avatar, c.name FROM event e, category c WHERE e.category_id = c.id AND c.id = 3 AND e.status = 4 ORDER BY e.public_at DESC";
+
 $sqlRecommend = "SELECT title, avatar, MAX(id) as id FROM event WHERE status = 4 GROUP BY faculty_id";
 
 $resultFeature = mysqli_query($conn, $sqlFeature);
@@ -100,8 +101,8 @@ $resultRecommend = mysqli_query($conn, $sqlRecommend);
 
     <!--Danh Muc-->
 
-    <section class="dm_background">
-        <div class="rows pad-bot-redu tb-space ">
+    <section id="section-category">
+        <div class="rows pad-bot-redu tb-space">
             <div class="container">
                 <!-- TITLE & DESCRIPTION -->
                 <div class="spe-title">
@@ -116,7 +117,8 @@ $resultRecommend = mysqli_query($conn, $sqlRecommend);
                 <div class="col-md-4 wow slideInUp">
                 	<div id="myCarousel1" class="carousel slide" data-ride="carousel">
                 		<!-- Wrapper for slides -->
-                		<div class="carousel-inner category-fix-img fix-background-category">
+                    <h3 class="text-center category-title">Học thuật</h3>
+                		<div class="carousel-inner category-fix-img">
 
 	                    <?php
 	                    if (mysqli_num_rows($resultAcademic) > 0) {
@@ -129,13 +131,21 @@ $resultRecommend = mysqli_query($conn, $sqlRecommend);
 		                        $academic_category_name = $rowAcademic["name"];
 	                    ?>
 	                    	<div class="item <?php if ($count == 1) {echo 'active';} ?>">
-		                        <a href="event-detail.php?id=<?php echo $academic_event_id ?>">
-		                        	<img src="<?php echo $academic_event_avatar ?>" alt="Văn Lang" style="width:100%;">
-		                        	<div class="carousel-caption">
-		                        		<h3><?php echo $academic_category_name ?></h3>
-		                            <p><?php echo $academic_event_name ?></p>
-			                        </div>
-			                    </a>
+		                       <!--  <a href="event-detail.php?id=<?php echo $academic_event_id ?>">
+  		                        	<img src="<?php echo $academic_event_avatar ?>" alt="Văn Lang" style="width:100%;">
+  		                        	<div class="carousel-caption">
+  		                        		<h3><?php echo $academic_category_name ?></h3>
+  		                            <p><?php echo $academic_event_name ?></p>
+  			                        </div>
+  			                    </a> -->
+                            <a href="event-detail.php?id=<?php echo $academic_event_id ?>">
+                                <div class="tour-mig-like-com">
+                                    <div class="tour-mig-lc-img"> <img src="<?php echo $academic_event_avatar ?>" alt=""> </div>
+                                    <div class="tour-mig-lc-con">
+                                        <p class="text-center"><?php echo $academic_event_name ?></p>
+                                    </div>
+                                </div>
+                            </a>
 			                </div>
 
 		                    <?php
@@ -145,7 +155,7 @@ $resultRecommend = mysqli_query($conn, $sqlRecommend);
 		                    <div class="item active">
 		                    	<img src="images/listing/home.jpg" alt="Los Angeles" style="width:100%;">
 		                    	<div class="carousel-caption">
-			                        <h3>Học THuật</h3>
+			                        <!-- <h3>Học THuật</h3> -->
 			                        <p>Chưa có sự kiện</p>
 			                    </div>
 			                </div>
@@ -169,7 +179,8 @@ $resultRecommend = mysqli_query($conn, $sqlRecommend);
 		        <div class="col-md-4 wow slideInUp">
                     <div id="myCarousel2" class="carousel slide" data-ride="carousel">
                     	<!-- Wrapper for slides -->
-                    	<div class="carousel-inner category-fix-img fix-background-category">
+                      <h3 class="text-center category-title">Văn hóa</h3>
+                    	<div class="carousel-inner category-fix-img">
 
 	                    <?php
 	                    if (mysqli_num_rows($resultCulture) > 0) {
@@ -182,13 +193,22 @@ $resultRecommend = mysqli_query($conn, $sqlRecommend);
 		                        $culture_category_name = $rowCulture["name"];
 	                    ?>
 	                    	<div class="item <?php if ($count == 1) {echo 'active';} ?>">
-		                        <a href="event-detail.php?id=<?php echo $academic_event_id ?>">
-		                        	<img src="<?php echo $culture_event_avatar ?>" alt="Văn Lang" style="width:100%;">
-		                        	<div class="carousel-caption">
-		                        		<h3><?php echo $culture_category_name ?></h3>
-		                            <p><?php echo $culture_event_name ?></p>
-			                        </div>
-			                    </a>
+		                        <!-- <a href="event-detail.php?id=<?php echo $culture_event_id ?>">
+  		                        	<img src="<?php echo $culture_event_avatar ?>" alt="Văn Lang" style="width:100%;">
+  		                        	<div class="carousel-caption">
+  		                        		<h3><?php echo $culture_category_name ?></h3>
+  		                            <p><?php echo $culture_event_name ?></p>
+  			                        </div>
+  			                    </a> -->
+
+                            <a href="event-detail.php?id=<?php echo $culture_event_id ?>">
+                                <div class="tour-mig-like-com">
+                                    <div class="tour-mig-lc-img"> <img src="<?php echo $culture_event_avatar ?>" alt=""> </div>
+                                    <div class="tour-mig-lc-con">
+                                        <p class="text-center"><?php echo $culture_event_name ?></p>
+                                    </div>
+                                </div>
+                            </a>
 			                </div>
 
 		                    <?php
@@ -198,7 +218,7 @@ $resultRecommend = mysqli_query($conn, $sqlRecommend);
 		                    <div class="item active">
 		                    	<img src="images/listing/home.jpg" alt="Los Angeles" style="width:100%;">
 		                    	<div class="carousel-caption">
-			                        <h3>Văn Hoá</h3>
+			                        <!-- <h3>Văn Hoá</h3> -->
 			                        <p>Chưa có sự kiện</p>
 			                    </div>
 			                </div>
@@ -222,7 +242,8 @@ $resultRecommend = mysqli_query($conn, $sqlRecommend);
               <div class="col-md-4 wow slideInUp">
                     <div id="myCarousel3" class="carousel slide" data-ride="carousel">
                     	<!-- Wrapper for slides -->
-                    	<div class="carousel-inner category-fix-img fix-background-category">
+                      <h3 class="text-center category-title">Thể thao</h3>
+                    	<div class="carousel-inner category-fix-img">
 
 	                    <?php
 	                    if (mysqli_num_rows($resultSport) > 0) {
@@ -235,13 +256,27 @@ $resultRecommend = mysqli_query($conn, $sqlRecommend);
           								$sport_category_name = $rowSport["name"];
 	                    ?>
 	                    	<div class="item <?php if ($count == 1) {echo 'active';} ?>">
-		                        <a href="event-detail.php?id=<?php echo $academic_event_id ?>">
-		                        	<img src="<?php echo $sport_event_avatar ?>" alt="Văn Lang" style="width:100%;">
+		                        <!-- <a href="event-detail.php?id=<?php echo $sport_event_id ?>">
+                              <div class="img-gradient">
+                                
+		                        	 <img src="<?php echo $sport_event_avatar ?>" alt="Văn Lang" style="width:100%;">
+                              </div>
 		                        	<div class="carousel-caption">
 		                        		<h3><?php echo $sport_category_name ?></h3>
 		                            <p><?php echo $sport_event_name ?></p>
 			                        </div>
-			                    </a>
+			                    </a> -->
+
+                          <a href="event-detail.php?id=<?php echo $sport_event_id ?>">
+                              <div class="tour-mig-like-com">
+                                  <div class="tour-mig-lc-img"> <img src="<?php echo $sport_event_avatar ?>" alt=""> </div>
+                                  <div class="tour-mig-lc-con">
+                                      <p class="text-center"><?php echo $sport_event_name ?></p>
+                                  </div>
+                              </div>
+                          </a>
+
+
 			                </div>
 
 		                    <?php
@@ -251,7 +286,7 @@ $resultRecommend = mysqli_query($conn, $sqlRecommend);
 		                    <div class="item active">
 		                    	<img src="images/listing/home.jpg" alt="Los Angeles" style="width:100%;">
 		                    	<div class="carousel-caption">
-			                        <h3>Thể Thao</h3>
+			                        <!-- <h3>Thể Thao</h3> -->
 			                        <p>Chưa có sự kiện</p>
 			                    </div>
 			                </div>
@@ -288,98 +323,51 @@ $resultRecommend = mysqli_query($conn, $sqlRecommend);
                     </div>
                     <p>Các sự kiện hay cần xem</p>
                 </div>
-                <div class="wow slideInUp">
-                    <div id="carousel-recommend" class="carousel slide" data-ride="carousel">
-                      <!-- Indicators -->
-                      <ol class="carousel-indicators">
+                <div class="slider-recommend rows">
 
-                        <?php
-                          if (mysqli_num_rows($resultRecommend) > 1) {
-                            $count = 0;
-                            for ($i=0; $i < mysqli_num_rows($resultRecommend); $i++) {
-                              $count++;
-                              ?>
-
-                                <li data-target="#carousel-recommend" data-slide-to="<?php echo $i ?>" class="<?php if ($count == 1) echo 'active' ?>"></li>
-
-                              <?php
-                            }
-                          }
-                        ?>
-
-                        <!-- <li data-target="#carousel-recommend" data-slide-to="0" class="active"></li>
-                        <li data-target="#carousel-recommend" data-slide-to="1"></li> -->
-                      
-
-                      </ol>
-
-                      <!-- Wrapper for slides -->
-                      <div class="carousel-inner dexuat">
-
-                        <?php
-                          if (mysqli_num_rows($resultRecommend) > 0) {
-                            $count = 0;
-                            while ($rowRecommend = mysqli_fetch_assoc($resultRecommend)) {
-                              $count++;
-                              $recommend_event_id = $rowRecommend['id'];
-                              $recommend_event_name = $rowRecommend['title'];
-                              $recommend_event_avatar = $rowRecommend['avatar'];
-                          ?>
-                        <div class="item <?php if ($count == 1 ) echo 'active' ?>">
-                          <a href="event-detail.php?id=<?php echo $recommend_event_id ?>">
-                            <img src="<?php echo $recommend_event_avatar ?>" alt="Văn Lang">
-                            <div class="carousel-caption">
-                              <h3><?php echo $recommend_event_name ?></h3>
-                            </div>
-                          </a>
-                        </div>
-
-                          <?php
-                            }
-                          } else {
-                          ?>
-                        <div class="item active">
-                          <a href="event-detail.php">
-                            <img src="images/listing/home.jpg" alt="Văn Lang">
-                            <div class="carousel-caption">
-                              <h3>Chưa có sự kiện</h3>
-                            </div>
-                          </a>
-                        </div>
-
-                          <?php
-                          }
-                        ?>
-
-
-                        <!-- <div class="item active">
-                          <a href="event-detail.php?id=">
-                            <img src="images/listing/home1.jpg" alt="Los Angeles">
-                            <div class="carousel-caption">
-                              <h3>Thể thao</h3>
-                            </div>
-                          </a>
-                        </div> -->
-
-                      
-                    
+                  <!-- <div class="col-md-4 col-sm-6 col-xs-12 b_packages">
+                    <a href="#">
+                      <div class="v_place_img">
+                        <img src="images/t5.png" width="400" height="180" alt="Tour Booking" title="">
                       </div>
+                      <div class="b_pack rows">
+                          <div class="col-md-12 col-sm-12">
+                            <h4 title="Tên sự kiện">sự kiện 1 có cái tên dài ơi là dài dài quá dài luôn</h4>
+                          </div>
+                      </div>
+                    </a>
+                  </div> -->
 
-                      <!-- Left and right controls -->
-                      <a class="left carousel-control" href="#carousel-recommend" data-slide="prev">
-                        <span class="icon-prev"></span>
-                        <span class="sr-only">Previous</span>
-                      </a>
-                      <a class="right carousel-control" href="#carousel-recommend" data-slide="next">
-                        <span class="icon-next"></span>
-                        <span class="sr-only">Next</span>
+                  <?php
+                    if (mysqli_num_rows($resultRecommend) > 0) {
+                      while ($rowRecommend = mysqli_fetch_assoc($resultRecommend)) {
+                        $id = $rowRecommend['id'];
+                        $name = $rowRecommend['title'];
+                        $image = $rowRecommend['avatar'];
+                  ?>
+                    <div class="col-md-4 col-sm-6 col-xs-12 b_packages">
+                      <a href="event-detail.php?id=<?php echo $id ?>">
+                        <div class="v_place_img">
+                          <img src="<?php echo $image ?>" width="400" height="180" alt="Tour Booking" title="">
+                        </div>
+                        <div class="b_pack rows">
+                            <div class="col-md-12 col-sm-12">
+                              <h4 title="<?php echo $name ?>"><?php echo $name ?></h4>
+                            </div>
+                        </div>
                       </a>
                     </div>
-              </div>
-                 
 
-                 
-                
+                  <?php
+                      }
+                    } else {
+                      # code...
+                    }
+                    
+                  ?>
+
+
+                </div>                
             </div>
 
         </div>
@@ -416,6 +404,45 @@ include('footer.php');
 ?>
 
 <script type="text/javascript">
+  $('.slider-recommend').slick({
+    // dots: true,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2000,
+    speed: 700,
+
+    responsive: [
+    {
+      breakpoint: 1366,
+      settings: {
+        slidesToShow: 3,
+      }
+    },
+    {
+      breakpoint: 900,
+      settings: {
+        arrows: false,
+        dots: true,
+        slidesToShow: 2,
+      }
+    },
+    {
+      breakpoint: 480,
+      settings: {
+        arrows: false,
+        dots: true,
+        slidesToShow: 1,
+      }
+    }
+    // You can unslick at a given breakpoint now by adding:
+    // settings: "unslick"
+    // instead of a settings object
+  ]
+
+  })
+
+
   $('#join-room-form').submit(function(e){
     e.preventDefault();
     var code = $('#event-code').val();
