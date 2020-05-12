@@ -78,7 +78,10 @@ include('header.php');
                             </thead>
                             <tbody>
                                 <?php
-                                $sql = "SELECT e.*, a.email FROM event e, account a WHERE e.status < 5 AND e.account_id = a.id AND email = '".$_SESSION["user_email"]."'";
+                                // $sql = "SELECT e.*, a.email FROM event e, account a WHERE e.status < 5 AND e.account_id = a.id AND a.email = '".$_SESSION["user_email"]."'";
+
+                                $sql = "SELECT e.* FROM event e, account a WHERE e.status < 5 AND e.account_id = a.id AND a.email = '".$account_email."' UNION SELECT e.* FROM event e, moderator m WHERE e.status < 5 AND e.id = m.event_id AND m.email = '".$account_email."'";
+
                                 $result = mysqli_query($conn, $sql);
                                 $count = 0;
 
@@ -151,6 +154,7 @@ include('header.php');
                                             <a href="attendee.php?id=<?php echo $id ?>" class="btn waves-effect waves-light btn-sm btn-info" title="Danh sách người tham dự"><i class="fa fa-users"></i></a>
                                             <a href="edit-event.php?id=<?php echo $id ?>" class="btn waves-effect waves-light btn-sm btn-success" title="Sửa sự kiện"><i class="fa fa-pencil"></i></a>
                                             <a href="setting-event.php?id=<?php echo $id ?>" class="btn waves-effect waves-light btn-sm btn-warning" title="Cấu hình sự kiện"><i class="fa fa-cog"></i></a>
+                                            <a href="manage-question.php?id=<?php echo $id ?>" class="btn waves-effect waves-light btn-sm btn-primary" title="Quản lý câu hỏi"><i class="fa fa-question"></i></a>
                                             <a href="#" class="delete-event btn waves-effect waves-light btn-sm btn-danger" data-toggle="modal" data-target="#delete-modal" title="Xóa sự kiện"><i class="fa fa-trash-o" ></i></a>
                                         </td>
                                     </tr>
@@ -190,8 +194,8 @@ include('header.php');
                     <form id="delete-product-form" method="POST" action="<?php  $_SERVER["PHP_SELF"] ?>">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h4 class="modal-title"> Xóa sự kiện</h4>
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title"> Xóa sự kiện</h4>
                             </div>
                             <div class="modal-body">
                                 <input type="hidden" name="id" id="did">

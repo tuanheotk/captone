@@ -26,14 +26,14 @@ $resultRecommend = mysqli_query($conn, $sqlRecommend);
                     <div class="tourz-search-1">
                         <h1>Nhập mã sự kiện</h1>
                         
-                        <form class="tourz-search-form">
+                        <form class="tourz-search-form" id="join-room-form">
                             <div class="input-field">
                                 <input type="text" id="select-city" class="autocomplete">
                                 <label for="select-city">Enter class</label>
                             </div>
                             <div class="input-field">
-                                <input type="text" id="select-search" class="autocomplete">
-                                <label for="select-search" class="search-hotel-type">#123</label>
+                                <input type="text" id="event-code" class="autocomplete" required maxlength="4">
+                                <label for="event-code" class="search-hotel-type">A1B2</label>
                             </div>
                             <div class="input-field">
                                 <input type="submit" value="Tham gia" class="waves-effect waves-light tourz-sear-btn"> 
@@ -414,3 +414,30 @@ $resultRecommend = mysqli_query($conn, $sqlRecommend);
 <?php
 include('footer.php');
 ?>
+
+<script type="text/javascript">
+  $('#join-room-form').submit(function(e){
+    e.preventDefault();
+    var code = $('#event-code').val();
+
+    if (code.replace(/\s+/g, ' ').trim().length != 4) {
+      alert('Mã sự kiện 4 ký tự');
+      $('#event-code').focus();
+      return false;
+    }
+
+    $.ajax({
+      url: 'process-question.php',
+      method: 'POST',
+      data: {'action': 'join-room', 'event-code': code}
+    }).done(function(data){
+      if (data.result) {
+        code = data.message;
+        window.location.href = 'ask.php?id='+code;
+      } else {
+        alert(data.message);
+      }
+    })
+
+  })
+</script>

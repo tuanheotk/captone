@@ -1,4 +1,4 @@
-/*----------------------------------------- [MASTER STYLE SHEET] * Project: The Travel * Version: v2.0 * Copyright 2016-2020 rn53themes * V1.0: 03/09/2016 * V2.0: 24/08/2017 * Author: RN53 Themes * Email: rn53themes@gmail.com * Website: http://www.rn53themes.net -----------------------------------------------*/
+----------------------------------------- [MASTER STYLE SHEET] * Project: The Travel * Version: v2.0 * Copyright 2016-2020 rn53themes * V1.0: 03/09/2016 * V2.0: 24/08/2017 * Author: RN53 Themes * Email: rn53themes@gmail.com * Website: http://www.rn53themes.net -----------------------------------------------*/
 /*------------------------------------------------- = TABLE OF CSS 1.COMMON CSS 2.HEADER(LOG0 & HELP LINE) 3.NAVIGATION MENU 4.SLIDER & INNER PAGE BANNER 5.SLIDER ENQUIRY 6.TOUR PLACES 6.1 HOTELS 7.FREE CONSULTANT 8.EVENTS 9.POPULAR TOUR PLACES 10.REQUEST A QUOTE 11.TIPS BEFORE TRAVEL 11.1 TIPS BEFORE TRAVEL 11.2 CUSTOMER TESTIMONIALS 11.3 ARRANGEMENTS & HELPS 12.FOOTER 1 12.1 OFFERS 12.2 MOST POPULAR VACATIONS 13.FOOTER 2 13.1 ADDRESS 13.2 SUBSCRIBE 13.2 FAQ 13.2 LOCATION 13.5 SOCIAL MEDIA 14.COPY RIGHTS 15.INNER PAGE 15.1 COMMON BANNER 15.2 ALL INNER PAGE STYLES 16.PRE LOADING 17.REVIEWS 18.TOP TRENDINGS 19.INNER PAGE LISTING 20.LISTING 21.LISTING SOCIAL SHARE 22.ROOM AVAILABILITY CHECK 23.SOCIAL MEDIA SHARE 24.MY ACCOUNT DROP DOWN -------------------------------------------------*/
 /*-------------------------------------------------------*/
 /* 1.COMMON CSS 
@@ -4314,7 +4314,7 @@
      font-size: 14px;
      border: 1px solid #efefef;
 }
- #select-search {
+ #event-code {
      background: url(../images/icon/search.png) no-repeat left center #fff;
      border: 0px;
      height: 45px;
@@ -4324,6 +4324,7 @@
      font-size: 14px;
      background-size: 17px;
      background-position-x: 10px;
+     text-transform: uppercase;
 }
  .search-hotel-type {
      padding-left: 18px;
@@ -8245,7 +8246,7 @@
     font-weight: 600;
     font-family: 'Quicksand', sans-serif;
 }
-.tourz-search-10 #select-search
+.tourz-search-10 #event-code
 {
      border: 1px solid;
      border-color: #C0C0C0;
@@ -8258,22 +8259,20 @@
      box-shadow: 1px;
 }
 
-.askquestion-border{
-     height: 300px;
-    overflow: auto;
-}
-.askquestion{
 
+.askquestion{
      border-bottom: 1px solid;
+     border-radius: 9px;
      padding: 5px 20px;
      border-color: #f2f2f2;
      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
-
 }
+
 .askquestion:hover {
     background-color: #f2f2f2;
 }
+
 .modal-footer textarea{
      margin: 6px 0;
 }
@@ -8282,7 +8281,7 @@
      background-color: #f2f2f2;
 }
 
-.manage-askquestion-border{
+.askquestion-border{
     height: 600px;
     overflow: auto;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -8301,7 +8300,7 @@
 }
 /* width */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 7px;
 }
 
 /* Track */
@@ -8311,12 +8310,13 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #5bc0de;
+  background: #f3354e;
+  border-radius: 5px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #8e262d;
 }
 
 .container-full{
@@ -8324,18 +8324,155 @@
      margin: 0 auto;
 }
 
-.modalask{
-     height: 590px;
+
+.modalask .modal-footer {
+     height: 150px !important;
 }
 
-#the-count span{
-     color: #bfbfbf;
-}
-
-.modal-poll {
+/*.modal-poll {
      height: 300px;
-}
+}*/
 .modal-poll div
 {
      margin: 5px 0;
+}
+
+/*Fix padding col-md-6 in manage-question.php*/
+.fix-lr-padding {
+     padding-right: 0 !important;
+     padding-left: 0 !important;
+}
+
+#fix-margin {
+     margin-left: -20px;
+     margin-right: -20px;
+}
+
+#fix-padding-bottom {
+     padding-bottom: 0;
+}
+
+.bg-danger {
+     background: #f3354e !important;
+}
+
+/*Custom scroll body reply modal*/
+#list-answer {
+     overflow: auto;
+     max-height: 390px;
+}
+
+/*Custom button*/
+.custom-btn {
+     height: 20px;
+     /*width: 30px;*/
+     font-size: 15px;
+     line-height: 20px;
+     text-align: center;
+     vertical-align: middle;
+     padding: 0;
+     margin: 0 5px;
+     background-color: transparent;
+     /*color: #ed2f48;*/
+     border: none;
+     /*border: 1px solid red;*/
+     box-shadow: none;
+     transition: .3s all ease-in-out;
+}
+.custom-btn:focus {
+     background-color: transparent;
+}
+
+
+.custom-liked, .custom-liked:focus {
+     color: #ed2f48;
+     /*color: #ff0808;*/
+}
+.custom-liked:hover, .custom-pinned:hover {
+     color: #888888;
+}
+
+.custom-like, .custom-pin {
+     color: #888888;
+}
+.custom-like:hover {
+     color: #ff0808;
+}
+
+.custom-pinned {
+     color: #f1af52;
+}
+.custom-pin:hover {
+     color: #f1af52;
+}
+
+.custom-reply, .custom-reply:focus {
+     color: #55bd31;
+}
+.custom-reply:hover {
+     color: #73e44c;
+}
+
+.custom-edit, .custom-edit:focus {
+     color: #faaf12;
+}
+.custom-edit:hover {
+     color: #fac962;
+}
+
+.custom-del {
+     color: #f3354e;
+}
+.custom-del:hover {
+     color: #f00;
+}
+
+.card .card-title {
+     font-size: 17px !important;
+     font-weight: 700 !important;
+     color: #5b5b5b;
+}
+
+/*Custom button for ask card*/
+/*.askquestion .btn {
+     border: none;
+}
+
+.askquestion .btn:hover {
+     background-color: transparent;
+     box-shadow: none;
+}
+
+.askquestion .btn-warning {
+     color: #f0ad4e;
+     background: transparent;
+}*/
+
+/*.nav-tabs > li {
+    float:none;
+    display:inline-block;
+    zoom:1;
+}
+
+.nav-tabs {
+    text-align:center;
+}*/
+
+@media screen and (max-width: 1000px) {
+     #fix-top {
+          margin-top: 10vh;
+     }
+}
+@media screen and (max-width: 500px) {
+     #fix-top {
+          margin-top: 10vh;
+     }
+}
+
+
+.modal-poll div {
+     margin-bottom: 15px;
+}
+#list-option div, #list-option-update div {
+     margin-bottom: 5px;
 }

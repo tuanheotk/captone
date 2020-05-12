@@ -3,7 +3,8 @@ $title = 'Danh sách người tham dự';
 include('header.php');
 if (isset($_GET["id"])) {
     $event_id = $_GET["id"];
-    $sqlCheckAuthor = "SELECT id FROM event WHERE id = ".$event_id." AND account_id = '".$account_id."'";
+    // $sqlCheckAuthor = "SELECT id FROM event WHERE id = ".$event_id." AND account_id = '".$account_id."'";
+    $sqlCheckAuthor = "SELECT id FROM event WHERE status != 5 AND id = ".$event_id." AND account_id = ".$account_id." UNION SELECT e.id FROM event e, moderator m WHERE e.status !=5 AND e.id = m.event_id AND m.event_id = ".$event_id." AND m.email = '".$account_email."'";
     $resultCheckAuthor = mysqli_query($conn, $sqlCheckAuthor);
 
     if (mysqli_num_rows($resultCheckAuthor) == 0) {
@@ -62,7 +63,7 @@ if (isset($_GET["id"])) {
                             <a href="my-events.php"><i class="fa fa-calendar" aria-hidden="true"></i> Sự kiện của tôi</a>
                         </li>
                         <li>
-                            <a href="my-events.php"><i class="fa fa-check" aria-hidden="true"></i> Sự kiện đã đăng ký tham gia</a>
+                            <a href="my-registered-events.php"><i class="fa fa-check" aria-hidden="true"></i> Sự kiện đã đăng ký tham gia</a>
                         </li>
 
                         <?php 
@@ -82,8 +83,23 @@ if (isset($_GET["id"])) {
             <div class="db-2">
                 <div class="db-2-com db-2-main">
                     <h4>Danh sách người tham dự</h4>
+                    <div style="margin: 10px 15px;">
+                        <?php
+
+                            require("database-config.php");
+                            $eventID = $_GET["id"];
+                        $sqlInfo = "SELECT * FROM event WHERE id = ".$eventID;
+                        $resultInfo = mysqli_query($conn, $sqlInfo);
+                        $rowInfo = mysqli_fetch_assoc($resultInfo);
+                         ?>
+                        <h5>Sự kiện: <?php echo $rowInfo["title"] ?></h5>
+                        <!-- <p><i class="fa fa-map-marker"></i> <?php echo $rowInfo["place"] ?></p>
+                        <p><i class="fa fa-hourglass-start"></i> <?php echo date("H:i - d/m/Y", strtotime($rowInfo["start_date"])) ?></p>
+                        <p><i class="fa fa-hourglass-end"></i> <?php echo date("H:i - d/m/Y", strtotime($rowInfo["end_date"])) ?></p> -->
+                        
+                    </div>
                     <a href="#" data-toggle="modal" data-target="#check-in-modal" class="btn btn-success waves-effect waves-light" style="margin: 10px 15px;">Điểm danh</a>
-                    
+
                     <div class="db-2-main-com db-2-main-com-table">
                         <table class="table table-hover" id="attendee-table">
                             <thead>
@@ -100,7 +116,8 @@ if (isset($_GET["id"])) {
                                 <?php 
                                 require("database-config.php");
                                 $eventID = $_GET["id"];
-                                $sqlAttendee = "SELECT ac.name, ac.code, at.id, at.email, at.status FROM attendee AS at, account AS ac WHERE at.email = ac.email AND event_id = ".$eventID;
+                                // $sqlAttendee = "SELECT ac.name, ac.code, at.id, at.email, at.status FROM attendee AS at, account AS ac WHERE at.email = ac.email AND event_id = ".$eventID;
+                                $sqlAttendee = "SELECT ac.name, ac.code, at.id, at.email, at.status FROM attendee AS at LEFT JOIN account AS ac ON at.email = ac.email WHERE event_id = ".$eventID." ORDER BY at.id";
                                 $resultAtt = mysqli_query($conn, $sqlAttendee);
                                 if (mysqli_num_rows($resultAtt) > 0) {
                                     $count = 0;
@@ -112,9 +129,16 @@ if (isset($_GET["id"])) {
                                         $code = $rowAtt["code"];
 
                                         if ($rowAtt["code"] == "") {
-                                            $code = "######";
-                                            $type = "Bên Ngoài";
-                                            $colorType = 'event-wait';
+                                            if ((strstr($email, "@") == "@vanlanguni.vn")) {
+                                                $code = strstr($email, "@", true);
+                                                $type = "Văn Lang";
+                                                $colorType = "event-reject";
+                                            } else {
+                                                $code = "######";
+                                                $type = "Bên Ngoài";
+                                                $colorType = 'event-wait';
+                                            }
+
                                         } else {
                                             $code = $rowAtt["code"];
                                             $type = "Văn Lang";
@@ -182,29 +206,7 @@ if (isset($_GET["id"])) {
             </div>
         
             <!--RIGHT SECTION-->
-            <div class="db-3">
-                <h4>Thông tin sự kiện</h4>
-                <ul>
-                    <li>
-
-                        <a href="#!"> <img src="images/icon/dbr1.jpg" alt="" />
-                            <?php 
-                            $sqlInfo = "SELECT * FROM event WHERE id = ".$eventID;
-                            $resultInfo = mysqli_query($conn, $sqlInfo);
-                            $rowInfo = mysqli_fetch_assoc($resultInfo);
-                             ?>
-                            <h5><?php echo $rowInfo["title"] ?></h5>
-                            <p><i class="fa fa-map-marker"></i> <?php echo $rowInfo["place"] ?></p>
-                            <p><i class="fa fa-hourglass-start"></i> <?php echo date("H:i - d/m/Y", strtotime($rowInfo["start_date"])) ?></p>
-                            <p><i class="fa fa-hourglass-end"></i> <?php echo date("H:i - d/m/Y", strtotime($rowInfo["end_date"])) ?></p>
-                            <!-- <p><i class="fa fa-phone"></i> 12356987</p> -->
-                            
-                        </a>
-                    </li>
-                    
-                    
-                </ul>
-            </div>
+            
             <!-- Send Ticket -->
             <div id="send-ticket-modal" class="modal fade" role="dialog">
                 <div class="modal-dialog">
@@ -240,21 +242,50 @@ if (isset($_GET["id"])) {
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
                         <div class="modal-body">
-                            <div class="input-field col s12 m3 text-center">
-                                <input type="hidden" id="event-id" value="<?php echo $event_id ?>">
-                                <p class="text-danger" id="no-internet" hidden>Không có kết nối internet không thể điểm danh</p>
-                                <div id="loadingMessage">🎥 Vui lòng cho phép truy cập camera</div>
+                            <ul class="nav nav-tabs nav-justified">
+                                <li class="active">
+                                    <a data-toggle="tab" href="#ticket-checkin">Có vé</a>
+                                </li>
+                                <li>
+                                    <a data-toggle="tab" href="#no-ticket-checkin">Không có vé</a>
+                                </li>
+                            </ul>
 
-								<canvas id="canvas" hidden></canvas>
-                                <p class="text-danger" id="error-checkin"></p>
-								<div id="output" hidden>
+                            <div class="tab-content">
+                                <div id="ticket-checkin" class="tab-pane fade in active">
+                                    <div class="input-field col s12 m3 text-center">
+                                        <input type="hidden" id="event-id" value="<?php echo $event_id ?>">
+                                        <p class="text-danger" id="no-internet" hidden>Không có kết nối internet không thể điểm danh</p>
+                                        <div id="loadingMessage">🎥 Vui lòng cho phép truy cập camera</div>
 
-									<!-- <div id="outputMessage">No QR code detected.</div> -->
+        								<canvas id="canvas" hidden></canvas>
+                                        <p class="text-danger" id="error-checkin"></p>
+        								<div id="output" hidden>
 
-									<!-- <div hidden><b>Data:</b> <span id="outputData"></span></div> -->
+        									<!-- <div id="outputMessage">No QR code detected.</div> -->
 
-								</div>
+        									<!-- <div hidden><b>Data:</b> <span id="outputData"></span></div> -->
+
+        								</div>
+                                    </div>
+
+                                </div>
+                                <div id="no-ticket-checkin" class="tab-pane fade">
+                                    <form id="checkin-no-ticket-form">
+                                        <div class="row">
+                                            <div class="input-field col s12 m9">
+
+                                                <input type="text" class="validates" id="attendee-code" placeholder="Mã sinh viên" title="Mã sinh viên" maxlength="50" required="" style="height: 36px; padding-left: 10px;">
+                                            </div>
+                                            <div class="input-field col s12 m3">
+                                                <input type="hidden" name="action" value="checkin-no-ticket">
+                                                <button type="submit" class="full-btn btn btn-primary waves-light waves-effect">Thêm</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
@@ -313,7 +344,6 @@ include('footer.php');
 
     $('#btn-send-ticket').click(function(){
         var id = $('#id-table-attendee').val();
-        location.reload();
         $.ajax({
             url: 'send-ticket.php',
             method: 'POST',
@@ -454,6 +484,29 @@ include('footer.php');
             $('#no-internet').show();
         }
     },1000)
+
+
+
+    // Check in no ticket
+    $('#checkin-no-ticket-form').submit(function(e) {
+        e.preventDefault();
+        var checkin_form = document.querySelector('#checkin-no-ticket-form');
+
+        $.ajax({
+            url: 'process-my-event.php',
+            method: 'POST',
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            data: new FormData(checkin_form)
+
+        }).done(function(data){
+            alert(data.message)
+        }).fail(function(jqXHR, statusText, errorThrown){
+            console.log("Fail:"+ jqXHR.responseText);
+            console.log(errorThrown);
+        })
+    })
 
 
 </script>

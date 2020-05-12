@@ -1,4 +1,5 @@
-<?php 
+<?php
+    $title = 'Chi tiết sự kiện';
     include "header.php";
     if (!isset($account_role) && $account_role != 2) {
         header("Location: my-events.php");
@@ -199,7 +200,7 @@
 
                   <div class="modal-body">
                     <form id="add-reviewer-form" method="POST" action="<?php  $_SERVER["PHP_SELF"] ?>" >
-                     <input type="text" id="email_mod" style="width: 450px; height: 40px; " name="email" cols="40" rows="3" placeholder="Nhập email của moderator cần thêm"></textarea>
+                     <input type="text" id="email_mod" style="width: 450px; height: 40px; " name="email" cols="40" rows="3" placeholder="Nhập email của người kiểm duyệt cần thêm" required></textarea>
                      <input type="hidden" name="id" value="<?php echo $resultevent['id']; ?>">
                      <BUTTON type="button" class="btn btn-primary" id="btn-add-mod">Thêm</BUTTON>
                      
@@ -255,7 +256,7 @@
                                                     $date = date ("d/m/Y", strtotime($resultcomment["day_comment"]));
                                                 ?>
                                                  <td><?php echo $date; ?></td>
-                                                  <td><a href=''><span class='db-cancel'>Từ chối</span></a>&nbsp;&nbsp;</td>
+                                                  <td><a href='#'><span class='db-cancel'>Từ chối</span></a>&nbsp;&nbsp;</td>
                                                    <td><?php echo $resultcomment["comment"] ?></td>
                                                     <td><?php echo $resultcomment["name"] ?></td>
                                             <tr>

@@ -1,5 +1,11 @@
 <?php 
 session_start();
+if (isset($_SESSION['last_active']) && (time() - $_SESSION['last_active'] > 7200)) {
+    session_unset();
+    // session_destroy();
+}
+$_SESSION['last_active'] = time();
+
 require('database-config.php');
 if (isset($_SESSION['user_email'])) {
     $sqlUserInfo = "SELECT a.id, a.name, a.email, a.code, a.role, a.faculty_id, a.status, f.name AS faculty_name FROM account a, faculty f WHERE a.faculty_id = f.faculty_id AND email = '".$_SESSION['user_email']."'";
@@ -68,7 +74,7 @@ ob_start();
 <body>
     <!-- Preloader -->
     <div id="preloader">
-        <div id="status">;</div>
+        <div id="status"></div>
     </div>
    
 

@@ -5552,7 +5552,8 @@ form p:last-child {
     display: inline-block;
     height: 25px;
     line-height: 25px;
-    font-size: 1rem;
+    /*font-size: 1rem;*/
+    font-size: 1.2rem;
     -webkit-user-select: none;
     /* webkit (safari, chrome) browsers */
     

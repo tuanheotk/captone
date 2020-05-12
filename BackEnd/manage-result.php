@@ -97,13 +97,10 @@ include('header.php');
                     <div class="db-2-main-com" id="fix-padding-bottom">
                         
 
-                        <section class="container-full">
+                       <section class="container-full">
                             <div class="row" id="fix-margin">
-
-                                <!-- List pending question -->
-                                <div class=" col-md-6 fix-lr-padding">
-                                    <h4 class="text-center bg-danger" id="num-pending" data-toggle="modal" data-target="#create-poll-modal">Tạo danh sách bầu chọn <i class="fa fa-plus"></i></h4>
-
+                                <div class=" col-md-4 fix-lr-padding">
+                                    <h4 class="text-center bg-danger" id="num-published">Người tham dự</h4>
                                     <div class="col-md-12 askquestion-border" id="list-pending-question">
                                         
 
@@ -112,59 +109,56 @@ include('header.php');
 
                                                 <input type="hidden" class="question-id" value="">
 
-                                                <h5 class="card-title">Các bạn muốn ăn gì ngày hôm nay?</h5>
-                                                <p class="card-text">Chỉ chọn một</p>
-                                                <p class="card-text"><small class="text-muted">Số người bầu: 20 người</small></p>
-                                                <a href="#" class="custom-btn custom-edit btn-edit-question" data-toggle="modal" data-target="#edit-poll-modal" title="Sửa câu hỏi"><i class="fa fa-pencil" ></i></a>
-                                                <button type="button" data-toggle="modal" data-target="#delete-modal" title="Xoá bình chọn" class="custom-btn custom-del btn-deny-question"><i class="fa fa-times" aria-hidden="true"></i></button>
+                                                <h5 class="card-title">Tổng số người tham dự: 20</h5>
+                                                <p class="card-text">Số người đã điểm danh: 15</p>
+                                                <p class="card-text">Số người chưa điểm danh: 5</p>
                                             </div>
                                         </div>
 
                                         
                                         
                                     </div>
+                                    
 
                                 </div>
-                                <!-- End list pending question -->
-
-                                <!-- List published question -->
-                                <div class=" col-md-6 fix-lr-padding">
-                                    <h4 class="text-center bg-danger" id="num-published">Kết quả</h4>
-
-                                    <div class="col-md-12 askquestion-border" id="list-published-question">
-                                        
-                                        
-
+                                <div class=" col-md-4 fix-lr-padding">
+                                    <h4 class="text-center bg-danger" id="num-published">Câu hỏi</h4>
+                                    <div class="col-md-12 askquestion-border" id="list-pending-question">
                                         <div class="card w-75">
-                                            <div class="card-body poll-card">
-                                                <h5 class="card-title">Các bạn muốn ăn gì ngày hôm nay? </h5>
+                                            <div class="card-body askquestion">
 
-                                                <p>Cơm</p>
-                                                <div class="progress">
-                                                  <div class="progress-bar" role="progressbar" style="width: 15%;" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">15%</div>
-                                                </div>
-                                                <p>Mì xào</p>
-                                                <div class="progress">
-                                                  <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">25%</div>
-                                                </div>
-                                                <p>Hải sản</p>
-                                                <div class="progress">
-                                                  <div class="progress-bar" role="progressbar" style="width: 45%;" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">45%</div>
-                                                </div>
-                                                <p>Tôm hùm</p>
-                                                <div class="progress">
-                                                  <div class="progress-bar" role="progressbar" style="width: 15%;" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">15%</div>
-                                                </div>
+                                                <input type="hidden" class="question-id" value="">
+
+                                                <h5 class="card-title">Tổng số câu hỏi được đặt: 20</h5>
+                                                <h5 class="card-title">Tổng số câu trả lời: 20</h5>
+                                                <p class="card-text">Tổng số câu hỏi được trả lời: 15</p>
+                                                <p class="card-text">Lượt Thích / Không thích: 15 / 5</p>
+                                                <p class="card-text">Tổng số câu hỏi được trả lời: 15</p>
+                                                
                                             </div>
                                         </div>
-
-                                        
                                     </div>
 
                                 </div>
-                                <!-- End list published quesion -->
+                                <div class=" col-md-4 fix-lr-padding">
+                                    <h4 class="text-center bg-danger" id="num-published">Số phiếu bầu</h4>
+                                    <div class="col-md-12 askquestion-border" id="list-pending-question">
+                                        <div class="card w-75">
+                                            <div class="card-body askquestion">
+
+                                                <input type="hidden" class="question-id" value="">
+
+                                                <h5 class="card-title">Tổng số phiếu Bầu: 200</h5>
+                                                <h5 class="card-title">Tổng số cuộc bầu chọn được tạo: 5</h5>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+
+                                </div>
                             </div>
-                        </section>  
+                        </section> 
                     </div>
                 </div>
             </div>

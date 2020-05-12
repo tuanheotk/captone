@@ -240,10 +240,8 @@ if ($action == "add") {
 		$data["result"] = false;
 		$data["message"] = "Vé không hợp lệ";
 	}
-	
-
-	
-	
+} else if ($action == "checkin-no-ticket") {
+	$data["message"] = "test";
 }
 
 mysqli_close($conn);

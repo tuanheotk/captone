@@ -7,7 +7,6 @@
                         <div>
                             <div class="row footernoop">
                                 <div class="col-sm-3 foot-spec foot-com">
-                                    
                                     <div class="wed-logo2">
                                         <a href="index.php"><img src="images/preloader.png" alt="" />
                                         </a>
@@ -55,8 +54,10 @@
 
     <!-- Datatables -->
     <script type="text/javascript" src="vendor/DataTables/datatables.min.js"></script>
-    <script type="text/javascript" src="vendor/ckeditor5/ckeditor.js"></script>
     <!-- CKEditor -->
+    <script type="text/javascript" src="vendor/ckeditor5/ckeditor.js"></script>
+    <!-- Pusher -->
+    <script type="text/javascript" src="vendor/Pusher/pusher.min.js"></script>
 </body>
 
 </html>

@@ -79,6 +79,8 @@ if ($action == "add") {
 	}
 
 } else if ($action == "login") {
+	$_SESSION['last_active'] = time();
+	
 	$email = $_POST["email"];
 	$pass = $_POST["password"];
 	$sqlCheckInfo = "SELECT email, verified FROM account WHERE verify_code != '' AND email = '".$email."' AND password = '".$pass."'";
