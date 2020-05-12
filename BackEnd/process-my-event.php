@@ -7,8 +7,8 @@ $action = $_POST["action"];
 
 if ($action == "get-mod-list-cfg-event") {
 	$event_id = $_POST["event-id"];
-	$email_host = $_POST["email-host"];
-	$sql = "SELECT id, event_id, email FROM moderator WHERE email != '".$email_host."' AND event_id = ".$event_id;
+	// $email_host = $_POST["email-host"];
+	$sql = "SELECT id, event_id, email FROM moderator WHERE email != '".$_SESSION["user_email"]."' AND event_id = ".$event_id;
 	$result = mysqli_query($conn, $sql);
 	if(!$result){
 		$data["result"] = false;
@@ -104,24 +104,21 @@ if ($action == "add") {
 	$resultInsertEvent = mysqli_query($conn, $sqlInsertEvent);
 	// $resultInsertEvent = true;
 
-	$getMaxID = mysqli_query($conn, "SELECT MAX(id) from event");
-    if (mysqli_num_rows($getMaxID) == 0) {
-    	$event_id = 1;
-    } else {
-    	$row = mysqli_fetch_assoc($getMaxID);
-    	$event_id = $row["MAX(id)"];
-    }
+	// $getMaxID = mysqli_query($conn, "SELECT MAX(id) from event");
+	// if (mysqli_num_rows($getMaxID) == 0) {
+	// 	$event_id = 1;
+	// } else {
+	// 	$row = mysqli_fetch_assoc($getMaxID);
+	// 	$event_id = $row["MAX(id)"];
+	// }
 
-    $sqlInsertMod = "INSERT INTO moderator(email, event_id) VALUES('".$_SESSION["user_email"]."', ".$event_id.")";
-    $resultInsertMod = mysqli_query($conn, $sqlInsertMod);
+    // $sqlInsertMod = "INSERT INTO moderator(email, event_id) VALUES('".$_SESSION["user_email"]."', ".$event_id.")";
+    // $resultInsertMod = mysqli_query($conn, $sqlInsertMod);
     // $resultInsertMod = true;
 
     if($resultInsertEvent){
     	move_uploaded_file($_FILES["cover-image"]["tmp_name"], $target_file);
-    	$resultInsertMod = mysqli_query($conn, $sqlInsertMod);
-    	if ($resultInsertMod) {
-        	$data["result"] = true;
-    	}
+    	$data["result"] = true;
     }else{
         $data["result"] = false;
         $data["error"] = "Error: ".mysqli_error($conn);
@@ -175,15 +172,23 @@ if ($action == "add") {
     }
 
 } else if ($action == "delete") {
-	$id = $_POST["id"];
-	$sql = "UPDATE event SET status = 5 WHERE id = ".$id;
-	$result = mysqli_query($conn, $sql);
-	if($result){
-		$data["result"]=true;
-	}else{
+	$even_id = $_POST["id"];
+	$user_id = $_POST["uid"];
+
+	$sql_check_owner = "SELECT id FROM event WHERE id = $even_id AND account_id = $user_id";
+	$result_check_owner = mysqli_query($conn, $sql_check_owner);
+
+	if (mysqli_num_rows($result_check_owner) > 0) {
+		$sql_delete_event = "UPDATE event SET status = 5 WHERE id = ".$even_id;
+		$result_delete_event = mysqli_query($conn, $sql_delete_event);
+		if($result_delete_event){
+			$data["result"]=true;
+		}else{
+			$data["result"]=false;
+		}
+	} else {
 		$data["result"]=false;
 	}
-
 } else if ($action == "setting") {
 	$event_id = $_POST["id"];
 	
@@ -241,7 +246,38 @@ if ($action == "add") {
 		$data["message"] = "Vé không hợp lệ";
 	}
 } else if ($action == "checkin-no-ticket") {
-	$data["message"] = "test";
+	$event_id = $_POST["event-id"];
+	$email = $_POST["attendee-email"];
+
+	// $email = $attendee_code."@vanlanguni.vn";
+
+	$sql_check_registered = "SELECT id FROM attendee WHERE email = '$email' AND event_id = $event_id";
+	$result_check_registered = mysqli_query($conn, $sql_check_registered);
+
+	if (mysqli_num_rows($result_check_registered) > 0) {
+		// Update status for registered attendee
+		$sql_update_status = "UPDATE attendee SET status = 1 WHERE email = '$email' AND event_id = $event_id";
+		$result_update_status = mysqli_query($conn, $sql_update_status);
+		
+		if ($result_update_status) {
+			$data["result"] = true;
+			$data["message"] = "Điểm danh thành công";
+		} else {
+			$data["result"] = false;
+		}
+		
+	} else {
+		// Insert new attendee
+		$sql_insert_new_attendee = "INSERT INTO attendee (email, event_id, status) VALUES ('$email', $event_id, 1)";
+		$result_insert_new_attendee = mysqli_query($conn, $sql_insert_new_attendee);
+
+		if ($result_insert_new_attendee) {
+			$data["result"] = true;
+			$data["message"] = "Điểm danh thành công";
+		} else {
+			$data["result"] = false;
+		}
+	}	
 }
 
 mysqli_close($conn);

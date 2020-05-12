@@ -85,17 +85,35 @@ if (isset($_GET["id"])) {
                     <h4>Danh sách người tham dự</h4>
                     <div style="margin: 10px 15px;">
                         <?php
-
-                            require("database-config.php");
-                            $eventID = $_GET["id"];
+                        require("database-config.php");
+                        $eventID = $_GET["id"];
                         $sqlInfo = "SELECT * FROM event WHERE id = ".$eventID;
                         $resultInfo = mysqli_query($conn, $sqlInfo);
                         $rowInfo = mysqli_fetch_assoc($resultInfo);
-                         ?>
+
+                        $sql_get_count = "SELECT
+                        (SELECT COUNT(id) FROM attendee WHERE event_id = $event_id AND ticket_code != '') AS num_registered,
+                        (SELECT COUNT(id) FROM attendee WHERE event_id = $event_id AND ticket_code != '' AND status = 1) AS num_joined,
+                        (SELECT COUNT(id) FROM attendee WHERE event_id = $event_id AND ticket_code = '' AND status = 1) AS num_guest
+                        FROM DUAL";
+
+                        $result_get_count = mysqli_query($conn, $sql_get_count);
+                        $row_count = mysqli_fetch_assoc($result_get_count);
+
+                        $num_registered = $row_count["num_registered"];
+                        $num_joined = $row_count["num_joined"];
+                        $num_guest = $row_count["num_guest"];
+
+
+                        ?>
                         <h5>Sự kiện: <?php echo $rowInfo["title"] ?></h5>
                         <!-- <p><i class="fa fa-map-marker"></i> <?php echo $rowInfo["place"] ?></p>
                         <p><i class="fa fa-hourglass-start"></i> <?php echo date("H:i - d/m/Y", strtotime($rowInfo["start_date"])) ?></p>
                         <p><i class="fa fa-hourglass-end"></i> <?php echo date("H:i - d/m/Y", strtotime($rowInfo["end_date"])) ?></p> -->
+
+                        <h5>Số người đăng ký: <?php echo $num_registered ?></h5>
+                        <h5>Số người tham dự: <?php echo $num_joined ?></h5>
+                        <h5>Số người tham dự phát sinh: <?php echo $num_guest ?></h5>
                         
                     </div>
                     <a href="#" data-toggle="modal" data-target="#check-in-modal" class="btn btn-success waves-effect waves-light" style="margin: 10px 15px;">Điểm danh</a>
@@ -117,7 +135,7 @@ if (isset($_GET["id"])) {
                                 require("database-config.php");
                                 $eventID = $_GET["id"];
                                 // $sqlAttendee = "SELECT ac.name, ac.code, at.id, at.email, at.status FROM attendee AS at, account AS ac WHERE at.email = ac.email AND event_id = ".$eventID;
-                                $sqlAttendee = "SELECT ac.name, ac.code, at.id, at.email, at.status FROM attendee AS at LEFT JOIN account AS ac ON at.email = ac.email WHERE event_id = ".$eventID." ORDER BY at.id";
+                                $sqlAttendee = "SELECT ac.name, ac.code, at.id, at.email, at.ticket_code, at.status FROM attendee AS at LEFT JOIN account AS ac ON at.email = ac.email WHERE event_id = ".$eventID." ORDER BY at.id";
                                 $resultAtt = mysqli_query($conn, $sqlAttendee);
                                 if (mysqli_num_rows($resultAtt) > 0) {
                                     $count = 0;
@@ -127,6 +145,7 @@ if (isset($_GET["id"])) {
                                         $name = $rowAtt["name"];
                                         $email = $rowAtt["email"];
                                         $code = $rowAtt["code"];
+                                        $ticket = $rowAtt["ticket_code"];
 
                                         if ($rowAtt["code"] == "") {
                                             if ((strstr($email, "@") == "@vanlanguni.vn")) {
@@ -155,6 +174,9 @@ if (isset($_GET["id"])) {
                                                 $status = "Đã điểm danh";
                                                 $colorStatus = "event-accept";
                                                 $modal = "";
+
+                                                if ($ticket == "") $status = "Đã điểm danh (phát sinh)";
+
                                                 break;
                                             case 2:
                                                 $status = "Chờ duyệt vé";
@@ -274,12 +296,13 @@ if (isset($_GET["id"])) {
                                     <form id="checkin-no-ticket-form">
                                         <div class="row">
                                             <div class="input-field col s12 m9">
-
-                                                <input type="text" class="validates" id="attendee-code" placeholder="Mã sinh viên" title="Mã sinh viên" maxlength="50" required="" style="height: 36px; padding-left: 10px;">
+                                                <input type="email" class="form-control" name=" attendee-email" id="attendee-email" placeholder="Email người tham dự" title="Email người tham dự" required maxlength="40">
+                                                <!-- <input type="text" name="attendee-code" id="attendee-code" placeholder="Mã sinh viên" title="Mã sinh viên" maxlength="50" required="" maxlength="20" style="height: 36px; padding-left: 10px;"> -->
                                             </div>
                                             <div class="input-field col s12 m3">
                                                 <input type="hidden" name="action" value="checkin-no-ticket">
-                                                <button type="submit" class="full-btn btn btn-primary waves-light waves-effect">Thêm</button>
+                                                <input type="hidden" name="event-id" value="<?php echo $event_id ?>">
+                                                <button type="submit" class="full-btn btn btn-success waves-light waves-effect">Điểm danh</button>
                                             </div>
                                         </div>
                                     </form>
@@ -486,10 +509,23 @@ include('footer.php');
     },1000)
 
 
+    // $('#attendee-code').on('keydown keyup', function(e) {
+    //     if (e.keyCode == 32) {
+    //         return false;
+    //     }
+    // })
 
     // Check in no ticket
     $('#checkin-no-ticket-form').submit(function(e) {
         e.preventDefault();
+
+
+        // if ($('#attendee-code').val().replace(/\s+/g, ' ').trim().length < 6) {
+        //     alert('Mã sinh viên tối thiểu 6 kí tự');
+        //     $('#attendee-code').focus();
+        //     return false;
+        // }
+
         var checkin_form = document.querySelector('#checkin-no-ticket-form');
 
         $.ajax({
@@ -501,7 +537,10 @@ include('footer.php');
             data: new FormData(checkin_form)
 
         }).done(function(data){
-            alert(data.message)
+            if (data.result) {
+                alert(data.message);
+                $('#attendee-email').val('');
+            }
         }).fail(function(jqXHR, statusText, errorThrown){
             console.log("Fail:"+ jqXHR.responseText);
             console.log(errorThrown);

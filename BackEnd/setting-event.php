@@ -159,13 +159,14 @@ if (isset($_GET["id"])) {
                             <div class="modal-body">
                                 <div class="row">
                                     <div class="input-field col s12 m9">
-                                        <input type="email" class="validate" id="email-mod" placeholder="Email người hổ trợ" title="Email người hổ trợ" maxlength="50" required="" style="height: 36px; padding-left: 10px;">
+                                        <!-- <input type="email" class="validate" id="email-mod" placeholder="Email người hổ trợ" title="Email người hổ trợ" maxlength="50" required="" style="height: 36px; padding-left: 10px;"> -->
+
+                                        <input type="email" class="form-control" id="email-mod" placeholder="Email người hổ trợ" title="Email người hổ trợ" maxlength="50" required="">
 
 
                                     </div>
                                     <div class="input-field col s12 m3">
                                         <input type="hidden" id="event-id" name="event-id" value="<?php echo $event_id ?>">
-                                        <input type="hidden" name="email-host" id="email-host" value="<?php echo $account_email ?>">
                                         <button type="submit" class="full-btn btn btn-primary waves-light waves-effect" id="btn-add-moderator">Thêm</button>
                                     </div>
                                 </div>
@@ -313,7 +314,6 @@ include('footer.php');
     });
 
     var event_id = $('#event-id').val();
-    var email_host = $('#email-host').val();
 
     // getModList(event_id, email_host);
 
@@ -322,7 +322,7 @@ include('footer.php');
             method: 'POST',
             dataType: 'json',
             url: 'process-my-event.php',
-            data: {'action' : 'get-mod-list-cfg-event', 'event-id' : event_id, 'email-host' : email_host},
+            data: {'action' : 'get-mod-list-cfg-event', 'event-id' : event_id},
         }).done(function(data){
             if(data.result){
                 var rows = '';

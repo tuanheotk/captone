@@ -99,58 +99,45 @@ include('header.php');
 
                        <section class="container-full">
                             <div class="row" id="fix-margin">
-                                <div class=" col-md-4 fix-lr-padding">
-                                    <h4 class="text-center bg-danger" id="num-published">Người tham dự</h4>
-                                    <div class="col-md-12 askquestion-border" id="list-pending-question">
-                                        
-
-                                        <div class="card w-75">
-                                            <div class="card-body askquestion">
-
-                                                <input type="hidden" class="question-id" value="">
-
-                                                <h5 class="card-title">Tổng số người tham dự: 20</h5>
-                                                <p class="card-text">Số người đã điểm danh: 15</p>
-                                                <p class="card-text">Số người chưa điểm danh: 5</p>
-                                            </div>
-                                        </div>
-
-                                        
-                                        
-                                    </div>
-                                    
-
-                                </div>
-                                <div class=" col-md-4 fix-lr-padding">
-                                    <h4 class="text-center bg-danger" id="num-published">Câu hỏi</h4>
+                                <div class=" col-md-6 fix-lr-padding">
+                                    <h4 class="text-center bg-danger" id="num-published">Câu hỏi <i class="fa fa-question-circle-o"></i></h4>
                                     <div class="col-md-12 askquestion-border" id="list-pending-question">
                                         <div class="card w-75">
                                             <div class="card-body askquestion">
 
                                                 <input type="hidden" class="question-id" value="">
 
-                                                <h5 class="card-title">Tổng số câu hỏi được đặt: 20</h5>
+                                                <h5 class="card-title">Tổng số câu hỏi: 20 </h5>
                                                 <h5 class="card-title">Tổng số câu trả lời: 20</h5>
-                                                <p class="card-text">Tổng số câu hỏi được trả lời: 15</p>
-                                                <p class="card-text">Lượt Thích / Không thích: 15 / 5</p>
-                                                <p class="card-text">Tổng số câu hỏi được trả lời: 15</p>
+                                                <h5 class="card-title">Lượt Thích: 15 </i></h5>
+                                                <p class="card-text">
+                                                    <button class="btn btn-success" type="button" data-toggle="modal" data-target="#export-question">
+                                                        Xuất file câu hỏi <i class="fa fa-table"></i>
+                                                    </button>
+                                                    
+                                                </p>
                                                 
                                             </div>
                                         </div>
                                     </div>
 
                                 </div>
-                                <div class=" col-md-4 fix-lr-padding">
-                                    <h4 class="text-center bg-danger" id="num-published">Số phiếu bầu</h4>
+                                <div class=" col-md-6 fix-lr-padding">
+                                    <h4 class="text-center bg-danger" id="num-published">Cuộc bầu chọn <i class="fa fa-hand-o-left"></i></h4>
                                     <div class="col-md-12 askquestion-border" id="list-pending-question">
                                         <div class="card w-75">
                                             <div class="card-body askquestion">
 
                                                 <input type="hidden" class="question-id" value="">
-
-                                                <h5 class="card-title">Tổng số phiếu Bầu: 200</h5>
-                                                <h5 class="card-title">Tổng số cuộc bầu chọn được tạo: 5</h5>
-                                                
+                                                <h5 class="card-title">Tổng số cuộc bầu chọn được tạo: 5 </h5>
+                                                <h5 class="card-title">Tổng số người bầu: 200</h5>
+                                                <h5 class="card-title">Tổng số phiếu trung bình: 40</h5>
+                                                <p class="card-text">
+                                                    <button class="btn btn-success" type="button" data-toggle="modal" data-target="#export-poll">
+                                                        Xuất file bầu chọn <i class="fa fa-table"></i>
+                                                    </button>
+                                                    
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -164,252 +151,49 @@ include('header.php');
             </div>
             
 
-            <!-- Create Poll Modal -->
-            <div id="create-poll-modal" class="modal fade" role="dialog">
+            
+            
+            <!-- Export Question -->
+            <div id="export-question" class="modal fade" role="dialog">
                 <div class="modal-dialog">
                     <!-- Modal content-->
-                    <form method="POST" action="<?php  $_SERVER["PHP_SELF"] ?>">
+                    <form id="export-question" method="POST" action="">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <h5>Tạo cuộc bầu chọn mới</h5>
-                            </div>
-
-                            <div class="modal-body modal-poll">
-                                <div class="container-fluid">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="input-field">
-                                                <input type="text" name="" class="form-control" placeholder="Bạn muốn khảo sát điều gì">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-
-                                    <div id="list-option">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control" placeholder="Lựa chọn" maxlength="30">
-                                                    <div class="input-group-btn">
-                                                        <button class="btn btn-danger" type="button">
-                                                            <i class="fa fa-times"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control" placeholder="Lựa chọn" maxlength="30">
-                                                    <div class="input-group-btn">
-                                                        <button class="btn btn-danger" type="button">
-                                                            <i class="fa fa-times"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control" placeholder="Lựa chọn" maxlength="30">
-                                                    <div class="input-group-btn">
-                                                        <button class="btn btn-danger" type="button">
-                                                            <i class="fa fa-times"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        
-                                        
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <button class="btn btn-success" type="button">Thêm lựa chọn</button>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input" id="customSwitches">
-                                                <label class="custom-control-label" for="customSwitches">Cho phép người tham dự chọn nhiều lựa chọn</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                
-
-
-                                
-
-                                <!-- <div class="col-md-2">
-                                    <input type="number" class="form-control" name="" value="2">
-                                </div> -->
-
-
-
-
-                                <!-- <div class="row">
-                                    <div class="col m12 s12">
-                                        <div class="custom-control custom-switch">
-                                            <input type="checkbox" class="custom-control-input" id="customSwitches">
-                                            <label class="custom-control-label" for="customSwitches">Cho phép người tham dự chọn nhiều lựa chọn</label>
-                                        </div>
-                                    </div>
-                                </div> -->
-
-                                  <!-- <div class="col-md-12">
-                                    <input type="text" class="form-control" placeholder="Bạn muốn khảo sát điều gì?"  aria-describedby="basic-addon2">
-                                  </div>
-                                    <div class="col-md-10 col-sm-10">
-                                      <input type="text" class="form-control" placeholder="Lựa chọn" aria-describedby="basic-addon2">
-                                    </div>
-                                    <div class="col-md-2 col-sm-10">
-                                      <a href="#" class="delete-event btn waves-effect waves-light btn-sm btn-danger" title="Xóa số câu khảo sát"><i class="fa fa-trash-o" ></i></a>
-                                    </div>
-                                    <div class="col-md-2">
-                                      <button class="btn btn-success btn-block"><i class="fa fa-plus"></i></button>
-                                    </div>
-                                    <div class="col-md-12">
-                                      <div class="custom-control custom-switch">
-                                        <input type="checkbox" class="custom-control-input" id="customSwitches">
-                                        <label class="custom-control-label" for="customSwitches">Cho phép người tham dự chọn nhiều lựa chọn</label>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <input class="form-control" type="number" name="" value="2">
-                                    </div> -->
-                            </div>
-                            
-                            <div class="modal-footer">    
-                                  <div class="col-md-12">
-                                    <div class="col-md-8">
-                                    </div>
-                                    <div class="col-md-4">
-                                      <button class="btn btn-success btn-block"><i class="fa fa-plus"> Tạo</i></button>
-                                    </div>
-                                  </div>
-                            </div>  
-                        </div>
-                    </form>
-                </div>              
-            </div>
-            <!-- Edit Poll Modal -->
-            <div id="edit-poll-modal" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <!-- Modal content-->
-                    <form method="POST" action="<?php  $_SERVER["PHP_SELF"] ?>">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <h5>Chỉnh sửa cuộc bầu chọn</h5>
-                            </div>
-                            <div class="modal-body modal-poll">
-                                  <div class="container-fluid">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="input-field">
-                                                <input type="text" name="" class="form-control" placeholder="Bạn muốn khảo sát điều gì">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-
-                                    <div id="list-option">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control" placeholder="Lựa chọn" maxlength="30">
-                                                    <div class="input-group-btn">
-                                                        <button class="btn btn-danger" type="button">
-                                                            <i class="fa fa-times"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control" placeholder="Lựa chọn" maxlength="30">
-                                                    <div class="input-group-btn">
-                                                        <button class="btn btn-danger" type="button">
-                                                            <i class="fa fa-times"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control" placeholder="Lựa chọn" maxlength="30">
-                                                    <div class="input-group-btn">
-                                                        <button class="btn btn-danger" type="button">
-                                                            <i class="fa fa-times"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        
-                                        
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <button class="btn btn-success" type="button">Thêm lựa chọn</button>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input" id="customSwitches">
-                                                <label class="custom-control-label" for="customSwitches">Cho phép người tham dự chọn nhiều lựa chọn</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="modal-footer">    
-                                  <div class="col-md-12">
-                                    <div class="col-md-8">
-                                    </div>
-                                    <div class="col-md-4">
-                                      <button class="btn btn-success btn-block">Sửa</i></button>
-                                    </div>
-                                  </div>
-                            </div>  
-                        </div>
-                    </form>
-                </div>              
-            </div>
-            <!-- Delete Event Event -->
-            <div id="delete-modal" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <!-- Modal content-->
-                    <form id="delete-product-form" method="POST" action="<?php  $_SERVER["PHP_SELF"] ?>">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <h4 class="modal-title"> Xoá bình chọn</h4>
+                                <h4 class="modal-title"> Xuất file câu hỏi</h4>
                             </div>
                             <div class="modal-body">
                                 <input type="hidden" name="id" id="did">
                                 <input type="hidden" name="dname" id="dname">
-                                <p>Bạn có muốn xóa bình chọn: <strong id="event-will-delete"></strong> ?</p>             
+                                <p>Bạn có muốn xuất file câu hỏi và câu trả lời sang định dạng excel không?</p>             
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
-                                <button type="button" class="btn btn-danger" id="delete-event-btn">Xóa</button>
+                                <button type="button" class="btn btn-success" id="delete-event-btn">Xuất</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>              
+            </div>
+            <!-- Export Poll -->
+            <div id="export-poll" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <form id="export-poll" method="POST" action="">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title"> Xuất file bầu chọn</h4>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" name="id" id="did">
+                                <input type="hidden" name="dname" id="dname">
+                                <p>Bạn có muốn xuất file bầu chọn lời sang định dạng excel không?</p>             
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                <button type="button" class="btn btn-success" id="delete-event-btn">Xuất</button>
                             </div>
                         </div>
                     </form>

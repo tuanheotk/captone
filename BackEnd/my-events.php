@@ -80,7 +80,7 @@ include('header.php');
                                 <?php
                                 // $sql = "SELECT e.*, a.email FROM event e, account a WHERE e.status < 5 AND e.account_id = a.id AND a.email = '".$_SESSION["user_email"]."'";
 
-                                $sql = "SELECT e.* FROM event e, account a WHERE e.status < 5 AND e.account_id = a.id AND a.email = '".$account_email."' UNION SELECT e.* FROM event e, moderator m WHERE e.status < 5 AND e.id = m.event_id AND m.email = '".$account_email."'";
+                                $sql = "SELECT e.* FROM event e, account a WHERE e.status < 5 AND e.account_id = a.id AND a.email = '".$account_email."' UNION SELECT e.* FROM event e, moderator m WHERE e.status < 5 AND e.id = m.event_id AND m.email = '".$account_email."' ORDER BY id DESC";
 
                                 $result = mysqli_query($conn, $sql);
                                 $count = 0;
@@ -200,11 +200,12 @@ include('header.php');
                             <div class="modal-body">
                                 <input type="hidden" name="id" id="did">
                                 <input type="hidden" name="dname" id="dname">
+                                <input type="hidden" id="uid" value="<?php echo $account_id ?>">
                                 <p>Bạn có muốn xóa sự kiện: <strong id="event-will-delete"></strong> ?</p>             
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
-                                <button type="button" class="btn btn-danger" id="delete-event-btn">Xóa</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal" id="delete-event-btn">Xóa</button>
                             </div>
                         </div>
                     </form>
@@ -257,15 +258,18 @@ include('footer.php');
 
     $('#delete-event-btn').click(function(){
         var id = $('#did').val();
+        var uid = $('#uid').val();
         $.ajax({
             url: 'process-my-event.php',
             method: 'POST',
             dataType: 'json',
-            data: {'action': 'delete', 'id': id}
+            data: {'action': 'delete', 'id': id, 'uid': uid}
         }).done(function(data){
             if(data.result){
                 alert('Sự kiện đã được xóa');
                 location.reload();
+            } else {
+                alert('Bạn là người hổ trợ của sự kiện nên không có quyền xóa sự kiện này');
             }
         })
     })

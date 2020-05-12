@@ -1,7 +1,7 @@
 <?php
-$title = 'Đặt câu hỏi';
+$title = 'Bầu chọn';
 include('header.php');
-/*if (isset($_GET["id"])) {
+if (isset($_GET["id"])) {
     $event_id = $_GET["id"];
 
     $sql_get_event_info = "SELECT title, code FROM event WHERE status = 4 AND id = ".$event_id;
@@ -29,7 +29,7 @@ include('header.php');
 
 } else {
     header("Location: events.php");
-}*/
+}
 
 ?>
 
@@ -63,9 +63,12 @@ include('header.php');
     <div class="container">
         <div class="row">
             <div class="tourz-search-10">
-                <h2>Hãy bình chọn cho sự kiện</h2>
-                <h2>Mã sự kiện: <span>CG45</span></h2>
-                <h4>Tên sự kiện: Các bạn nghỉ dịch để làm gì</h4>
+                <h2>Hãy đặt câu hỏi cho sự kiện</h2>
+                <h2>Mã sự kiện: <span><?php echo $event_code ?></span></h2>
+                <h4><?php echo $event_name ?></h4>
+                <input type="hidden" id="user-id" value="<?php echo $account_id ?>">
+                <input type="hidden" id="user-fullname" value="<?php echo $account_name ?>">
+                <input type="hidden" id="event-id" value="<?php echo $event_id ?>">
                 <!-- <h2><?php echo $account_name ?></h2>
                 <h2><?php echo $account_id ?></h2> -->
                 
@@ -78,57 +81,69 @@ include('header.php');
 <section>
     <div class="container">
 
-        <!-- List question -->
-        <div class="card w-75" id="list-question">
+        <!-- List poll -->
+        <div class="card w-75" id="list-poll">
             
 
             <div class="card w-75">   
-                <div class="card-body askquestion">
-                    <input type="hidden" class="question-id" value="">
-                    <h5 class="card-title user-fullname">Các bạn thích ăn gì trong ngày nghỉ dịch?</h5>
-                    <p class="card-text question-content">Số người bầu chọn: 20 <i class="fa fa-users"></i></p>
-                    <p class="card-text question-time"><small class="text-muted">Số câu trả lời được phép chọn: 2</small></p>
+                <div class="card-body poll-card">
+                    <input type="hidden" class="poll-id" value="">
+                    <input type="hidden" class="poll-max-choice" value="">
+                    <h6>
+                        <span class="card-title">Các bạn thích ăn gì trong ngày nghỉ dịch?</span>
+                        <span class="pull-right" title="Số người đã bầu chọn">50 <i class="fa fa-user"></i></span>
+                    </h6>
+                    <hr>
+
+                    <p class="card-text"><small class="text-muted">Số câu trả lời được phép chọn: 2</small></p>
+
                     <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option2">
-                      <label class="form-check-label" for="inlineCheckbox1">Tôm hùm</label>
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="">
+                        <label class="form-check-label" for="inlineCheckbox1">Tôm hùm</label>
                     </div>
                     <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
-                      <label class="form-check-label" for="inlineCheckbox2">Thịt bò</label>
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="">
+                        <label class="form-check-label" for="inlineCheckbox2">Thịt bò</label>
                     </div>
                     <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option2">
-                      <label class="form-check-label" for="inlineCheckbox3">Mì Hải sản</label>
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="">
+                        <label class="form-check-label" for="inlineCheckbox3">Mì Hải sản</label>
                     </div>
                     <button type="button" class="btn btn-info" title="Gửi">Gửi</button>
                 </div>
             </div>
 
+
             <div class="card w-75">   
-                <div class="card-body askquestion">
-                    <input type="hidden" class="question-id" value="">
-                    <h5 class="card-title user-fullname">Các bạn thích ăn gì trong ngày nghỉ dịch?</h5>
-                    <p class="card-text question-content">Số người bầu chọn: 20 <i class="fa fa-users"></i></p>
-                    <p class="card-text question-time"><small class="text-muted">Số câu trả lời được phép chọn: 2</small></p>
+                <div class="card-body poll-card">
+                    <input type="hidden" class="poll-id" value="">
+                    <input type="hidden" class="poll-max-choice" value="">
+
+                    <h6>
+                        <span class="card-title poll-title">Các bạn thích ăn gì trong ngày nghỉ dịch?</span>
+                        <span class="pull-right num-attendee" title="Số người đã bầu chọn">50 <i class="fa fa-user"></i></span>
+                    </h6>
+                    <hr>
+                    <!-- <p class="card-text question-time"><small class="text-muted">Số câu trả lời được phép chọn: 2</small></p> -->
                     <div class="form-check form-check-inline">
                         <p>Tôm hùm</p>
                         <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: 15%;" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">15%</div>
+                            <div class="progress-bar progress-bar-striped active progress-bar-danger" role="progressbar" style="width: 15%;" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">15%</div>
                         </div>
                     </div>
                     <div class="form-check form-check-inline">
                         <p>Thịt bò</p>
                         <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: 35%;" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">35%</div>
+                            <div class="progress-bar progress-bar-striped active progress-bar-grey" role="progressbar" style="width: 35%;" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">35%</div>
                         </div>
                     </div>
                     <div class="form-check form-check-inline">
                         <p>Mì hải sản</p>
                         <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: 50%;" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">50%</div>
+                            <div class="progress-bar progress-bar-striped active progress-bar-danger" role="progressbar" style="width: 50%;" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">50%</div>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-warning" title="Gửi">Sửa</button>
+                    <button type="button" class="btn btn-success" title="Sửa">Sửa bầu chọn</button>
                 </div>
             </div>
             
@@ -136,390 +151,276 @@ include('header.php');
     </div>
 </section>
 
-<!-- Reply question modal-->
-<div id="reply-question-modal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <form id="" method="POST" action="<?php  $_SERVER["PHP_SELF"] ?>">
-            <div class="modal-content modalask">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title"> Trả lời câu hỏi</h4>
-                    <div class="card-body askquestion">
-                          <h5 class="card-title" id="asker-name"></h5>
-                          <p class="card-text" id="question-content"></p>
-                          <p class="card-text"><small class="text-muted" id="question-time"></small></p>
-                        </div>
-                </div>
-                <div class="modal-body" id="list-answer">
-                    <div class="card w-75">
-                        <div class="card-body askquestion">
-                            <h5 class="card-title">Person 1</h5>
-                            <p class="card-text">Content</p>
-                            <p class="card-text"><small class="text-muted">12:34 - 20/02/2020</small></p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="modal-footer">    
-                    <div class="col-md-10 col-10">
-                        <textarea rows="4" type="text" class="form-control" id="reply-content" placeholder="Nhập câu trả lời của bạn" aria-describedby="basic-addon2" maxlength="300"></textarea>
-                        <div class="text-muted">
-                            <span id="count-char">0</span> <span>/ 300</span>
-                        </div>
-                    </div>
-                    <div class="col-md-2 col-2">
-                        <div class="input-group-append ">
-                            <input type="hidden" id="question-id">
-                            <button class="btn btn-success " id="btn-send-reply" type="button">Trả lời</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
 
-            <?php include('footer.php') ?>
-    <script type="text/javascript">
+<?php include('footer.php') ?>
+<script type="text/javascript">
+    //Pusher
+    var pusher2 = new Pusher('71289e96793d3248d6ec', {
+        cluster: 'ap1',
+        forceTLS: true
+    });
 
 
-        // Pusher
-        var pusher = new Pusher('51111816fa8714dbec22', {
-            cluster: 'ap1',
-            forceTLS: true
-            // encrypted: true
-        });
+    get_published_poll();
 
-        var channel = pusher.subscribe('ask-page');
-        channel.bind('published-question', function(data) {
+    var event_id = $('#event-id').val();
+
+    $(document).ready(function(){
+        // Change checkbox
+        $('input[type=checkbox]').on('click', function() {
+            $(this).val(this.checked ? 1 : 0);
+        })
+
+    })
+
+
+    // Realtime published poll
+    var channel_poll = pusher2.subscribe('vote-page-'+event_id);
+    channel_poll.bind('refresh-published-poll', function() {
+        // Load published poll
+        get_published_poll();
+    });
+
+    
+
+
+
+    function get_published_poll(){
+
+        // Check id option selected
+        var option_id_selected = new Array();
+        $('#list-poll .poll-no-vote .form-check-input').each(function(){
+            if (this.checked) option_id_selected.push($(this).attr('id'));
+        })
+        // console.log(option_id_selected);
+
+        var event_id = $('#event-id').val();
+        var user_id = $('#user-id').val();
+
+        $.ajax({
+            url: 'process-poll.php',
+            method: 'POST',
+            data: {'action': 'get-published-poll', 'event-id': event_id, 'user-id': user_id}
+        }).done(function(data){
             // console.log(data);
-            // Load list question realtime
-            var user_id = $('#user-id').val();
-
             if (data.result) {
-                    var rows = '';
-                    $.each(data.questions, function(index, q) {
-                        var num_like = (q.num_like > 0) ? q.num_like : '';
-                        var question_id = q.id;
+                var rows = '';
+                $.each(data.poll, function(index, p) {
 
-                        rows+= '<div class="card w-75">';
-                        rows+= '<div class="card-body askquestion">';
-                        rows+= '<h5 class="card-title user-fullname">'+q.user_fullname+'</h5>';
-                        rows+= '<p class="card-text question-content">'+q.content+'</p>';
-                        rows+= '<p class="card-text question-time"><small class="text-muted">'+q.create_at+'</small></p>';
+                    var poll_id = p.id;
+                    var title = p.title;
+                    var max_choice = p.max_choice;
+                    var votes = p.votes;
+                    var total_vote = p.total_vote;
+                    var poll_voted = p.voted;
 
-                        $.each(data.liked, function(index, l) {
-                            if (question_id == l.question_id) {
-                                if (user_id == l.user_id) {
-                                    liked = true;
-                                    return false;
+                    if (poll_voted) {
+                        rows+= '<div class="card w-75 poll-voted">';
+                        rows+= '<div class="card-body poll-card">';
+                        rows+= '<input type="hidden" class="poll-id" value="'+poll_id+'">';
+                        rows+= '<input type="hidden" class="poll-max-choice" value="'+max_choice+'">';
+                        rows+= '<h6>';
+                        rows+= '<span class="card-title poll-title">'+title+'</span>';
+                        rows+= '<span class="pull-right num-votes" title="Số người đã bầu chọn">'+votes+' <i class="fa fa-user"></i></span>';
+                        rows+= '</h6>';
+                        rows+= '<hr>';
+                        rows+= '<div class="list-option">';
+
+                        $.each(data.list_option, function(index, o) {
+                            var option_id = o.id;
+                            var option_content = o.content;
+                            var option_voted = o.voted;
+
+                            var percent = o.total_vote*100/total_vote;
+                            percent =  Math.round(percent * 100) / 100;
+                            if (total_vote == 0) percent = 0;
+
+
+                            if (poll_id == o.poll_id) {
+                                if (option_voted) {
+                                    rows+= '<div class="form-check form-check-inline">';
+                                    rows+= '<p class="poll-title">'+option_content+'</p>';
+                                    rows+= '<div class="progress">';
+                                    rows+= '<div class="progress-bar progress-bar-stripeds actives progress-bar-danger" role="progressbar" style="width: '+percent+'%;" aria-valuenow="'+percent+'" aria-valuemin="0" aria-valuemax="100">'+percent+'%</div>';
+                                    rows+= '</div>';
+                                    rows+= '</div>';
                                 } else {
-                                    liked = false;
+                                    rows+= '<div class="form-check form-check-inline">';
+                                    rows+= '<p class="poll-title">'+option_content+'</p>';
+                                    rows+= '<div class="progress">';
+                                    rows+= '<div class="progress-bar progress-bar-stripeds actives progress-bar-grey" role="progressbar" style="width: '+percent+'%;" aria-valuenow="'+percent+'" aria-valuemin="0" aria-valuemax="100">'+percent+'%</div>';
+                                    rows+= '</div>';
+                                    rows+= '</div>';
 
                                 }
-
-                            } else {
-                                liked = false;
                             }
+
+
                         })
 
-                        if (liked) {
-                            rows+= '<button type="button" class="custom-btn custom-liked btn-unlike-question" title="Bỏ yêu thích">'+num_like+' <i class="fa fa-heart" aria-hidden="true"></i></button> ';
-                        } else {
-                            rows+= '<button type="button" class="custom-btn custom-like btn-like-question" title="Yêu thích">'+num_like+' <i class="fa fa-heart-o" aria-hidden="true"></i></button> ';
-                        }
 
-                        rows+= '<a href="#" class="custom-btn custom-reply btn-reply-question" data-toggle="modal" data-target="#reply-question-modal" title="Trả lời"><i class="fa fa-reply" ></i></a>';
-                        rows+= '<input type="hidden" class="question-id" value="'+q.id+'">';
+                        rows+= '</div>';
+                        rows+= '<button type="button" class="btn btn-success" title="Sửa">Sửa bầu chọn</button>';
                         rows+= '</div>';
                         rows+= '</div>';
-                    })
-                } else {
-                    // console.log(data.result);
-                    rows = '<div class="card w-75"><h3 class="text-center">chưa có câu hỏi</h3></div>';
-                }
+                    } else {
 
-            $('#list-question').html(rows);
-        })
+                        rows+= '<div class="card w-75 poll-no-vote">';
+                        rows+= '<div class="card-body poll-card">';
+                        rows+= '<input type="hidden" class="poll-id" value="'+poll_id+'">';
+                        rows+= '<input type="hidden" class="poll-max-choice" value="'+max_choice+'">';
+                        rows+= '<h6>';
+                        rows+= '<span class="card-title poll-title">'+title+'</span>';
+                        rows+= '<span class="pull-right num-votes" title="Số người đã bầu chọn">'+votes+' <i class="fa fa-user"></i></span>';
+                        rows+= '</h6>';
+                        rows+= '<hr>';
+                        rows+= '<p class="card-text"><small class="text-muted">Số câu trả lời được phép chọn: '+max_choice+'</small></p>';
+                        rows+= '<div class="list-option">';
+
+                        $.each(data.list_option, function(index, o) {
+
+                            var option_id = o.id;
+                            var option_content = o.content;
+
+                            if (poll_id == o.poll_id) {
+                                rows+= '<div class="form-check form-check-inline">';
+                                rows+= '<input class="form-check-input" type="checkbox" id="'+option_id+'" value="0">';
+                                rows+= '<label class="form-check-label" for="'+option_id+'">'+option_content+'</label>';
+                                rows+= '</div>';
+                            }
+
+                        })
 
 
-
-        // Send question
-        $('#btn-send-question').click(function(e){
-            e.preventDefault();
-            var event_id = $('#event-id').val();
-            var user_id = $('#user-id').val();
-            var user_fullname = $('#user-fullname').val();
-            var question_content = $('#select-search5').val();
-
-            if (question_content.replace(/\s+/g, ' ').trim().length < 10) {
-                alert('Nội dung câu hỏi tối thiểu 10 ký tự');
-                $('#select-search5').focus();
-                return false;
-            }
-
-            $.ajax({
-                url: 'process-question.php',
-                method: 'POST',
-                data: {'action': 'user-send-question', 'event-id': event_id, 'user-id': user_id,
-                        'user-fullname': user_fullname, 'content': question_content}
-            }).done(function(data){
-                $('#select-search5').val('');
-                if (data.result) {
-                    if (data.pending) {
-                        alert(data.message);
+                        rows+= '</div>';
+                        rows+= '<button type="button" class="btn btn-info" title="Gửi">Gửi</button>';
+                        rows+= '</div>';
+                        rows+= '</div>';
                     }
-                    // reload list question
-                    get_published_question();
+                })
+            } else {
+                rows = '<h3 class="text-center">Chưa có bầu chọn</h3>';
+            }
+            $('#list-poll').html(rows);
 
-                    // send question for mod
-                    get_pending_question();
-                } else {
-                    alert(data.message)
-                }
-            }).fail(function(jqXHR, statusText, errorThrown){
-                console.log("Fail:"+ jqXHR.responseText);
-                console.log(errorThrown);
-            })
+            // write_published_poll(data);
 
-        })
-
-        // Like question
-        $('body').on('click', '.btn-like-question', function(){
-            var event_id = $('#event-id').val();
-            var user_id = $('#user-id').val();
-            var question_id = $(this).parent('div').find('.question-id').val();
-
-
-            var current_like = $(this).text().trim();
-            new_like = (current_like != '') ? parseInt(current_like) + 1 : '1';
-
-            $(this).html(new_like+' <i class="fa fa-heart"></i></button> ').removeClass('custom-like').removeClass('btn-like-question').addClass('custom-liked').addClass('btn-unlike-question');
-
-            $.ajax({
-                url: 'process-question.php',
-                method: 'POST',
-                data: {'action': 'like-question', 'event-id': event_id, 'user-id': user_id, 'question-id': question_id}
-            }).done(function(data){
-                if (data.result) {
-                    get_published_question();
-                } else alert('dã tim ròi')
-            })
-        })
-
-        // Unlike question
-        $('body').on('click', '.btn-unlike-question', function(){
-            var event_id = $('#event-id').val();
-            var user_id = $('#user-id').val();
-            var question_id = $(this).parent('div').find('.question-id').val();
-
-            var current_like = $(this).text().trim();
-            new_like = (current_like > 1) ? current_like - 1 : '';
-            $(this).html(new_like+' <i class="fa fa-heart-o"></i></button> ').removeClass('custom-liked').removeClass('btn-unlike-question').addClass('custom-like').addClass('btn-like-question');
-
-            $.ajax({
-                url: 'process-question.php',
-                method: 'POST',
-                data: {'action': 'unlike-question', 'event-id': event_id, 'user-id': user_id, 'question-id': question_id}
-            }).done(function(data){
-                if (data.result) {
-                    get_published_question();
-                }
-            })
-        })
-
-        // Click button reply question
-        $('body').on('click', '.btn-reply-question', function(){
-            var event_id = $('#event-id').val();
-            var question_id = $(this).parent('div').find('.question-id').val();
-
-            var asker_name = $(this).parent('div').find('.user-fullname').text();
-            var question_content = $(this).parent('div').find('.question-content').text();
-            var question_time = $(this).parent('div').find('.question-time').text();
-
-
-            $('#reply-question-modal #question-id').val(question_id);
-            $('#reply-question-modal #asker-name').text(asker_name);
-            $('#reply-question-modal #question-content').text(question_content);
-            $('#reply-question-modal #question-time').text(question_time);
-
-            // Load list answer
-            get_answer(event_id, question_id);
-
-
-        })
-
-        // Count char on textarea reply
-        $('#reply-content').on('keyup keydown', function(){
-            current = $(this).val().length;
-            $('#count-char').text(current)
-        })
-
-        // Click button answer
-        $('#btn-send-reply').click(function(){
-            var event_id = $('#event-id').val();
-            var question_id = $('#reply-question-modal #question-id').val();
-            var user_id = $('#user-id').val();
-            var user_fullname = $('#user-fullname').val();
-            var reply_content = $('#reply-content').val();
-
-            if (reply_content.replace(/\s+/g, ' ').trim().length < 5) {
-                alert('Nội dung câu trả lời tối thiểu 5 ký tự');
-                $('#reply-content').focus();
-                return false;
+            for (var i = 0; i < option_id_selected.length; i++) {
+                id = option_id_selected[i];
+                $('#'+id).prop('checked', true).val(1);
             }
 
-
-            // set 
-            // var now = new Date();
-            // var h = String(now.getHours()).padStart(2, '0');
-            // var min = String(now.getMinutes()).padStart(2, '0');
-            
-            // var d = String(now.getDate()).padStart(2, '0');
-            // var m = String(now.getMonth() + 1).padStart(2, '0');
-            // var y = now.getFullYear();
-
-            // var time = h + ":" + min + " - " + d + '/' + m + '/' + y;
-
-            // var rows = '';
-            // rows+= '<div class="card w-75">';
-            // rows+= '<div class="card-body askquestion">';
-            // rows+= '<h5 class="card-title">'+user_fullname+'</h5>';
-            // rows+= '<p class="card-text">'+reply_content+'</p>';
-            // rows+= '<p class="card-text"><small class="text-muted">'+time+'</small></p>';
-            // rows+= '</div>';
-            // rows+= '</div>';
-            
-            // $('#list-answer').append(rows);
-
-            // // Scroll to bottom
-            // $('#list-answer').scrollTop($('#list-answer')[0].scrollHeight);
-
-
-            $.ajax({
-                url: 'process-question.php',
-                method: 'POST',
-                data: {'action': 'user-reply-question', 'event-id': event_id, 'question-id': question_id,
-                    'user-id': user_id, 'user-fullname': user_fullname, 'content': reply_content}
-            }).done(function(data){
-                if (data.result) {
-                    $('#reply-content').val('');
-                    $('#count-char').text(0);
-                    get_answer(event_id, question_id);
-
-                } else {
-                    alert(data.message);
-                }
-            })
+        }).fail(function(jqXHR, statusText, errorThrown){
+              console.log("Fail:"+ jqXHR.responseText);
+              console.log(errorThrown);
         })
+    }
 
 
+    // function write_published_poll(data) {
+    //     if (data.result) {
+    //         var rows = '';
+    //         $.each(data.poll, function(index, p) {
+
+    //             var poll_id = p.id;
+    //             var title = p.title;
+    //             var max_choice = p.max_choice;
+    //             var votes = p.votes;
+    //             var total_vote = p.total_vote;
+    //             var poll_voted = p.voted;
+
+    //             if (poll_voted) {
+    //                 rows+= '<div class="card w-75 poll-voted">';
+    //                 rows+= '<div class="card-body poll-card">';
+    //                 rows+= '<input type="hidden" class="poll-id" value="'+poll_id+'">';
+    //                 rows+= '<input type="hidden" class="poll-max-choice" value="'+max_choice+'">';
+    //                 rows+= '<h6>';
+    //                 rows+= '<span class="card-title poll-title">'+title+'</span>';
+    //                 rows+= '<span class="pull-right num-votes" title="Số người đã bầu chọn">'+votes+' <i class="fa fa-user"></i></span>';
+    //                 rows+= '</h6>';
+    //                 rows+= '<hr>';
+    //                 rows+= '<div class="list-option">';
+
+    //                 $.each(data.list_option, function(index, o) {
+    //                     var option_id = o.id;
+    //                     var option_content = o.content;
+    //                     var option_voted = o.voted;
+
+    //                     var percent = o.total_vote*100/total_vote;
+    //                     percent =  Math.round(percent * 100) / 100;
+    //                     if (total_vote == 0) percent = 0;
 
 
-        // Function load published question
-        function get_published_question(){
-            var event_id = $('#event-id').val();
-            var user_id = $('#user-id').val();
-            $.ajax({
-                url: 'process-question.php',
-                method: 'POST',
-                data: {'action': 'get-published-question', 'event-id': event_id}
-            }).done(function(data) {
-                if (data.result) {
-                    var rows = '';
-                    $.each(data.questions, function(index, q) {
-                        var num_like = (q.num_like > 0) ? q.num_like : '';
-                        var question_id = q.id;
+    //                     if (poll_id == o.poll_id) {
+    //                         if (option_voted) {
+    //                             rows+= '<div class="form-check form-check-inline">';
+    //                             rows+= '<p class="poll-title">'+option_content+'</p>';
+    //                             rows+= '<div class="progress">';
+    //                             rows+= '<div class="progress-bar progress-bar-stripeds actives progress-bar-danger" role="progressbar" style="width: '+percent+'%;" aria-valuenow="'+percent+'" aria-valuemin="0" aria-valuemax="100">'+percent+'%</div>';
+    //                             rows+= '</div>';
+    //                             rows+= '</div>';
+    //                         } else {
+    //                             rows+= '<div class="form-check form-check-inline">';
+    //                             rows+= '<p class="poll-title">'+option_content+'</p>';
+    //                             rows+= '<div class="progress">';
+    //                             rows+= '<div class="progress-bar progress-bar-stripeds actives progress-bar-grey" role="progressbar" style="width: '+percent+'%;" aria-valuenow="'+percent+'" aria-valuemin="0" aria-valuemax="100">'+percent+'%</div>';
+    //                             rows+= '</div>';
+    //                             rows+= '</div>';
 
-                        rows+= '<div class="card w-75">';
-                        rows+= '<div class="card-body askquestion">';
-                        rows+= '<h5 class="card-title user-fullname">'+q.user_fullname+'</h5>';
-                        rows+= '<p class="card-text question-content">'+q.content+'</p>';
-                        rows+= '<p class="card-text question-time"><small class="text-muted">'+q.create_at+'</small></p>';
-
-                        $.each(data.liked, function(index, l) {
-                            if (question_id == l.question_id) {
-                                if (user_id == l.user_id) {
-                                    liked = true;
-                                    return false;
-                                } else {
-                                    liked = false;
-
-                                }
-
-                            } else {
-                                liked = false;
-                            }
-                        })
-
-                        if (liked) {
-                            rows+= '<button type="button" class="custom-btn custom-liked btn-unlike-question" title="Bỏ yêu thích">'+num_like+' <i class="fa fa-heart" aria-hidden="true"></i></button> ';
-                        } else {
-                            rows+= '<button type="button" class="custom-btn custom-like btn-like-question" title="Yêu thích">'+num_like+' <i class="fa fa-heart-o" aria-hidden="true"></i></button> ';
-                        }
-
-                        rows+= '<a href="#" class="custom-btn custom-reply btn-reply-question" data-toggle="modal" data-target="#reply-question-modal" title="Trả lời"><i class="fa fa-reply" ></i></a>';
-                        rows+= '<input type="hidden" class="question-id" value="'+q.id+'">';
-                        rows+= '</div>';
-                        rows+= '</div>';
-                    })
-                } else {
-                    rows = '<div class="card w-75"><h3 class="text-center">chưa có câu hỏi</h3></div>';
-                }
-
-                $('#list-question').html(rows);
-            }).fail(function(jqXHR, statusText, errorThrown){
-                  console.log("Fail:"+ jqXHR.responseText);
-                  console.log(errorThrown);
-            })
-        }
+    //                         }
+    //                     }
 
 
-        
-        // Function get pending question
-        function get_pending_question() {
-            var event_id = $('#event-id').val();
-            $.ajax({
-                url: 'process-question.php',
-                method: 'POST',
-                data: {'action': 'get-pending-question', 'event-id': event_id}
-            }).done(function(data) {
-            })
-        }
+    //                 })
 
 
-        // Function get answer
-        function get_answer(event_id, question_id) {
-            $.ajax({
-                url: 'process-question.php',
-                method: 'POST',
-                data: {'action': 'get-answer', 'event-id': event_id, 'question-id': question_id}
-            }).done(function(data){
-                if (data.result) {
-                    var rows = '';
-                    $.each(data.answer, function(index, ans) {
-                        rows+= '<div class="card w-75">';
-                        rows+= '<div class="card-body askquestion">';
-                        rows+= '<h5 class="card-title">'+ans.user_fullname+'</h5>';
-                        rows+= '<p class="card-text">'+ans.content+'</p>';
-                        rows+= '<p class="card-text"><small class="text-muted">'+ans.create_at+'</small></p>';
-                        rows+= '</div>';
-                        rows+= '</div>';
-                    })
-                } else {
-                    rows = '';
-                }
+    //                 rows+= '</div>';
+    //                 rows+= '<button type="button" class="btn btn-success" title="Sửa">Sửa bầu chọn</button>';
+    //                 rows+= '</div>';
+    //                 rows+= '</div>';
+    //             } else {
 
-                $('#list-answer').html(rows);
+    //                 rows+= '<div class="card w-75 poll-no-vote">';
+    //                 rows+= '<div class="card-body poll-card">';
+    //                 rows+= '<input type="hidden" class="poll-id" value="'+poll_id+'">';
+    //                 rows+= '<input type="hidden" class="poll-max-choice" value="'+max_choice+'">';
+    //                 rows+= '<h6>';
+    //                 rows+= '<span class="card-title poll-title">'+title+'</span>';
+    //                 rows+= '<span class="pull-right num-votes" title="Số người đã bầu chọn">'+votes+' <i class="fa fa-user"></i></span>';
+    //                 rows+= '</h6>';
+    //                 rows+= '<hr>';
+    //                 rows+= '<p class="card-text"><small class="text-muted">Số câu trả lời được phép chọn: '+max_choice+'</small></p>';
+    //                 rows+= '<div class="list-option">';
 
-                // Scroll to bottom
-                $('#list-answer').scrollTop($('#list-answer')[0].scrollHeight);
-            })
-        }
+    //                 $.each(data.list_option, function(index, o) {
+
+    //                     var option_id = o.id;
+    //                     var option_content = o.content;
+
+    //                     if (poll_id == o.poll_id) {
+    //                         rows+= '<div class="form-check form-check-inline">';
+    //                         rows+= '<input class="form-check-input" type="checkbox" id="'+option_id+'" value="0">';
+    //                         rows+= '<label class="form-check-label" for="'+option_id+'">'+option_content+'</label>';
+    //                         rows+= '</div>';
+    //                     }
+
+    //                 })
 
 
-    </script>
+    //                 rows+= '</div>';
+    //                 rows+= '<button type="button" class="btn btn-info" title="Gửi">Gửi</button>';
+    //                 rows+= '</div>';
+    //                 rows+= '</div>';
+    //             }
+    //         })
+    //     } else {
+    //         rows = '<h3 class="text-center">Chưa có bầu chọn</h3>';
+    //     }
+    //     $('#list-poll').html(rows);
+    // }
+
+
+</script>
     
 </body>
 

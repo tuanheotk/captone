@@ -103,6 +103,29 @@ if (isset($_GET["id"])) {
                     <input type="hidden" id="user-fullname" value="<?php echo $account_name ?>">
                     
                     <div class="db-2-main-com" id="fix-padding-bottom">
+                        <div class="containers">
+                            <ul class="nav nav-tabs nav-justified">
+                            <li class="active">
+                                <a data-toggle="tab" href="#question">Câu hỏi</a>
+                            </li>
+                            <li>
+                                <a data-toggle="tab" href="#poll">Bầu chọn</a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div id="question" class="tab-pane fade in active">
+                                <h3>Câu hỏi</h3>
+                                <p>giao diện câu hỏi</p>
+                            </div>
+                            <div id="poll" class="tab-pane fade">
+                                <h3>Bầu chọn</h3>
+                                <p>Giao diện của bầu chọn</p>
+                            </div>
+                        </div>
+                            
+                        </div>
+
                         <section class="container">
                             <!-- Ask -->
                             <div class="row">
@@ -297,7 +320,9 @@ if (isset($_GET["id"])) {
                             <h4 class="modal-title"> Chỉnh sửa câu hỏi</h4>
                         </div>
                         <div class="modal-body">
-                            <input type="text" class="form-control" id="tb-edit-question">
+                            <!-- <input type="text" class="form-control" id="tb-edit-question" maxlength="300"> -->
+                            <textarea rows="3" class="form-control" id="tb-edit-question"></textarea>
+
                             <input type="hidden" id="question-id-update">
                         </div>
                         <div class="modal-footer">
@@ -327,25 +352,26 @@ if (isset($_GET["id"])) {
                                     </div>
                             </div>
                             <div class="modal-body" id="list-answer">
-                                <div class="card w-75">
+                                <!-- <div class="card w-75">
                                     <div class="card-body askquestion">
                                         <h5 class="card-title">Person 1</h5>
                                         <p class="card-text">Content</p>
                                         <p class="card-text"><small class="text-muted">12:34 - 20/02/2020</small></p>
                                     </div>
-                                </div>
+                                </div> -->
+                                <p class="text-center"><i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i></p>
                             </div>
                             
                             <div class="modal-footer">    
                                 <div class="col-md-10 col-10">
                                     <textarea rows="4" type="text" class="form-control" id="reply-content" placeholder="Nhập câu trả lời của bạn" aria-describedby="basic-addon2" maxlength="300"></textarea>
-                                    <div id="count-char">
-                                        <span id="current">0</span>
-                                        <span>/ 300</span>
+                                    <div class="text-muted">
+                                        <span id="count-char">0</span> <span>/ 300</span>
                                     </div>
                                 </div>
                                 <div class="col-md-2 col-2">
-                                    <div class="input-group-append ">
+                                    <div class="input-group-append">
+                                        <input type="hidden" id="question-id">
                                         <button class="btn btn-success " id="btn-send-reply" type="button">Trả lời</button>
                                     </div>
                                 </div>
@@ -368,6 +394,8 @@ include('footer.php');
     get_published_question();
 
 
+    var event_id = $('#event-id').val();
+
     // Pusher
     var pusher = new Pusher('51111816fa8714dbec22', {
         cluster: 'ap1',
@@ -377,14 +405,14 @@ include('footer.php');
 
 
     // Realtime get pending question
-    var channel = pusher.subscribe('manage-ask');
+    var channel = pusher.subscribe('manage-ask-'+event_id);
     channel.bind('pending-question', function(data) {
         // console.log(data);
         
         // Load list pending question realtime
+        var count = 0;
         if (data.result) {
             var rows = '';
-            var count = 0;
             $.each(data.questions, function(index, q) {
                 count++;
                 rows+= '<div class="card w-75">';
@@ -410,15 +438,16 @@ include('footer.php');
 
 
     // Realtime get published question
-    var channel2 = pusher.subscribe('ask-page');
+    var channel2 = pusher.subscribe('ask-page-'+event_id);
     channel2.bind('published-question', function(data) {
         // console.log(data);
         // Load list published question
         var user_id = $('#user-id').val();
 
+        var count = 0;
         if (data.result) {
+            // console.log(data);
             var rows = '';
-            var count = 0;
             $.each(data.questions, function(index, q) {
                 count++;
                 var num_like = (q.num_like > 0) ? q.num_like : '';
@@ -451,7 +480,7 @@ include('footer.php');
                     rows+= '<button type="button" class="custom-btn custom-like btn-like-question" title="Yêu thích">'+num_like+' <i class="fa fa-heart-o" aria-hidden="true"></i></button> ';
                 }
 
-                rows+= '<a href="#" class="custom-btn custom-reply btn-reply-question" data-toggle="modal" data-target="#reply-question-modal" title="Trả lời"><i class="fa fa-reply" ></i></a> ';
+                rows+= '<a href="#" class="custom-btn custom-reply btn-reply-question" data-toggle="modal" data-target="#reply-question-modal" title="Trả lời">'+q.num_reply+' <i class="fa fa-reply" ></i></a> ';
 
                 if (q.pinned == 0) {
                     rows+= '<button type="button" title="Ghim câu hỏi" class="custom-btn custom-pin btn-pin-question" value ="0"><i class="fa fa-check-circle-o" aria-hidden="true"></i></button>';
@@ -474,8 +503,8 @@ include('footer.php');
 
 
     // Realtime check question status
-    var channel3 = pusher.subscribe('manage-ask');
-    channel3.bind('check-question-status', function(status) {
+    // var channel3 = pusher.subscribe('manage-ask');
+    channel.bind('check-question-status', function(status) {
         var rows;
         if (status == 1) {
             rows = '<input type="checkbox" class="custom-control-input" id="check-question" checked>';
@@ -488,8 +517,8 @@ include('footer.php');
     })
 
     // Realtime user make question status
-    var channel4 = pusher.subscribe('manage-ask');
-    channel4.bind('user-make-question-status', function(status) {
+    // var channel4 = pusher.subscribe('manage-ask');
+    channel.bind('user-make-question-status', function(status) {
         var rows;
         if (status == 1) {
             rows = '<input type="checkbox" class="custom-control-input" id="user-make-question" checked>';
@@ -502,8 +531,8 @@ include('footer.php');
     })
 
     // Realtime user reply question status
-    var channel5 = pusher.subscribe('manage-ask');
-    channel5.bind('user-reply-question-status', function(status) {
+    // var channel5 = pusher.subscribe('manage-ask');
+    channel.bind('user-reply-question-status', function(status) {
         var rows;
         if (status == 1) {
             rows = '<input type="checkbox" class="custom-control-input" id="user-reply-question" checked>';
@@ -525,9 +554,9 @@ include('footer.php');
             method: 'POST',
             data: {'action': 'get-pending-question', 'event-id': event_id}
         }).done(function(data) {
+            var count = 0;
             if (data.result) {
                 var rows = '';
-                var count = 0;
                 $.each(data.questions, function(index, q) {
                     count++;
                     rows+= '<div class="card w-75">';
@@ -561,9 +590,9 @@ include('footer.php');
             method: 'POST',
             data: {'action': 'get-published-question', 'event-id': event_id}
         }).done(function(data) {
+            var count = 0;
             if (data.result) {
                 var rows = '';
-                var count = 0;
                 $.each(data.questions, function(index, q) {
                     count++;
                     var num_like = (q.num_like > 0) ? q.num_like : '';
@@ -596,7 +625,7 @@ include('footer.php');
                         rows+= '<button type="button" class="custom-btn custom-like btn-like-question" title="Yêu thích">'+num_like+' <i class="fa fa-heart-o" aria-hidden="true"></i></button> ';
                     }
 
-                    rows+= '<a href="#" class="custom-btn custom-reply btn-reply-question" data-toggle="modal" data-target="#reply-question-modal" title="Trả lời"><i class="fa fa-reply" ></i></a> ';
+                    rows+= '<a href="#" class="custom-btn custom-reply btn-reply-question" data-toggle="modal" data-target="#reply-question-modal" title="Trả lời">'+q.num_reply+' <i class="fa fa-reply" ></i></a> ';
 
 
                     if (q.pinned == 0) {
@@ -621,6 +650,37 @@ include('footer.php');
         })
     }
 
+
+    // Function get answer
+    function get_answer(event_id, question_id) {
+        $.ajax({
+            url: 'process-question.php',
+            method: 'POST',
+            data: {'action': 'get-answer', 'event-id': event_id, 'question-id': question_id}
+        }).done(function(data){
+            if (data.result) {
+                var rows = '';
+                $.each(data.answer, function(index, ans) {
+                    rows+= '<div class="card w-75">';
+                    rows+= '<div class="card-body askquestion">';
+                    rows+= '<h5 class="card-title">'+ans.user_fullname+'</h5>';
+                    rows+= '<p class="card-text">'+ans.content+'</p>';
+                    rows+= '<p class="card-text"><small class="text-muted">'+ans.create_at+'</small></p>';
+                    rows+= '</div>';
+                    rows+= '</div>';
+                })
+            } else {
+                rows = '';
+            }
+
+            $('#list-answer').html(rows);
+
+            // Scroll to bottom
+            $('#list-answer').scrollTop($('#list-answer')[0].scrollHeight);
+        })
+    }
+
+
     // Click edit question
     $('body').on('click', '.btn-edit-question', function(){
         var question_content = $(this).parent('div').find('.question-content').text();
@@ -633,6 +693,13 @@ include('footer.php');
     $('#btn-update-question').click(function(){
         var question_id = $('#question-id-update').val();
         var question_content = $('#tb-edit-question').val();
+
+        if (question_content.replace(/\s+/g, ' ').trim().length < 10) {
+            alert('Nội dung câu hỏi tối thiểu 10 ký tự');
+            $('#tb-edit-question').focus();
+            return false;
+        }
+
         $.ajax({
             url: 'process-question.php',
             method: 'POST',
@@ -645,6 +712,10 @@ include('footer.php');
     // Click accept question
     $('body').on('click', '.btn-accept-question', function(){
         var question_id = $(this).parent('div').find('.question-id').val();
+        
+        // Add loading
+        $(this).html('<i class="fa fa-spinner fa-spin"></i>');
+
         $.ajax({
             url: 'process-question.php',
             method: 'POST',
@@ -658,6 +729,10 @@ include('footer.php');
     // Click deny question
     $('body').on('click', '.btn-deny-question', function(){
         var question_id = $(this).parent('div').find('.question-id').val();
+        
+        // Add loading
+        $(this).html('<i class="fa fa-spinner fa-spin"></i>');
+
         $.ajax({
             url: 'process-question.php',
             method: 'POST',
@@ -688,7 +763,7 @@ include('footer.php');
         }).done(function(data){
             if (data.result) {
                 get_published_question();
-            } else alert('dã tim ròi')
+            }
         })
     })
 
@@ -715,25 +790,109 @@ include('footer.php');
 
     // Click button reply question
     $('body').on('click', '.btn-reply-question', function(){
+        var event_id = $('#event-id').val();
+        var question_id = $(this).parent('div').find('.question-id').val();
+
         var asker_name = $(this).parent('div').find('.user-fullname').text();
         var question_content = $(this).parent('div').find('.question-content').text();
         var question_time = $(this).parent('div').find('.question-time').text();
 
+
+        $('#reply-question-modal #question-id').val(question_id);
         $('#reply-question-modal #asker-name').text(asker_name);
         $('#reply-question-modal #question-content').text(question_content);
         $('#reply-question-modal #question-time').text(question_time);
+
+        // Load list answer
+        get_answer(event_id, question_id);
+
+
     })
 
+    // Count char on textarea reply
     $('#reply-content').on('keyup keydown', function(){
         current = $(this).val().length;
-        $('#current').text(current)
+        $('#count-char').text(current)
     })
 
+    // Click button answer
+    $('#btn-send-reply').click(function(){
+        var event_id = $('#event-id').val();
+        var question_id = $('#reply-question-modal #question-id').val();
+        var user_id = $('#user-id').val();
+        var user_fullname = $('#user-fullname').val();
+        var reply_content = $('#reply-content').val();
+
+        if (reply_content.replace(/\s+/g, ' ').trim().length < 5) {
+            alert('Nội dung câu trả lời tối thiểu 5 ký tự');
+            $('#reply-content').focus();
+            return false;
+        }
+
+        $.ajax({
+            url: 'process-question.php',
+            method: 'POST',
+            data: {'action': 'user-reply-question', 'event-id': event_id, 'question-id': question_id,
+                'user-id': user_id, 'user-fullname': user_fullname, 'content': reply_content}
+        }).done(function(data){
+            if (data.result) {
+                $('#reply-content').val('');
+                $('#count-char').text(0);
+                get_answer(event_id, question_id);
+
+                get_published_question();
+
+            } else {
+                alert(data.message);
+            }
+        })
+    })
+
+
+    // Hidden reply question modal
+    $('#reply-question-modal').on('hidden.bs.modal', function(){
+        $('#list-answer').html('<p class="text-center"><i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i></p>');
+    });
+
+    // Shown reply question modal
+    $('#reply-question-modal').on('shown.bs.modal', function(){
+        var event_id = $('#event-id').val();
+        var question_id = $('#reply-question-modal #question-id').val();
+
+
+
+        var channel2 = pusher.subscribe('question-event'+event_id);
+        channel2.bind('list-answer'+question_id, function(data) {
+            // console.log(data);
+            if (data.result) {
+                var rows = '';
+                $.each(data.answer, function(index, ans) {
+                    rows+= '<div class="card w-75">';
+                    rows+= '<div class="card-body askquestion">';
+                    rows+= '<h5 class="card-title">'+ans.user_fullname+'</h5>';
+                    rows+= '<p class="card-text">'+ans.content+'</p>';
+                    rows+= '<p class="card-text"><small class="text-muted">'+ans.create_at+'</small></p>';
+                    rows+= '</div>';
+                    rows+= '</div>';
+                })
+            } else {
+                rows = '';
+            }
+
+            $('#list-answer').html(rows);
+
+            // Scroll to bottom
+            // $('#list-answer').scrollTop($('#list-answer')[0].scrollHeight);
+        })
+    });
 
     // Change pin question
     $('body').on('click', '.btn-pin-question', function(){
         var question_id = $(this).parent('div').find('.question-id').val();
-        new_pin_status = ($(this).val() == 0) ? 1 : 0 ;
+        new_pin_status = ($(this).val() == 0) ? 1 : 0;
+
+        // Add loading
+        $(this).html('<i class="fa fa-spinner fa-spin"></i>');
 
         $.ajax({
             url: 'process-question.php',

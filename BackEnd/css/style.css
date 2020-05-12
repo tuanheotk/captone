@@ -4816,10 +4816,10 @@
 }
  .db-2-main-com ul li {
      text-align: left;
-     border-bottom: 1px solid #eaedef;
+     /*border-bottom: 1px solid #eaedef;*/
      padding: 12px 0px;
      list-style-type: none;
-     background: url('../images/icon/db-arrow.png') no-repeat center left;
+     /*background: url('../images/icon/db-arrow.png') no-repeat center left;*/
      background-size: 10px;
      text-overflow: ellipsis;
      white-space: inherit;
@@ -8260,7 +8260,7 @@
 }
 
 
-.askquestion{
+.askquestion, .poll-card{
      border-bottom: 1px solid;
      border-radius: 9px;
      padding: 5px 20px;
@@ -8273,6 +8273,15 @@
     background-color: #f2f2f2;
 }
 
+.poll-selected {
+     border: 2px solid #f3354e;
+     background-color: #f2f2f2;
+}
+
+.poll-blur {
+     filter: blur(4px);
+}
+
 .modal-footer textarea{
      margin: 6px 0;
 }
@@ -8282,9 +8291,9 @@
 }
 
 .askquestion-border{
-    height: 600px;
+    max-height: 600px;
     overflow: auto;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    /*box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);*/
     padding-top: 10px;
 }
 #btn-reply {
@@ -8329,12 +8338,21 @@
      height: 150px !important;
 }
 
-/*.modal-poll {
-     height: 300px;
+.modal-poll {
+     /*height: 300px;*/
+}
+
+/*.modal-poll div {
+     margin-bottom: 10px;
 }*/
-.modal-poll div
-{
-     margin: 5px 0;
+
+/*Fix margin modal body poll*/
+#create-poll-modal .modal-body div, #edit-poll-modal .modal-body div {
+     margin-bottom: 10px;
+}
+
+#list-option div, #list-option-update div {
+     margin-bottom: 5px !important;
 }
 
 /*Fix padding col-md-6 in manage-question.php*/
@@ -8373,7 +8391,7 @@
      padding: 0;
      margin: 0 5px;
      background-color: transparent;
-     /*color: #ed2f48;*/
+     color: #888888;
      border: none;
      /*border: 1px solid red;*/
      box-shadow: none;
@@ -8458,6 +8476,7 @@
     text-align:center;
 }*/
 
+/*Fix menu cover top page room*/
 @media screen and (max-width: 1000px) {
      #fix-top {
           margin-top: 10vh;
@@ -8470,9 +8489,42 @@
 }
 
 
-.modal-poll div {
-     margin-bottom: 15px;
+/*Custom progress*/
+.progress-bar-grey {
+     background-color: #aaa !important;
 }
-#list-option div, #list-option-update div {
-     margin-bottom: 5px;
+
+.progress {
+     height: 15px !important;
+     border-radius: 15px !important;
+     margin-top: -5px !important;
+     margin-bottom: 15px !important;
+}
+
+.progress-bar {
+     color: #000 !important;
+     font-weight: 700;
+     font-family: 'Quicksand', sans-serif !important;
+     font-size: 14px !important;
+     /*text-align: left !important;*/
+     /*padding-left: 10px !important;*/
+     line-height: 15px !important;
+
+}
+
+/*Custom hr*/
+hr {
+     margin-top: 10px !important;
+     margin-bottom: 10px !important;
+}
+
+/*Custom label checkbox*/
+[type="checkbox"] + label {
+     font-family: 'Quicksand', sans-serif !important;
+     font-size: 15px !important;
+}
+
+.poll-card p {
+     font-family: 'Quicksand', sans-serif !important;
+     font-weight: 500;
 }

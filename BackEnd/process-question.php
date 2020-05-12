@@ -42,11 +42,16 @@ if ($action == "get-pending-question") {
 	}
 
 	// Pusher
-	$pusher->trigger('manage-ask', 'pending-question', $data);
+	$pusher->trigger('manage-ask-'.$event_id, 'pending-question', $data);
 
 } else if ($action == "get-published-question") {
 	$event_id = $_POST["event-id"];
-	$sql_get_published_question = "SELECT q.*, COUNT(r.user_id) AS num_like FROM question q LEFT JOIN reaction r ON q.id = r.question_id WHERE q.status = 1 AND q.event_id = $event_id GROUP BY q.id ORDER BY q.pinned DESC, q.id DESC";
+	$sql_get_published_question = "SELECT T1.*, T1.num_like, T2.num_reply
+                                    FROM
+                                    (SELECT q.*, COUNT(r.user_id) AS num_like FROM question q LEFT JOIN reaction r ON q.id = r.question_id WHERE q.status = 1 AND q.event_id = $event_id GROUP BY q.id ORDER BY q.pinned DESC, q.id DESC) T1
+                                    JOIN
+                                    ( SELECT q.*, COUNT(a.user_id) AS num_reply FROM question q LEFT JOIN answer a ON q.id = a.question_id GROUP BY q.id) T2
+                                    ON T1.id = T2.id";
 	$result_get_published_question = mysqli_query($conn, $sql_get_published_question);
 
 	if ($result_get_published_question) {
@@ -76,7 +81,7 @@ if ($action == "get-pending-question") {
 	}
 
 	// Pusher
-	$pusher->trigger('ask-page', 'published-question', $data);
+	$pusher->trigger('ask-page-'.$event_id, 'published-question', $data);
 
 } else if ($action == "get-published-question-bak") {
 	$event_id = $_POST["event-id"];
@@ -99,7 +104,7 @@ if ($action == "get-pending-question") {
 	}
 
 	// Pusher
-	$pusher->trigger('ask-page', 'published-question', $data);
+	$pusher->trigger('ask-page-'.$event_id, 'published-question', $data);
 
 } else if ($action == "user-send-question") {
 	$event_id = $_POST["event-id"];
@@ -191,7 +196,7 @@ if ($action == "get-pending-question") {
 	}
 	
 	// Push status check question
-	$pusher->trigger('manage-ask', 'check-question-status', $check_status);
+	$pusher->trigger('manage-ask-'.$event_id, 'check-question-status', $check_status);
 
 } else if ($action == 'change-user-make-question') {
 	$event_id = $_POST["event-id"];
@@ -213,7 +218,7 @@ if ($action == "get-pending-question") {
 	}
 	
 	// Push status user make question
-	$pusher->trigger('manage-ask', 'user-make-question-status', $user_make_quesion_status);
+	$pusher->trigger('manage-ask-'.$event_id, 'user-make-question-status', $user_make_quesion_status);
 
 } else if ($action == 'change-user-reply-question') {
 	$event_id = $_POST["event-id"];
@@ -235,7 +240,7 @@ if ($action == "get-pending-question") {
 	}
 	
 	// Push status user reply question
-	$pusher->trigger('manage-ask', 'user-reply-question-status', $user_reply_quesion_status);
+	$pusher->trigger('manage-ask-'.$event_id, 'user-reply-question-status', $user_reply_quesion_status);
 
 } else if ($action == 'mod-pin-question') {
 	$question_id = $_POST["question-id"];
@@ -311,6 +316,10 @@ if ($action == "get-pending-question") {
 	} else {
 		$data["result"] = false;
 	}
+	
+	// Pusher
+	$pusher->trigger('question-event'.$event_id, 'list-answer'.$question_id, $data);
+
 } else if ($action == 'user-reply-question') {
 	$event_id = $_POST["event-id"];
 	$question_id = $_POST["question-id"];
