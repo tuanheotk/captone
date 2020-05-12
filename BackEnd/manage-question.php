@@ -41,9 +41,11 @@ if (isset($_GET["id"])) {
         }
     } else {
         header("Location: my-events.php");
+        // header('Location: javascript://history.go(-1)');
     }
 } else {
     header("Location: my-events.php");
+    // header('Location: javascript://history.go(-1)');
 }
 ?>
     <!--DASHBOARD-->
@@ -102,7 +104,7 @@ if (isset($_GET["id"])) {
                     <input type="hidden" id="user-id" value="<?php echo $account_id ?>">
                     <input type="hidden" id="user-fullname" value="<?php echo $account_name ?>">
                     
-                    <div class="db-2-main-com" id="fix-padding-bottom">
+                    <div class="db-2-main-com" id="fix-padding">
                         <div class="containers">
                             <ul class="nav nav-tabs nav-justified">
                             <li class="active">
@@ -110,6 +112,9 @@ if (isset($_GET["id"])) {
                             </li>
                             <li>
                                 <a data-toggle="tab" href="#poll">Bầu chọn</a>
+                            </li>
+                            <li>
+                                <a data-toggle="tab" href="#statistic">Thống kê</a>
                             </li>
                         </ul>
 
@@ -121,6 +126,10 @@ if (isset($_GET["id"])) {
                             <div id="poll" class="tab-pane fade">
                                 <h3>Bầu chọn</h3>
                                 <p>Giao diện của bầu chọn</p>
+                            </div>
+                            <div id="statistic" class="tab-pane fade">
+                                <h3>Thống kê</h3>
+                                <p>Giao diện của thống kê</p>
                             </div>
                         </div>
                             
@@ -219,9 +228,9 @@ if (isset($_GET["id"])) {
                                                 <h5 class="card-title"><?php echo $fullname ?></h5>
                                                 <p class="card-text question-content"><?php echo $question_content ?></p>
                                                 <p class="card-text"><small class="text-muted"><?php echo $time ?></small></p>
-                                                <a href="#" class="btn btn-warning btn-edit-question" data-toggle="modal" data-target="#edit-question-modal" title="Sửa câu hỏi"><i class="fa fa-pencil"></i></a>
-                                                <button type="button" title="Chấp nhận câu hỏi" class="btn btn-success btn-accept-question"><i class="fa fa-check" aria-hidden="true"></i></button>
-                                                <button type="button" title="Từ chối câu hỏi" class="btn btn-danger btn-deny-question"><i class="fa fa-times" aria-hidden="true"></i></button>
+                                                <a href="#" class="custom-btn custom-edit btn-edit-question" data-toggle="modal" data-target="#edit-question-modal" title="Sửa câu hỏi"><i class="fa fa-pencil"></i></a>
+                                                <button type="button" title="Chấp nhận câu hỏi" class="custom-btn custom-reply btn-accept-question"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                                <button type="button" title="Từ chối câu hỏi" class="custom-btn custom-del btn-deny-question"><i class="fa fa-times" aria-hidden="true"></i></button>
                                             </div>
                                         </div>
 
@@ -390,7 +399,7 @@ include('footer.php');
 ?>
 <script type="text/javascript">
 
-    get_pending_question();
+    // get_pending_question();
     get_published_question();
 
 
@@ -410,11 +419,11 @@ include('footer.php');
         // console.log(data);
         
         // Load list pending question realtime
-        var count = 0;
+        var count_question = 0;
         if (data.result) {
             var rows = '';
+            count_question = data.questions.length;
             $.each(data.questions, function(index, q) {
-                count++;
                 rows+= '<div class="card w-75">';
                 rows+= '<div class="card-body askquestion">';
                 rows+= '<input type="hidden" class="question-id" value="'+q.id+'">';
@@ -433,7 +442,7 @@ include('footer.php');
         }
 
         $('#list-pending-question').html(rows);
-        $('#num-pending').text('Câu hỏi chờ duyệt (' + count + ')');
+        $('#num-pending').text('Câu hỏi chờ duyệt (' + count_question + ')');
     })
 
 
@@ -444,12 +453,15 @@ include('footer.php');
         // Load list published question
         var user_id = $('#user-id').val();
 
-        var count = 0;
+        var count_question = 0;
+        var count_like = 0;
+        var count_reply = 0;
         if (data.result) {
-            // console.log(data);
             var rows = '';
+            count_question = data.questions.length;
+            count_like = data.liked.length;
             $.each(data.questions, function(index, q) {
-                count++;
+                count_reply += parseInt(q.num_reply);
                 var num_like = (q.num_like > 0) ? q.num_like : '';
                 var question_id = q.id;
 
@@ -482,6 +494,7 @@ include('footer.php');
 
                 rows+= '<a href="#" class="custom-btn custom-reply btn-reply-question" data-toggle="modal" data-target="#reply-question-modal" title="Trả lời">'+q.num_reply+' <i class="fa fa-reply" ></i></a> ';
 
+
                 if (q.pinned == 0) {
                     rows+= '<button type="button" title="Ghim câu hỏi" class="custom-btn custom-pin btn-pin-question" value ="0"><i class="fa fa-check-circle-o" aria-hidden="true"></i></button>';
                 } else {
@@ -493,12 +506,16 @@ include('footer.php');
                 rows+= '</div>';
             })
         } else {
-            // console.log(data.result);
             rows = '<div class="card w-75"><h3 class="text-center">chưa có câu hỏi</h3></div>';
         }
 
         $('#list-published-question').html(rows);
-        $('#num-published').text('Câu hỏi đã công khai (' + count + ')');
+        $('#num-published').text('Câu hỏi đã công khai (' + count_question + ')');
+
+        // Set for statistic
+        $('#statistic-question').text(count_question);
+        $('#statistic-reply').text(count_reply);
+        $('#statistic-like').text(count_like);
     })
 
 
@@ -554,11 +571,11 @@ include('footer.php');
             method: 'POST',
             data: {'action': 'get-pending-question', 'event-id': event_id}
         }).done(function(data) {
-            var count = 0;
+            var count_question = 0;
             if (data.result) {
                 var rows = '';
+                count_question = data.questions.length;
                 $.each(data.questions, function(index, q) {
-                    count++;
                     rows+= '<div class="card w-75">';
                     rows+= '<div class="card-body askquestion">';
                     rows+= '<input type="hidden" class="question-id" value="'+q.id+'">';
@@ -577,7 +594,7 @@ include('footer.php');
             }
 
             $('#list-pending-question').html(rows);
-            $('#num-pending').text('Câu hỏi chờ duyệt (' + count + ')');
+            $('#num-pending').text('Câu hỏi chờ duyệt (' + count_question + ')');
         })
     }
 
@@ -590,11 +607,15 @@ include('footer.php');
             method: 'POST',
             data: {'action': 'get-published-question', 'event-id': event_id}
         }).done(function(data) {
-            var count = 0;
+            var count_question = 0;
+            var count_like = 0;
+            var count_reply = 0;
             if (data.result) {
                 var rows = '';
+                count_question = data.questions.length;
+                count_like = data.liked.length;
                 $.each(data.questions, function(index, q) {
-                    count++;
+                    count_reply += parseInt(q.num_reply);
                     var num_like = (q.num_like > 0) ? q.num_like : '';
                     var question_id = q.id;
 
@@ -643,7 +664,12 @@ include('footer.php');
             }
 
             $('#list-published-question').html(rows);
-            $('#num-published').text('Câu hỏi đã công khai (' + count + ')');
+            $('#num-published').text('Câu hỏi đã công khai (' + count_question + ')');
+
+            // Set for statistic
+            $('#statistic-question').text(count_question);
+            $('#statistic-reply').text(count_reply);
+            $('#statistic-like').text(count_like);
         }).fail(function(jqXHR, statusText, errorThrown){
               console.log("Fail:"+ jqXHR.responseText);
               console.log(errorThrown);

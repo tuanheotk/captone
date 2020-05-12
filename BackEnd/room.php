@@ -12,7 +12,8 @@ if (isset($_GET["id"])) {
         $event_name = $row_event_info["title"];
         $event_code = $row_event_info["code"];
     } else {
-        header("Location: events.php");
+        // header("Location: events.php");
+        header('Location: javascript://history.go(-1)');
     }
 
 
@@ -28,7 +29,8 @@ if (isset($_GET["id"])) {
     }
 
 } else {
-    header("Location: events.php");
+    // header("Location: events.php");
+    header('Location: javascript://history.go(-1)');
 }
 
 ?>
@@ -36,14 +38,16 @@ if (isset($_GET["id"])) {
 
 <div class="container" id="fix-top">
 
-    <ul class="nav nav-tabs nav-justifieds">
-        <li class="active">
-            <a data-toggle="tab" href="#question-tab">Câu hỏi</a>
-        </li>
-        <li>
-            <a data-toggle="tab" href="#poll-tab">Bầu chọn</a>
-        </li>
-    </ul>
+    <div class="container">
+        <ul class="nav nav-tabs nav-justified">
+            <li class="active">
+                <a data-toggle="tab" href="#question-tab">Câu hỏi</a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#poll-tab">Bầu chọn</a>
+            </li>
+        </ul>
+    </div>
 
     <!-- Tab content -->
     <div class="tab-content">
@@ -54,7 +58,9 @@ if (isset($_GET["id"])) {
                     <div class="row">
                         <div class="tourz-search-10">
                             <h2>Hãy đặt câu hỏi cho sự kiện</h2>
-                            <h2>Mã sự kiện: <span><?php echo $event_code ?></span></h2>
+                            <h2>Mã sự kiện: <span><?php echo $event_code ?></span>
+                                <i class="fa fa-qrcode" data-toggle="modal" data-target="#qr-link-modal"></i>
+                            </h2>
                             <h4><?php echo $event_name ?></h4>
                             <!-- <h2><?php echo $account_name ?></h2>
                             <h2><?php echo $account_id ?></h2> -->
@@ -158,28 +164,17 @@ if (isset($_GET["id"])) {
                                     </div>
                             </div>
                             <div class="modal-body" id="list-answer">
-                                <!-- <div class="card w-75">
-                                    <div class="card-body askquestion">
-                                        <h5 class="card-title">Person 1</h5>
-                                        <p class="card-text">Content</p>
-                                        <p class="card-text"><small class="text-muted">12:34 - 20/02/2020</small></p>
-                                    </div>
-                                </div> -->
                                 <p class="text-center"><i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i></p>
                             </div>
                             
                             <div class="modal-footer">    
-                                <div class="col-md-10 col-10">
+                                <div class="col-md-12 col-12">
+                                    <input type="hidden" id="question-id">
                                     <textarea rows="4" type="text" class="form-control" id="reply-content" placeholder="Nhập câu trả lời của bạn" aria-describedby="basic-addon2" maxlength="300"></textarea>
-                                    <div class="text-muted">
+                                    <div class="text-muted pull-left">
                                         <span id="count-char">0</span> <span>/ 300</span>
                                     </div>
-                                </div>
-                                <div class="col-md-2 col-2">
-                                    <div class="input-group-append">
-                                        <input type="hidden" id="question-id">
-                                        <button class="btn btn-success " id="btn-send-reply" type="button">Trả lời</button>
-                                    </div>
+                                    <button class="btn btn-success" id="btn-send-reply" type="button">Trả lời</button>
                                 </div>
                             </div>
                         </div>
@@ -195,9 +190,14 @@ if (isset($_GET["id"])) {
                 <div class="container">
                     <div class="row">
                         <div class="tourz-search-10">
-                            <h2>Hãy bình chọn cho sự kiện</h2>
-                            <h2>Mã sự kiện: <span>CG45</span></h2>
-                            <h4>Tên sự kiện: Các bạn nghỉ dịch để làm gì</h4>
+                            <h2>Hãy tham gia bầu chọn</h2>
+                            <h2>Mã sự kiện: <span><?php echo $event_code ?></span>
+                                <i class="fa fa-qrcode" data-toggle="modal" data-target="#qr-link-modal"></i>
+                            </h2>
+                            <h4><?php echo $event_name ?></h4>
+                            <input type="hidden" id="user-id" value="<?php echo $account_id ?>">
+                            <input type="hidden" id="user-fullname" value="<?php echo $account_name ?>">
+                            <input type="hidden" id="event-id" value="<?php echo $event_id ?>">
                             <!-- <h2><?php echo $account_name ?></h2>
                             <h2><?php echo $account_id ?></h2> -->
                             
@@ -212,72 +212,33 @@ if (isset($_GET["id"])) {
 
                     <!-- List poll -->
                     <div class="card w-75" id="list-poll">
-                        
-
-                        <div class="card w-75">   
-                            <div class="card-body poll-card">
-                                <input type="hidden" class="poll-id" value="">
-                                <h6>
-                                    <span class="card-title poll-title">Các bạn thích ăn gì trong ngày nghỉ dịch?</span>
-                                    <span class="pull-right num-attendee" title="Số người đã bầu chọn">50 <i class="fa fa-user"></i></span>
-                                </h6>
-                                <hr>
-
-                                <p class="card-text question-time"><small class="text-muted">Số câu trả lời được phép chọn: 2</small></p>
-                                <div class="form-check form-check-inline">
-                                  <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option2">
-                                  <label class="form-check-label" for="inlineCheckbox1">Tôm hùm</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                  <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
-                                  <label class="form-check-label" for="inlineCheckbox2">Thịt bò</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                  <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option2">
-                                  <label class="form-check-label" for="inlineCheckbox3">Mì Hải sản</label>
-                                </div>
-                                <button type="button" class="btn btn-info" title="Gửi">Gửi</button>
-                            </div>
-                        </div>
-
-                        <div class="card w-75">   
-                            <div class="card-body poll-card">
-                                <input type="hidden" class="question-id" value="">
-
-                                <h6>
-                                    <span class="card-title poll-title">Các bạn thích ăn gì trong ngày nghỉ dịch?</span>
-                                    <span class="pull-right num-attendee" title="Số người đã bầu chọn">50 <i class="fa fa-user"></i></span>
-                                </h6>
-                                <hr>
-                                <!-- <p class="card-text question-time"><small class="text-muted">Số câu trả lời được phép chọn: 2</small></p> -->
-                                <div class="form-check form-check-inline">
-                                    <p>Tôm hùm</p>
-                                    <div class="progress">
-                                        <div class="progress-bar progress-bar-striped active progress-bar-danger" role="progressbar" style="width: 15%;" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">15%</div>
-                                    </div>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <p>Thịt bò</p>
-                                    <div class="progress">
-                                        <div class="progress-bar progress-bar-striped active progress-bar-grey" role="progressbar" style="width: 35%;" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">35%</div>
-                                    </div>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <p>Mì hải sản</p>
-                                    <div class="progress">
-                                        <div class="progress-bar progress-bar-striped active progress-bar-danger" role="progressbar" style="width: 50%;" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">50%</div>
-                                    </div>
-                                </div>
-                                <button type="button" class="btn btn-success" title="Sửa">Sửa bầu chọn</button>
-                            </div>
-                        </div>
-                        
+                        <h3 class="text-center"><i class="fa fa-spinner fa-spin"></i></h3>
                     </div>
                 </div>
             </section>
-
         </div>
     </div>
+
+    <div id="qr-link-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+        <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"> Quét mã để tham gia đặt câu hỏi & bầu chọn</h4>
+                </div>
+                <div class="modal-body text-center">
+                    <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                    <img width="100%" src="https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl=http://localhost/event/room.php?id=<?php echo $event_id ?>&choe=UTF-8">      
+                </div>
+                <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                </div> -->
+            </div>
+        </div>
+    </div>
+
+
     
 </div>
 
@@ -285,17 +246,61 @@ if (isset($_GET["id"])) {
 
 
 <?php include('footer.php') ?>
+<script type="text/javascript" src="js/string.js"></script>
 <script type="text/javascript">
+
+    //------------------------------------------------------------------------------------------------//
 
     // Change tilte when change tab
     $('a[href^="#question-tab"]').click(function(){
         document.title = 'Đặt câu hỏi - EventBox Văn Lang';
+
+        set_cookie('tab', 'question-tab', 1);
     })
     $('a[href^="#poll-tab"]').click(function(){
         document.title = 'Bầu chọn - EventBox Văn Lang';
+        
+        set_cookie('tab', 'poll-tab', 1);
     })
 
+
+    var selected_tab = get_cookie('tab');
+
+    if (selected_tab == 'poll-tab') {
+        $('a[href^="#poll-tab"]').click();
+    }
+
+
+    // Prepare text
+    vi_arr = string_vi.split(',');
+    obscene_arr = string_obscene.split(',');
+
+    function set_cookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        var expires = "expires="+d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+
+    function get_cookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+
     var event_id = $('#event-id').val();
+    var user_id = $('#user-id').val();
 
     // Pusher
     var pusher = new Pusher('51111816fa8714dbec22', {
@@ -364,13 +369,25 @@ if (isset($_GET["id"])) {
         var event_id = $('#event-id').val();
         var user_id = $('#user-id').val();
         var user_fullname = $('#user-fullname').val();
-        var question_content = $('#select-search5').val();
+        var question_content = $('#select-search5').val().trim().replace(/  +/g, ' ');
+
+        var check_question = check_question_content(question_content);
+        console.log(check_question)
 
         if (question_content.replace(/\s+/g, ' ').trim().length < 10) {
             alert('Nội dung câu hỏi tối thiểu 10 ký tự');
             $('#select-search5').focus();
             return false;
         }
+
+
+        if (check_question.valid == false) {
+            alert(check_question.error);
+            return false;
+        }
+
+
+
 
         $.ajax({
             url: 'process-question.php',
@@ -397,6 +414,56 @@ if (isset($_GET["id"])) {
         })
 
     })
+
+    // Function check question content
+    function check_question_content(content) {
+        // content = content.toLowerCase().trim();
+        // content = content.replace(/  +/g, ' ');
+
+        content = (content.replace(/[0123456789?,.:;"`~!@#$%^&*()\-_+={}\[\]><|\/\\\']+/g,'')).toLowerCase();
+        var input_text_arr = content.split(' ');
+        // console.log(input_text_arr);
+
+        var correct_word = 0;
+        var valid = true;
+
+        var no_obscene_word = true;
+        var enough_correct_word = true;
+        var no_duplicate = true;
+
+        var error = null;
+        var obscene_used = new Array();
+
+        for (var i = 0; i < input_text_arr.length; i++) {
+            if (vi_arr.includes(input_text_arr[i])) {
+                correct_word++;
+            }
+            if (obscene_arr.includes(input_text_arr[i])) {
+                no_obscene_word = false;
+                obscene_used.push(input_text_arr[i]);
+            }
+        }
+
+        if (correct_word/ input_text_arr.length <= 0.7) {
+            enough_correct_word = false;
+            error = 'Đặt câu hỏi hợp lý hơn';
+        }
+
+        let find_duplicate = arr => arr.filter((item, index) => arr.indexOf(item) != index)
+        // console.log(find_duplicate(input_text_arr)) // All duplicates
+        if (find_duplicate(input_text_arr).length/ input_text_arr.length > 0.5) {
+            no_duplicate = false;
+            error = 'Đặt câu hỏi hợp lý hơn';
+        }
+
+        if (!no_obscene_word) error = 'Vui lòng không dùng các từ: ' + obscene_used.toString();
+
+        if (!enough_correct_word || !no_obscene_word || !no_duplicate) valid = false;
+
+
+        var result = {valid: valid, error: error, obscene_used: obscene_used};
+        return result;
+    }
 
     // Like question
     $('body').on('click', '.btn-like-question', function(){
@@ -482,32 +549,6 @@ if (isset($_GET["id"])) {
             $('#reply-content').focus();
             return false;
         }
-
-
-        // set 
-        // var now = new Date();
-        // var h = String(now.getHours()).padStart(2, '0');
-        // var min = String(now.getMinutes()).padStart(2, '0');
-        
-        // var d = String(now.getDate()).padStart(2, '0');
-        // var m = String(now.getMonth() + 1).padStart(2, '0');
-        // var y = now.getFullYear();
-
-        // var time = h + ":" + min + " - " + d + '/' + m + '/' + y;
-
-        // var rows = '';
-        // rows+= '<div class="card w-75">';
-        // rows+= '<div class="card-body askquestion">';
-        // rows+= '<h5 class="card-title">'+user_fullname+'</h5>';
-        // rows+= '<p class="card-text">'+reply_content+'</p>';
-        // rows+= '<p class="card-text"><small class="text-muted">'+time+'</small></p>';
-        // rows+= '</div>';
-        // rows+= '</div>';
-        
-        // $('#list-answer').append(rows);
-
-        // // Scroll to bottom
-        // $('#list-answer').scrollTop($('#list-answer')[0].scrollHeight);
 
 
         $.ajax({
@@ -668,6 +709,377 @@ if (isset($_GET["id"])) {
             // $('#list-answer').scrollTop($('#list-answer')[0].scrollHeight);
         })
     });
+
+
+    //------------------------------------------------------------------------------------------------//
+    //Pusher
+    var pusher2 = new Pusher('71289e96793d3248d6ec', {
+        cluster: 'ap1',
+        forceTLS: true
+    });
+
+
+    get_published_poll();
+
+    var event_id = $('#event-id').val();
+    var user_id = $('#user-id').val();
+
+    // Change value when click checkbox
+    $('body').on('click', 'input[type=checkbox]', function() {
+        $(this).val(this.checked ? 1 : 0);
+    })
+
+
+    // Realtime published poll
+    var channel_poll = pusher2.subscribe('vote-page-'+event_id);
+    channel_poll.bind('refresh-published-poll', function() {
+        // Load published poll
+        get_published_poll();
+    });
+
+
+
+    // Disable button send vote when over choice
+    $('body').on('click', '.form-check-input', function() {
+        var send_button = $(this).parents('.poll-card').find('.btn-send-vote');
+        var max_choice = parseInt($(this).parents('.poll-card').find('.poll-max-choice').val());
+        var current_choice = $(this).parents('.poll-card').find('.list-option').find(':input[value="1"]').length;
+        
+        var over_choice_text = $(this).parents('.poll-card').find('.over-choice');
+
+
+        if (current_choice > max_choice) {
+            over_choice_text.show();
+            send_button.prop('disabled', true);
+        } else {
+            over_choice_text.hide();
+            send_button.prop('disabled', false);
+        }
+    })
+
+
+    // Send vote
+    $('body').on('click', '.btn-send-vote', function() {
+        var poll_id = $(this).parent('.poll-card').find('.poll-id').val();
+        var max_choice = $(this).parent('.poll-card').find('.poll-max-choice').val();
+
+        var current_choice = $(this).parent('.poll-card').find('.list-option').find(':input[value="1"]').length;
+        var over_choice_text = $(this).parent('.poll-card').find('.over-choice');
+
+        // Check max_choice again
+        if (current_choice > max_choice) {
+            over_choice_text.show();
+            $(this).prop('disabled', true);
+            return false;
+        } else if (current_choice == 0) {
+            alert('Vui lòng chọn 1 lựa chọn');
+            return false;
+        } else {
+
+            // Remove class editing
+            $(this).parent('.poll-card').parent('div').removeClass('editing-poll');
+
+            // Add loading
+            $(this).html('<i class="fa fa-spinner fa-spin"></i>');
+            
+            // Get list selected option id
+            list_selected_option_id = new Array();
+            $.each($(this).parent('.poll-card').find('.list-option').find('.one-option'), function() {
+                if ($(this).find('.form-check-input').val() == 1) list_selected_option_id.push($(this).find('.form-check-input').attr('id'));
+            })
+            
+            $.ajax({
+                url: 'process-poll.php',
+                method: 'POST',
+                data: {'action': 'vote-poll', 'user-id': user_id, 'poll-id': poll_id, 'list-option': list_selected_option_id}
+            }).done(function(data){
+                if (data.result) {
+                    refresh_published_poll();
+
+                    // Refresh result poll manage page
+                    refresh_result_poll(poll_id);
+                    get_all_poll();
+                } else {
+                    get_published_poll();
+                }
+            })
+        }
+
+    })
+
+
+    // Click edit vote
+    $('body').on('click', '.btn-edit-vote', function() {
+        // Add class editing
+        $(this).parent('.poll-card').parent('div').addClass('editing-poll');
+
+        // Show text max choice
+        $(this).parent('.poll-card').find('.card-text').show();
+
+        var div_list_option = $(this).parent('.poll-card').find('.list-option');
+        // console.log(div_list_option);
+
+        // $(this).parent('.poll-card').find('.list-option')
+        var rows = '';
+        $.each(div_list_option.find('.one-option'), function() {
+            var option_id = $(this).attr('id');
+            var option_content = $(this).find('.option-content').text();
+            var option_voted = ($(this).find('.option-voted').val() == 1) ? true : false;
+
+            if (option_voted) {
+                rows+= '<div class="form-check form-check-inline one-option">';
+                rows+= '<input class="form-check-input" type="checkbox" id="'+option_id+'" value="1" checked>';
+                rows+= '<label class="form-check-label" for="'+option_id+'">'+option_content+'</label>';
+                rows+= '</div>';
+            } else {
+                rows+= '<div class="form-check form-check-inline one-option">';
+                rows+= '<input class="form-check-input" type="checkbox" id="'+option_id+'" value="0">';
+                rows+= '<label class="form-check-label" for="'+option_id+'">'+option_content+'</label>';
+                rows+= '</div>';
+            }
+        })
+
+        // Change checkbox for user select
+        div_list_option.html(rows);
+
+        // Change button to send
+        $(this).text('Gửi');
+        $(this).attr('title', 'Gửi bầu chọn');
+        $(this).removeClass('btn-success').removeClass('btn-edit-vote').addClass('btn-info').addClass('btn-send-vote');
+
+        // Show over choice text and disabled button
+        var max_choice = $(this).parent('.poll-card').find('.poll-max-choice').val();
+        var current_choice = $(this).parent('.poll-card').find('.list-option').find(':input[value="1"]').length;
+        if (current_choice > max_choice) {
+            $(this).prop('disabled', true);
+            $(this).parent('.poll-card').find('.over-choice').show();
+        }
+    })
+
+
+    function get_published_poll(){
+        // Get poll id selecting
+        var poll_id_selecting = new Array();
+        $('#list-poll .editing-poll .list-option').each(function() {
+            if ($(this).find(':input[value="1"]').length > 0) poll_id_selecting.push($(this).parent('.poll-card').find('.poll-id').val());
+        })
+
+
+        // Get option id selecting
+        var option_id_selecting = new Array();
+        $('#list-poll .form-check-input').each(function() {
+            if (this.checked) option_id_selecting.push($(this).attr('id'));
+        })
+        // console.log(option_id_selecting)
+
+
+        var event_id = $('#event-id').val();
+        var user_id = $('#user-id').val();
+
+        $.ajax({
+            url: 'process-poll.php',
+            method: 'POST',
+            data: {'action': 'get-published-poll', 'event-id': event_id, 'user-id': user_id}
+        }).done(function(data){
+            // console.log(data);
+            if (data.result) {
+                var rows = '';
+                $.each(data.poll, function(index, p) {
+
+                    var poll_id = p.id;
+                    var title = p.title;
+                    var max_choice = p.max_choice;
+                    var votes = p.votes;
+                    var total_vote = p.total_vote;
+                    var poll_voted = p.voted;
+
+                    if (poll_voted) {
+                        rows+= '<div class="card w-75 poll-voted">';
+                        rows+= '<div class="card-body poll-card">';
+                        rows+= '<input type="hidden" class="poll-id" value="'+poll_id+'">';
+                        rows+= '<input type="hidden" class="poll-max-choice" value="'+max_choice+'">';
+                        rows+= '<h6>';
+                        rows+= '<span class="card-title poll-title">'+title+'</span>';
+                        rows+= '<span class="pull-right num-votes" title="Số người đã bầu chọn">'+votes+' <i class="fa fa-user"></i></span>';
+                        rows+= '</h6>';
+                        rows+= '<hr>';
+                        rows+= '<p class="card-text" hidden><small class="text-muted">Số câu trả lời được phép chọn: '+max_choice+'</small></p>';
+                        rows+= '<div class="list-option">';
+
+                        $.each(data.list_option, function(index, o) {
+                            var option_id = o.id;
+                            var option_content = o.content;
+                            var option_voted = o.voted;
+
+                            var percent = o.total_vote*100/total_vote;
+                            percent =  Math.round(percent * 100) / 100;
+                            if (total_vote == 0) percent = 0;
+
+
+                            if (poll_id == o.poll_id) {
+                                if (option_voted) {
+                                    rows+= '<div class="form-check form-check-inline one-option" id="'+o.id+'">';
+                                    rows+= '<input type="hidden" class="option-voted" value="1">'
+                                    rows+= '<p class="option-content">'+option_content+'</p>';
+                                    rows+= '<div class="progress">';
+                                    rows+= '<div class="progress-bar progress-bar-striped actives progress-bar-danger" role="progressbar" style="width: '+percent+'%;" aria-valuenow="'+percent+'" aria-valuemin="0" aria-valuemax="100">'+percent+'%</div>';
+                                    rows+= '</div>';
+                                    rows+= '</div>';
+                                } else {
+                                    rows+= '<div class="form-check form-check-inline one-option" id="'+o.id+'">';
+                                    rows+= '<input type="hidden" class="option-voted" value="0">'
+                                    rows+= '<p class="option-content">'+option_content+'</p>';
+                                    rows+= '<div class="progress">';
+                                    rows+= '<div class="progress-bar progress-bar-striped actives progress-bar-grey" role="progressbar" style="width: '+percent+'%;" aria-valuenow="'+percent+'" aria-valuemin="0" aria-valuemax="100">'+percent+'%</div>';
+                                    rows+= '</div>';
+                                    rows+= '</div>';
+
+                                }
+                            }
+
+
+                        })
+
+
+                        rows+= '</div>';
+                        rows+= '<h6 class="text-danger over-choice" hidden>Bạn đã chọn nhiều hơn mức cho phép</h6>';
+                        rows+= '<button type="button" class="btn btn-success btn-edit-vote" title="Sửa bầu chọn">Sửa bầu chọn</button>';
+                        rows+= '</div>';
+                        rows+= '</div>';
+                    } else {
+
+                        rows+= '<div class="card w-75 poll-no-vote">';
+                        rows+= '<div class="card-body poll-card">';
+                        rows+= '<input type="hidden" class="poll-id" value="'+poll_id+'">';
+                        rows+= '<input type="hidden" class="poll-max-choice" value="'+max_choice+'">';
+                        rows+= '<h6>';
+                        rows+= '<span class="card-title poll-title">'+title+'</span>';
+                        rows+= '<span class="pull-right num-votes" title="Số người đã bầu chọn">'+votes+' <i class="fa fa-user"></i></span>';
+                        rows+= '</h6>';
+                        rows+= '<hr>';
+                        rows+= '<p class="card-text"><small class="text-muted">Số câu trả lời được phép chọn: '+max_choice+'</small></p>';
+                        rows+= '<div class="list-option">';
+
+                        $.each(data.list_option, function(index, o) {
+
+                            var option_id = o.id;
+                            var option_content = o.content;
+
+                            if (poll_id == o.poll_id) {
+                                rows+= '<div class="form-check form-check-inline one-option">';
+                                rows+= '<input class="form-check-input" type="checkbox" id="'+option_id+'" value="0">';
+                                rows+= '<label class="form-check-label" for="'+option_id+'">'+option_content+'</label>';
+                                rows+= '</div>';
+                            }
+
+                        })
+
+
+                        rows+= '</div>';
+                        rows+= '<h6 class="text-danger over-choice" hidden>Bạn đã chọn nhiều hơn mức cho phép</h6>';
+                        rows+= '<button type="button" class="btn btn-info btn-send-vote" title="Gửi bầu chọn">Gửi</button>';
+                        rows+= '</div>';
+                        rows+= '</div>';
+                    }
+                })
+            } else {
+                rows = '<h3 class="text-center">Chưa có bầu chọn</h3>';
+            }
+            $('#list-poll').html(rows);
+
+            // write_published_poll(data);
+
+            // 
+            for (var i = 0; i < poll_id_selecting.length; i++) {
+                id = poll_id_selecting[i];
+
+                // Show text max choice
+                $('.poll-id[value="'+id+'"]').parent('.poll-card').find('.card-text').show();
+                
+                // Add class editing
+                $('.poll-id[value="'+id+'"]').parent('.poll-card').parent('div').addClass('editing-poll');
+
+                // Button
+                $('.poll-id[value="'+id+'"]').parent('.poll-card').find('button').removeClass('btn-success').removeClass('btn-edit-vote').addClass('btn-info').addClass('btn-send-vote').text('Gửi');
+
+                div_list_option = $('.poll-id[value="'+id+'"]').parent('.poll-card').find('.list-option');
+
+
+                var rows = '';
+                $.each(div_list_option.find('.one-option'), function() {
+                    var option_id = $(this).attr('id');
+                    var option_content = $(this).find('.option-content').text();
+                    var option_voted = ($(this).find('.option-voted').val() == 1) ? true : false;
+
+                    rows+= '<div class="form-check form-check-inline one-option">';
+                    rows+= '<input class="form-check-input" type="checkbox" id="'+option_id+'" value="0">';
+                    rows+= '<label class="form-check-label" for="'+option_id+'">'+option_content+'</label>';
+                    rows+= '</div>';
+                })
+                div_list_option.html(rows);
+
+            }
+
+
+            // Recheck option be selected
+            for (var i = 0; i < option_id_selecting.length; i++) {
+                id = option_id_selecting[i];
+                $('#'+id).prop('checked', true).val(1);
+            }
+
+            // Disable send button for each poll over choice
+            $('#list-poll .poll-card').each(function() {
+                // var poll_id = $(this).find('.poll-id').val();
+                var voted = ($(this).parent('div').hasClass('poll-voted')) ? true : false;
+                var editing = ($(this).parent('div').hasClass('editing-poll')) ? true : false;
+                var max_choice = $(this).find('.poll-max-choice').val();
+                var current_choice = $(this).find('.list-option').find(':input[value="1"]').length;
+                var over_choice_text = $(this).find('.over-choice');
+                var button_send_vote = $(this).find('.btn-send-vote');
+
+                if (current_choice > max_choice) {
+                    if (!voted || editing) over_choice_text.show();
+                    button_send_vote.prop('disabled', true);
+                } else {
+                    over_choice_text.hide();
+                    button_send_vote.prop('disabled', false);
+                }
+            })
+
+
+
+
+        }).fail(function(jqXHR, statusText, errorThrown){
+              console.log("Fail:"+ jqXHR.responseText);
+              console.log(errorThrown);
+        })
+    }
+
+
+    function get_all_poll() {
+        $.ajax({
+            url: 'process-poll.php',
+            method: 'POST',
+            data: {'action': 'get-all-poll', 'event-id': event_id}
+        })
+    }
+
+    function refresh_published_poll() {
+        var event_id = $('#event-id').val();
+        $.ajax({
+            url: 'process-poll.php',
+            method: 'POST',
+            data: {'action': 'refresh-published-poll', 'event-id': event_id}
+        })
+    }
+
+    function refresh_result_poll(poll_id) {
+        $.ajax({
+            url: 'process-poll.php',
+            method: 'POST',
+            data: {'action': 'refresh-result-poll', 'poll-id': poll_id}
+        })
+    }
 
 
 

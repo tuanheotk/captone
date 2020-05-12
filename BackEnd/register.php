@@ -2,7 +2,8 @@
 $title = 'Đăng ký';
 include('header.php');
 if (isset($_SESSION["user_email"])) {
-	header("Location: index.php");
+	// header("Location: index.php");
+	header('Location: javascript://history.go(-1)');
 }
 ?>
     <!--END HEADER SECTION-->
@@ -65,8 +66,7 @@ include('footer.php');
 <script type="text/javascript">
 
 	$('#full-name').on('keydown keyup', function(){
-        // $(this).val($(this).val().replace(/[0123456789?,.!@#$%^&*()\-_+={}\[\]><|\/\\]+/g,''));
-        $(this).val($(this).val().replace(/[0123456789?,.!:;"@#$%^&*()\-_+={}\[\]><|\/\\\']+/g,''));
+        $(this).val($(this).val().replace(/[0123456789?,.:;"`~!@#$%^&*()\-_+={}\[\]><|\/\\\']+/g,''));
     })
 	$('#email').on('keydown keyup', function(){
         $(this).val($(this).val().replace(/[!#$%^&*()+={}\[\]><|\/\\]+/g,''));

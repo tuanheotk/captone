@@ -184,7 +184,7 @@ if ($action == 'get-all-poll') {
 
 
 } else if ($action == 'delete') {
-	$poll_id = $_POST["poll-id"];
+	$poll_id = $_POST['poll-id'];
 
 	$sql_delete_poll = "DELETE p, po, pv FROM poll p
 	LEFT JOIN poll_option po
@@ -203,7 +203,7 @@ if ($action == 'get-all-poll') {
 
 
 } else if ($action == 'hide') {
-	$poll_id = $_POST["poll-id"];
+	$poll_id = $_POST['poll-id'];
 
 	$sql_hide_poll = "UPDATE poll SET status = 0 WHERE id = $poll_id";
 
@@ -216,7 +216,7 @@ if ($action == 'get-all-poll') {
 	}
 
 } else if ($action == 'show') {
-	$poll_id = $_POST["poll-id"];
+	$poll_id = $_POST['poll-id'];
 
 	$sql_show_poll = "UPDATE poll SET status = 1 WHERE id = $poll_id";
 
@@ -229,7 +229,7 @@ if ($action == 'get-all-poll') {
 	}
 
 } else if ($action == 'show-result-poll') {
-	$poll_id = $_POST["poll-id"];
+	$poll_id = $_POST['poll-id'];
 
 	$sql_get_poll_title = "SELECT title FROM poll WHERE id = $poll_id";
 	$result_get_poll_title = mysqli_query($conn, $sql_get_poll_title);
@@ -261,37 +261,12 @@ if ($action == 'get-all-poll') {
 	// Pusher
 	// $pusher->trigger('result-poll', 'poll-'.$poll_id, $data);
 } else if ($action == 'refresh-result-poll') {
-	$poll_id = $_POST["poll-id"];
+	$poll_id = $_POST['poll-id'];
 
-	$sql_get_poll_title = "SELECT title FROM poll WHERE id = $poll_id";
-	$result_get_poll_title = mysqli_query($conn, $sql_get_poll_title);
-
-	$sql_get_list_option = "SELECT po.id, po.content, COUNT(pv.option_id) AS num_vote FROM poll_option po LEFT JOIN poll_vote pv ON pv.option_id = po.id WHERE po.poll_id = $poll_id GROUP BY po.id";
-	$result_list_option = mysqli_query($conn, $sql_get_list_option);
-
-
-	if (mysqli_num_rows($result_get_poll_title) > 0) {
-		// Get title
-		$row_poll_title = mysqli_fetch_assoc($result_get_poll_title);
-		$data['poll_title'] = $row_poll_title['title'];
-
-		// Get list option
-		if ($result_list_option) {
-			while ($row_list_option = mysqli_fetch_assoc($result_list_option)) {
-				$json[] = $row_list_option;
-			}
-			$data['result'] = true;
-			$data['list_option'] = $json;
-			
-		} else {
-			$data['result'] = false;
-		}
-	} else {
-		$data['result'] = false;
-	}
+	$data = $poll_id;
 
 	// Pusher
-	$pusher->trigger('result-poll', 'poll-'.$poll_id, $data);
+	$pusher->trigger('refresh-result-poll', 'poll-'.$poll_id, $data);
 } else if ($action == 'get-list-option') {
 	$poll_id = $_POST["poll-id"];
 
@@ -427,6 +402,43 @@ if ($action == 'get-all-poll') {
 
 	// Pusher
 	$pusher->trigger('vote-page-'.$data, 'refresh-published-poll', $data);
+} else if ($action == 'vote-poll') {
+	$user_id = $_POST['user-id'];
+	$poll_id = $_POST['poll-id'];
+	$list_option = $_POST['list-option'];
+
+	$sql_get_max_choice = "SELECT max_choice FROM poll WHERE id = $poll_id";
+	$result_max_choice = mysqli_query($conn, $sql_get_max_choice);
+	$row_max_choice = mysqli_fetch_assoc($result_max_choice);
+	$max_choice = $row_max_choice['max_choice'];
+
+	if ($max_choice >= count($list_option)) {
+		// Delele old vote option
+		$sql_delete_old_vote = "DELETE pv FROM poll_vote pv LEFT JOIN poll_option po ON pv.option_id = po.id WHERE pv.user_id = '$user_id' AND po.poll_id = $poll_id";
+		$result_delete_old_vote = mysqli_query($conn, $sql_delete_old_vote);
+
+
+
+		// for ($i=0; $i < $max_choice; $i++) {
+		// 	$option_id = $list_option[$i];
+		// 	$sql_insert_vote = "INSERT INTO poll_vote VALUES ('$user_id', $option_id)";
+		// 	$result_insert_vote = mysqli_query($conn, $sql_insert_vote);
+		// }
+		
+		// Insert new vote option
+		foreach ($list_option as $option_id) {
+			$sql_insert_vote = "INSERT INTO poll_vote VALUES ('$user_id', $option_id)";
+			$result_insert_vote = mysqli_query($conn, $sql_insert_vote);
+		}
+
+		if ($result_delete_old_vote && $result_insert_vote) {
+			$data['result'] = true;
+		} else {
+			$data['result'] = false;
+		}
+	} else {
+		$data['result'] = false;
+	}
 }
 mysqli_close($conn);
 echo json_encode($data);

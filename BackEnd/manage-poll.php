@@ -41,9 +41,11 @@ if (isset($_GET["id"])) {
         }
     } else {
         header("Location: my-events.php");
+        // header('Location: javascript://history.go(-1)');
     }
 } else {
     header("Location: my-events.php");
+    // header('Location: javascript://history.go(-1)');
 }
 ?>
     <!--DASHBOARD-->
@@ -102,7 +104,7 @@ if (isset($_GET["id"])) {
                     <input type="hidden" id="user-id" value="<?php echo $account_id ?>">
                     <input type="hidden" id="user-fullname" value="<?php echo $account_name ?>">
                     
-                    <div class="db-2-main-com" id="fix-padding-bottom">
+                    <div class="db-2-main-com" id="fix-padding">
                         
 
                         <section class="container-full">
@@ -166,7 +168,7 @@ if (isset($_GET["id"])) {
                                 </div>
                                 <!-- End list poll -->
                             </div>
-                        </section>  
+                        </section>
                     </div>
                 </div>
             </div>
@@ -345,9 +347,13 @@ include('footer.php');
         var poll_selected_id = $('.poll-selected').find('.poll-id').val();
         
         // Load all poll
+        var count_poll = 0;
+        var count_votes = 0;
         if (data.result) {
             var rows = '';
+            count_poll = data.poll.length;
             $.each(data.poll, function(index, p) {
+                count_votes += parseInt(p.votes);
 
                 rows+= '<div class="card w-75">';
 
@@ -382,7 +388,7 @@ include('footer.php');
                 rows+= '</div>';                   
             })
         } else {
-            rows = '<div class="card w-75"><h3 class="text-center">chưa có bầu chọn</h3></div>';
+            rows = '<div class="card w-75"><h3 class="text-center">Chưa có bầu chọn</h3></div>';
         }
         $('#list-poll').html(rows);
 
@@ -390,6 +396,10 @@ include('footer.php');
         if (poll_selected_id != undefined) {
             $('input.poll-id[value="'+poll_selected_id+'"]').parent('div').addClass('poll-selected');
         }
+
+        // Set for statistic
+        $('#statistic-poll').text(count_poll);
+        $('#statistic-votes').text(count_votes);
     })
 
 
@@ -435,7 +445,7 @@ include('footer.php');
             $('#max-choice').attr('max', count+1);
         }
 
-        if (count < 10) {
+        if (count < 20) {
             var rows = '';
             rows += '<div class="col-md-12 one-option" id="option-'+option_id+'">';
             rows += '<div class="input-group">';
@@ -449,7 +459,7 @@ include('footer.php');
             $('#list-option').append(rows);
             option_id++;
         } else {
-            alert('Tối đa 10 lựa chọn');
+            alert('Tối đa 20 lựa chọn');
         }
     })
 
@@ -621,6 +631,7 @@ include('footer.php');
     })
 
 
+    var poll_is_selecting;
     // Select poll to view result
     $('body').on('click', '.one-poll', function(){
 
@@ -629,53 +640,25 @@ include('footer.php');
         
         // Add class selected
         $(this).addClass('poll-selected');
+        var poll_selected_id = $('.poll-selected').find('.poll-id').val();
+
+        poll_is_selecting = poll_selected_id;
 
         // Add loading
-        $('#result-poll').html('<h3 class="text-center"><i class="fa fa-spinner fa-spin"></i></h3>')
+        $('#result-poll').html('<h3 class="text-center"><i class="fa fa-spinner fa-spin"></i></h3>');
 
         var poll_id = $(this).find('.poll-id').val();
         // var poll_title = $(this).find('.card-title').text();
 
         show_result_poll(poll_id);
 
-        // Realtime result poll
-        var channel_poll_2 = pusher2.subscribe('result-poll');
+        // Get result realtime
+        var channel_poll_2 = pusher2.subscribe('refresh-result-poll');
         channel_poll_2.bind('poll-'+poll_id, function(data) {
-            
-            // Show result
-            if (data.result) {
-                var rows = '';
-                // rows+= '<div class="col-md-12 askquestion-border">';
-                rows+= '<div class="card w-75">';
-                rows+= '<div class="card-body poll-card">';
-                rows+= '<h5 class="card-title">'+data.poll_title+'</h5>';
 
-                var total = 0;
-                $.each(data.list_option, function(index, o) {
-                    total+= parseInt(o.num_vote);
-                })
-
-                $.each(data.list_option, function(index, o) {
-
-                    var percent = o.num_vote*100/total;
-                    percent =  Math.round(percent * 100) / 100;
-
-                    if (total == 0) percent = 0;
-
-                    rows+= '<p>'+o.content+'</p>';
-                    rows+= '<div class="progress">';
-                    rows+= '<div class="progress-bar progress-bar-striped active progress-bar-success" role="progressbar" style="width: '+percent+'%;" aria-valuenow="'+percent+'" aria-valuemin="0" aria-valuemax="100">'+percent+'%</div>';
-                    rows+= '</div>';
-                })
-                
-                rows+= '</div>';
-                rows+= '</div>';
-                // rows+= '</div>';
-            } else {
-                rows = '<h3 class="text-center">Chọn để hiển thị</h3>';
-            }
-            $('#result-poll').html(rows);
+            if (data == poll_is_selecting) show_result_poll(poll_id);
         })
+        
     })
 
 
@@ -808,8 +791,8 @@ include('footer.php');
                 // Reload list poll user page
                 refresh_published_poll();
 
-                // Refresh
-                // refresh_result_poll(poll_id);
+                // Reload result poll
+                refresh_result_poll(poll_id);
 
                 // Reload result if this poll is selected
                 // if (poll_id == poll_selected_id) show_result_poll(poll_id);
@@ -874,8 +857,11 @@ include('footer.php');
                 // Reload list poll user page
                 refresh_published_poll()
 
+                // Reload result poll
+                refresh_result_poll(poll_id);
+
                 // Reset view result poll
-                if (poll_id == poll_selected_id) show_result_poll(poll_id);
+                // if (poll_id == poll_selected_id) show_result_poll(poll_id);
             }
         })
     })
@@ -925,7 +911,7 @@ include('footer.php');
         }).done(function(data){
             if (data.result) {
                 get_all_poll();
-                
+
                 // Reload list poll user page
                 refresh_published_poll()
             }
@@ -944,9 +930,13 @@ include('footer.php');
             method: 'POST',
             data: {'action': 'get-all-poll', 'event-id': event_id}
         }).done(function(data){
+            var count_poll = 0;
+            var count_votes = 0;
             if (data.result) {
                 var rows = '';
+                count_poll = data.poll.length;
                 $.each(data.poll, function(index, p) {
+                    count_votes += parseInt(p.votes);
 
                     rows+= '<div class="card w-75">';
 
@@ -989,6 +979,10 @@ include('footer.php');
             if (poll_selected_id != undefined) {
                 $('input.poll-id[value="'+poll_selected_id+'"]').parent('div').addClass('poll-selected');
             }
+
+            // Set for statistic
+            $('#statistic-poll').text(count_poll);
+            $('#statistic-votes').text(count_votes);
         }).fail(function(jqXHR, statusText, errorThrown){
               console.log("Fail:"+ jqXHR.responseText);
               console.log(errorThrown);
@@ -1023,7 +1017,7 @@ include('footer.php');
 
                     rows+= '<p>'+o.content+'</p>';
                     rows+= '<div class="progress">';
-                    rows+= '<div class="progress-bar progress-bar-striped active progress-bar-success" role="progressbar" style="width: '+percent+'%;" aria-valuenow="'+percent+'" aria-valuemin="0" aria-valuemax="100">'+percent+'%</div>';
+                    rows+= '<div class="progress-bar progress-bar-stripedd actived progress-bar-success" role="progressbar" style="width: '+percent+'%;" aria-valuenow="'+percent+'" aria-valuemin="0" aria-valuemax="100">'+percent+'%</div>';
                     rows+= '</div>';
                 })
                 
@@ -1050,7 +1044,6 @@ include('footer.php');
         })
     }
 
-    // get_published_poll()
 
     function refresh_published_poll() {
         var event_id = $('#event-id').val();

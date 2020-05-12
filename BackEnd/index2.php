@@ -2,7 +2,7 @@
 $title = 'Trang chủ';
 include('header.php');
 
-$sqlFeature = "SELECT e.id, e.title, e.avatar, e.start_date, e.place, COUNT(a.event_id) AS total FROM event e LEFT JOIN attendee a ON e.id = a.event_id WHERE e.status = 4 GROUP BY e.id ORDER BY total DESC LIMIT 6";
+$sqlFeature = "SELECT e.id, e.title, e.avatar, e.start_date, e.place, COUNT(a.event_id) AS total FROM event e LEFT JOIN attendee a ON e.id = a.event_id WHERE e.status = 4 GROUP BY e.id ORDER BY total DESC LIMIT 4";
 
 $sqlAcademic = "SELECT e.id, e.title, e.avatar, c.name FROM event e, category c WHERE e.category_id = c.id AND c.id = 1 AND e.status = 4 ORDER BY e.public_at DESC";
 $sqlCulture = "SELECT e.id, e.title, e.avatar, c.name FROM event e, category c WHERE e.category_id = c.id AND c.id = 2 AND e.status = 4 ORDER BY e.public_at DESC";
@@ -100,7 +100,7 @@ $resultRecommend = mysqli_query($conn, $sqlRecommend);
 
     <!--Danh Muc-->
 
-    <section class="dm_background">
+    <section>
         <div class="rows pad-bot-redu tb-space ">
             <div class="container">
                 <!-- TITLE & DESCRIPTION -->

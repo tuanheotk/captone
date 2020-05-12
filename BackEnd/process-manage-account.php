@@ -83,7 +83,7 @@ if ($action == "add") {
 	
 	$email = $_POST["email"];
 	$pass = $_POST["password"];
-	$sqlCheckInfo = "SELECT email, verified FROM account WHERE verify_code != '' AND email = '".$email."' AND password = '".$pass."'";
+	$sqlCheckInfo = "SELECT email, verified FROM account WHERE verify_code != '' AND email = '".$email."' AND BINARY password = '".$pass."'";
 
 	$resultCheckInfo = mysqli_query($conn, $sqlCheckInfo);
 

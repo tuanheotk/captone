@@ -20,11 +20,13 @@ if (isset($_GET["id"]) && $account_role == 4) {
         }
     } else {
         header("Location: manage-account.php");
+        // header('Location: javascript://history.go(-1)');
     }
     
 
 } else {
     header("Location: manage-account.php");
+    // header('Location: javascript://history.go(-1)');
 }
 ?>
     <!--DASHBOARD-->
@@ -192,6 +194,9 @@ if (isset($_GET["id"]) && $account_role == 4) {
 include('footer.php');
 ?>
 
+<script src="js/bootstrap.js"></script>
+<script src="js/materialize.min.js"></script>
+
 <script type="text/javascript">
     $(document).ready( function (){
         $('#event-table').DataTable({
@@ -219,7 +224,7 @@ include('footer.php');
 
     // dont alow special character
     $('#name').on('keydown keyup', function(){
-        $(this).val($(this).val().replace(/[0123456789?,.!@#$%^&*()\-_+={}\[\]><|\/\\]+/g,''));
+        $(this).val($(this).val().replace(/[0123456789?,.:;"`~!@#$%^&*()\-_+={}\[\]><|\/\\\']+/g,''));
     })
 
 

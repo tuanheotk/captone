@@ -27,9 +27,11 @@ if (isset($_GET["id"])) {
         }
     } else {
         header("Location: my-events.php");
+        // header('Location: javascript://history.go(-1)');
     }
 } else {
     header("Location: my-events.php");
+    // header('Location: javascript://history.go(-1)');
 }
 ?>
     <!--DASHBOARD-->
@@ -90,7 +92,7 @@ if (isset($_GET["id"])) {
                             <div class="row">
                                 <div class="input-field col s12">
                                     <input type="hidden" id="event-id" name="id" value="<?php echo $event_id ?>">
-                                    <input type="text" class="validate" id="event-name" name="name" value="<?php echo $name ?>" maxlength="100" title="Tên sự kiện" required>
+                                    <input type="text" class="validate" id="event-name" name="name" value="<?php echo htmlspecialchars($name) ?>" maxlength="100" title="Tên sự kiện" required>
                                     <label for="event-name">Tên sự kiện</label>
                                 </div>
                             </div>
@@ -140,7 +142,7 @@ if (isset($_GET["id"])) {
                             
                             <div class="row">
                                 <div class="input-field col s12">
-                                    <input type="number" class="validate" id="ticket-number" name="ticket-number" value="<?php echo $numTicket ?>" title="Số lượng vé" required="">
+                                    <input type="number" class="validate" id="ticket-number" name="ticket-number" value="<?php echo $numTicket ?>" title="Số lượng vé" min="0" max="1000000000" required="">
                                     <label>Số lượng vé</label>
                                 </div>
 
@@ -164,10 +166,16 @@ if (isset($_GET["id"])) {
                                 <div class="file-field input-field">
                                     <div class="db-up-btn"> <span>File</span>
                                         <input type="file" id="cover-image" name="cover-image">
-                                        <input type="hidden" name="current-image" value="<?php echo $avatar ?>">
+                                        <input type="hidden" name="current-image" id="current-image-link" value="<?php echo $avatar ?>">
                                     </div>
                                     <div class="file-path-wrapper">
-                                        <input class="file-path validate" type="text" placeholder="Vui lòng chọn hình ảnh"> </div>
+                                        <input class="file-path validate" type="text" placeholder="Chọn để thay đổi hình ảnh"> </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <img src="<?php echo $avatar ?>" id="image-preview">
                                 </div>
                             </div>
 
@@ -276,10 +284,78 @@ if (isset($_GET["id"])) {
         </div>
     </section>
     <!--END DASHBOARD-->
-<?php
 
-include('footer.php');
-?>
+
+    <!--====== FOOTER 2 ==========-->
+    <section>
+        <div class="rows">
+            <div class="footer">
+                <div class="container">
+                    <div class="foot-sec2">
+                        <div>
+                            <div class="row footernoop">
+                                <div class="col-sm-3 foot-spec foot-com">
+                                    <div class="wed-logo2">
+                                        <a href="index.php"><img src="images/preloader.png" alt="" />
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 foot-spec foot-com">
+                                    <h4>Địa chỉ & Thông tin liên hệ</h4>
+                                    <p>45 Nguyễn Khắc Nhu, Phường Cô Giang, Quận 1, Hồ Chí Minh.</p>
+                                    <p><span class="strong">Số điện thoại: </span></p>
+                                    <p><span class="highlighted">028 3836 7933</span> </p>
+                                </div>
+                                <div class="col-sm-3 col-md-3 foot-spec foot-com">
+                                    <h4>Hỗ Trợ & Giúp đỡ</h4>
+                                    <ul class="two-columns">
+                                        <li> <a href="#">Thông tin</a> </li>
+                                        <li> <a href="#">Liên hệ</a> </li>
+                                    </ul>
+                                </div>
+                                <div class="col-sm-3 foot-social foot-spec foot-com">
+                                    <h4>Theo dõi chúng tôi</h4>
+                                    
+                                    <ul>
+                                        <li><a href="https://www.facebook.com/truongdaihocvanlang/" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                                        <li><a href="https://www.youtube.com/user/truongdhvanlang" target="_blank"><i class="fa fa-youtube-play" aria-hidden="true"></i></a></li>
+                                        <li><a href="https://www.instagram.com/vanlanguniversity/?r=nametag" target="_blank"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                                        <li><a href="https://twitter.com/universityvan?lang=en" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--========= Scripts ===========-->
+    <script src="js/jquery-latest.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/wow.min.js"></script>
+    <script src="js/materialize.min.js"></script>
+    <script src="js/custom.js"></script>
+    <script src="js/bootstrap-datepicker.js"></script>
+    <script src="js/bootstrap-datetimepicker.js"></script>
+    
+
+    <!-- Datatables -->
+    <script type="text/javascript" src="vendor/DataTables/datatables.min.js"></script>
+    <!-- CKEditor -->
+    <script type="text/javascript" src="vendor/ckeditor5/ckeditor.js"></script>
+    <!-- Pusher -->
+    <script type="text/javascript" src="vendor/Pusher/pusher.min.js"></script>
+</body>
+
+</html>
+
+<!-- <?php
+    // include 'footer.php';
+?> -->
+
+<!-- <script src="js/bootstrap.js"></script>
+<script src="js/materialize.min.js"></script> -->
 
 <script type="text/javascript">
     $(document).ready( function (){
@@ -337,7 +413,7 @@ include('footer.php');
 
     // dont alow special character
     $('#event-name, #place, #short-desc').on('keydown keyup', function(){
-        $(this).val($(this).val().replace(/[@#$%^&*(){}_\[\]><|\/]+/g,''));
+        $(this).val($(this).val().replace(/[~`#$%^*{}_\[\]\\><|\/]+/g,''));
     })
 
 
@@ -351,6 +427,13 @@ include('footer.php');
         // only number
         $(this).val($(this).val().replace(/[^0-9]+/g, ''));
     })
+
+
+    // time start end
+    $('#start-time, #end-time').on('keydown keyup', function(){
+        $(this).val($(this).val().replace(/[^0-9 /:]+/g, ''));
+    })
+
 
     $('#edit-event-form').submit(function(e){
         e.preventDefault();
@@ -366,7 +449,7 @@ include('footer.php');
         var description = editor.getData();
         // var status = $('#event-status').val();
 
-        if (name.replace(/\s+/g, ' ').trim().length < 11) {
+        if (name.replace(/\s+/g, ' ').trim().length < 10) {
             alert('Tên sự kiện tối thiểu 10 ký tự');
             $('#event-name').focus();
             return false;
@@ -387,7 +470,7 @@ include('footer.php');
         //     return false;
         // }
 
-        if (place.replace(/\s+/g, ' ').trim().length < 11) {
+        if (place.replace(/\s+/g, ' ').trim().length < 10) {
             alert('Địa chỉ tối thiểu 10 ký tự');
             $('#place').focus();
             return false;
@@ -398,9 +481,15 @@ include('footer.php');
         //     return false;
         // }
 
-        if (shortDesc.replace(/\s+/g, ' ').trim().length < 11) {
+        if (shortDesc.replace(/\s+/g, ' ').trim().length < 10) {
             alert('Mô tả ngắn tối thiểu 10 ký tự');
             $('#short-desc').focus();
+            return false;
+        }
+
+        if (description.replace(/\s+/g, ' ').trim().length < 50) {
+            alert('Chi tiết sự kiện tối thiểu 50 ký tự');
+            $('.ck-blurred').focus()
             return false;
         }
 
@@ -451,5 +540,23 @@ include('footer.php');
           // format: "hh:ii - dd/mm/yyyy"
           format: "yyyy/mm/dd hh:ii"
         });
+    });
+
+
+    var current_image_link = $('#current-image-link').val();
+
+    function load_image(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#image-preview').attr('src',e.target.result);
+            };
+            reader.readAsDataURL(input. files[0]);
+        }
+    }
+
+    $('#cover-image').change(function () {
+        load_image(this);
+        if ($(this).val() == '') $('#image-preview').attr('src', current_image_link);
     });
 </script>

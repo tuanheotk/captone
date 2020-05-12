@@ -9,9 +9,11 @@ if (isset($_GET["id"])) {
 
     if (mysqli_num_rows($resultCheckAuthor) == 0) {
         header("Location: my-events.php");
+        // header('Location: javascript://history.go(-1)');
     }
 } else {
     header("Location: my-events.php");
+    // header('Location: javascript://history.go(-1)');
 }
 ?>
 <style>

@@ -4,6 +4,7 @@ include('header.php');
 
 if (!isset($_SESSION["user_email"]) || ($account_faculty_id != -1 && $account_name != "")) {
     header("Location: index.php");
+    // header('Location: javascript://history.go(-1)');
 }
 ?>
     
@@ -80,12 +81,14 @@ if (!isset($_SESSION["user_email"]) || ($account_faculty_id != -1 && $account_na
 include('footer.php');
 ?>
 
+<script src="js/bootstrap.js"></script>
+<script src="js/materialize.min.js"></script>
+
 
 <script type="text/javascript">
     // dont alow special character
     $('#name').on('keydown keyup', function(){
-        // $(this).val($(this).val().replace(/[0123456789?,.!@#$%^&*()\-_+={}\[\]><|\/\\]+/g,''));
-        $(this).val($(this).val().replace(/[0123456789?,.!:;"@#$%^&*()\-_+={}\[\]><|\/\\\']+/g,''));
+        $(this).val($(this).val().replace(/[0123456789?,.:;"`~!@#$%^&*()\-_+={}\[\]><|\/\\\']+/g,''));
     })
 
 

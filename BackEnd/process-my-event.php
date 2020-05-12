@@ -70,32 +70,43 @@ if ($action == "add") {
     // move_uploaded_file($_FILES["cover-image"]["tmp_name"], $target_file);
 
 
-    function generateCode()
+    function generate_code()
 	{
-		$arr = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'
-					, 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X'
-					, 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+		$arr = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
+					'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
+					'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 		$c1 = $arr[rand(0,35)];
 		$c2 = $arr[rand(0,35)];
 		$c3 = $arr[rand(0,35)];
 		$c4 = $arr[rand(0,35)];
 
-		$randCode = $c1.''.$c2.''.$c3.''.$c4;
-		return $randCode;
+		$rand_code = $c1.''.$c2.''.$c3.''.$c4;
+		return $rand_code;
 	}
 
-	$sqlSearchCode = "SELECT code FROM event ORDER BY id DESC LIMIT 1";
-	$getLastCode = mysqli_query($conn, $sqlSearchCode);
-	if (mysqli_num_rows($getLastCode) == 0) {
-		$code = generateCode();
+	$sql_get_code = "SELECT code FROM event WHERE status != 5";
+	$result_get_code = mysqli_query($conn, $sql_get_code);
+
+	$code_array = array();
+
+	if (mysqli_num_rows($result_get_code) == 0) {
+		$code = generate_code();
 	} else {
-		$row = mysqli_fetch_assoc($getLastCode);
-		$lastCode = $row["code"];
-
+		while ($row_code = mysqli_fetch_assoc($result_get_code)) {
+			array_push($code_array, $row_code['code']);
+		}
+		
 		do {
-			$code = generateCode();
-		} while ($code == $lastCode);
+			$code = generate_code();
+			if (in_array($code, $code_array)) {
+				$duplicate = true;
+			} else {
+				$duplicate = false;
+			}
+			
+		} while ($duplicate == true);
 	}
+
 	
 
 

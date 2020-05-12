@@ -3,6 +3,7 @@ $title = 'Thông tin cá nhân';
 include('header.php');
 if (!isset($_SESSION["user_email"])) {
     header("Location: index.php");
+    // header('Location: javascript://history.go(-1)');
 }
 ?>
     <!--DASHBOARD-->

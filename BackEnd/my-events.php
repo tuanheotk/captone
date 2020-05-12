@@ -154,7 +154,7 @@ include('header.php');
                                             <a href="attendee.php?id=<?php echo $id ?>" class="btn waves-effect waves-light btn-sm btn-info" title="Danh sách người tham dự"><i class="fa fa-users"></i></a>
                                             <a href="edit-event.php?id=<?php echo $id ?>" class="btn waves-effect waves-light btn-sm btn-success" title="Sửa sự kiện"><i class="fa fa-pencil"></i></a>
                                             <a href="setting-event.php?id=<?php echo $id ?>" class="btn waves-effect waves-light btn-sm btn-warning" title="Cấu hình sự kiện"><i class="fa fa-cog"></i></a>
-                                            <a href="manage-question.php?id=<?php echo $id ?>" class="btn waves-effect waves-light btn-sm btn-primary" title="Quản lý câu hỏi"><i class="fa fa-question"></i></a>
+                                            <a href="manage-room.php?id=<?php echo $id ?>" class="btn waves-effect waves-light btn-sm btn-primary" title="Quản lý câu hỏi & bầu chọn"><i class="fa fa-question"></i></a>
                                             <a href="#" class="delete-event btn waves-effect waves-light btn-sm btn-danger" data-toggle="modal" data-target="#delete-modal" title="Xóa sự kiện"><i class="fa fa-trash-o" ></i></a>
                                         </td>
                                     </tr>

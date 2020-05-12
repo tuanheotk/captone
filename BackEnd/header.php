@@ -51,9 +51,6 @@ ob_start();
     <!-- FONT-AWESOME ICON CSS -->
     <link rel="stylesheet" href="css/font-awesome.min.css">
 
-    <!-- Datatables -->  
-    <link href="vendor/DataTables/datatables.min.css" rel="stylesheet" type="text/css">
-
     <!--== ALL CSS FILES ==-->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/materialize.css">
@@ -62,6 +59,10 @@ ob_start();
     <link rel="stylesheet" href="css/animate.css">
     <link rel="stylesheet" href="css/bootstrap-datepicker.css">
     <link rel="stylesheet" href="css/bootstrap-datetimepicker.css">
+
+    <!-- Datatables -->  
+    <link href="vendor/DataTables/datatables.min.css" rel="stylesheet" type="text/css">
+    
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>

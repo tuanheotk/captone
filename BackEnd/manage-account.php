@@ -3,6 +3,7 @@ $title = 'Quản lý tài khoản';
 include('header.php');
 if (!isset($account_role) || $account_role != 4) {
     header('Location: index.php');
+    // header('Location: javascript://history.go(-1)');
 }
 ?>
 	<!--DASHBOARD-->

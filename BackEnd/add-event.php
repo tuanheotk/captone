@@ -104,7 +104,7 @@ if (!isset($_SESSION["user_email"])) {
                             
                             <div class="row">
                                 <div class="input-field col s12">
-                                    <input type="number" class="validate" id="ticket-number" name="ticket-number" title="Số lượng vé" required="">
+                                    <input type="number" class="validate" id="ticket-number" name="ticket-number" title="Số lượng vé" min="0" max="1000000000" required="">
                                     <label>Số lượng vé</label>
                                 </div>
 
@@ -134,12 +134,19 @@ if (!isset($_SESSION["user_email"])) {
                                 </div>
                             </div>
 
+                            <div class="row" hidden>
+                                <div class="input-field col s12">
+                                    <img src="" id="image-preview">
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <div class="input-field col s12">
                                     <input type="text" class="validate" id="short-desc" name="short-desc" maxlength="100" title="Mô tả ngắn" required="">
                                     <label>Mô tả ngắn</label>
                                 </div>
                             </div>
+
                             <div class="row">
                                 <div class="input-field col s12">
                                     <!-- <input type="text" class="validate" id="description" name="description"> -->
@@ -174,6 +181,10 @@ if (!isset($_SESSION["user_email"])) {
 include('footer.php');
 ?>
 
+<script src="js/bootstrap.js"></script>
+<script src="js/materialize.min.js"></script>
+
+    
 <script type="text/javascript">
     $(document).ready( function (){
         $('#event-table').DataTable({
@@ -249,7 +260,7 @@ include('footer.php');
 
     // dont alow special character
     $('#event-name, #place, #short-desc').on('keydown keyup', function(){
-        $(this).val($(this).val().replace(/[@#$%^&*(){}_\[\]><|\/]+/g,''));
+        $(this).val($(this).val().replace(/[~`#$%^*{}_\[\]\\><|\/]+/g,''));
     })
 
 
@@ -263,6 +274,12 @@ include('footer.php');
         // only number
         $(this).val($(this).val().replace(/[^0-9]+/g, ''));
     })
+
+    // time start end
+    $('#start-time, #end-time').on('keydown keyup', function(){
+        $(this).val($(this).val().replace(/[^0-9 /:]+/g, ''));
+    })
+
 
     $('#add-event-form').submit(function(e){
         e.preventDefault();
@@ -278,7 +295,7 @@ include('footer.php');
         var description = editor.getData();
         // var status = $('#event-status').val();
 
-        if (name.replace(/\s+/g, ' ').trim().length < 11) {
+        if (name.replace(/\s+/g, ' ').trim().length < 10) {
             alert('Tên sự kiện tối thiểu 10 ký tự');
             $('#event-name').focus();
             return false;
@@ -299,7 +316,7 @@ include('footer.php');
         //     return false;
         // }
 
-        if (place.replace(/\s+/g, ' ').trim().length < 11) {
+        if (place.replace(/\s+/g, ' ').trim().length < 10) {
             alert('Địa chỉ tối thiểu 10 ký tự');
             $('#place').focus();
             return false;
@@ -310,9 +327,15 @@ include('footer.php');
             return false;
         }
 
-        if (shortDesc.replace(/\s+/g, ' ').trim().length < 11) {
+        if (shortDesc.replace(/\s+/g, ' ').trim().length < 10) {
             alert('Mô tả ngắn tối thiểu 10 ký tự');
             $('#short-desc').focus();
+            return false;
+        }
+
+        if (description.replace(/\s+/g, ' ').trim().length < 50) {
+            alert('Chi tiết sự kiện tối thiểu 50 ký tự');
+            $('.ck-blurred').focus()
             return false;
         }
 
@@ -367,4 +390,22 @@ include('footer.php');
           format: "yyyy/mm/dd hh:ii"
         });
     });
+
+
+
+    function load_image(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#image-preview').attr('src',e.target.result).parent('div').parent('div').show();
+            };
+            reader.readAsDataURL(input. files[0]);
+        }
+    }
+
+    $('#cover-image').change(function () {
+        load_image(this);
+        if ($(this).val() == '') $('#image-preview').parent('div').parent('div').hide();
+    });
+
 </script>

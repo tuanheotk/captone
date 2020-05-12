@@ -7,6 +7,12 @@ include('header.php');
 require('api-oauth.php');
 require('api-outlook.php');
 
+// Check logged in
+if (isset($_SESSION['user_email'])) {
+	header('Location: javascript://history.go(-1)');
+}
+
+
 // $loggedIn = !is_null($_SESSION['access_token']);
 $loggedIn = isset($_SESSION['access_token']);
 $redirectUri = 'http://localhost/event/api-authorize.php';
@@ -24,14 +30,14 @@ if (!$loggedIn) {
 				<form class="col s12" id="login-form" method="POST">
 					<div class="row">
 						<div class="input-field col s12">
-							<input type="email" class="validate" id="email" name="email" maxlength="50" required="">
-							<label>Email</label>
+							<input type="email" class="validate" id="email" name="email" placeholder="Email" title="Email" maxlength="50" required="">
+							<!-- <label>Email</label> -->
 						</div>
 					</div>
 					<div class="row">
 						<div class="input-field col s12">
-							<input type="password" class="validate" id="pass" name="password" maxlength="50" required="">
-							<label>Mật khẩu</label>
+							<input type="password" class="validate" id="pass" name="password" placeholder="Mật khẩu" title="Mật khẩu" maxlength="50" required="">
+							<!-- <label>Mật khẩu</label> -->
 						</div>
 					</div>
 					<div class="row">
@@ -105,7 +111,13 @@ include('footer.php');
         }).done(function(data){
             if(data.result){
 				$('#btn-login').html('<i class="fa fa-check"></i> Thành công');
-                window.location = 'index.php';
+                // window.location = 'index.php';
+                // window.history.back();
+                if (document.referrer.includes('register.php')) {
+                	window.history.go(-2);
+                } else {
+                	window.history.go(-1);
+                }
             }else {
                 alert(data.message);
                 $('#btn-login').html('Đăng nhập');
