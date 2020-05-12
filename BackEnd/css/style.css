@@ -8062,32 +8062,6 @@
 .multicarousel .item img{
      width: 350px;
 }
-@media screen and (min-width: 1148px) {
-     .dexuat .item img{
-     height: 500px;
-
-     }
-     .dexuat .carousel-caption h3{
-     font-size: 40px;
-     }
-}
-@media screen and (max-width: 1148px) {
-     .dexuat .item img{
-     height: 400px;
-     }
-     .dexuat .carousel-caption h3{
-     font-size: 30px;
-     }
-}
-@media screen and (max-width: 400px) {
-     .dexuat .item img{
-     height: 200px;
-
-     }
-     .dexuat .carousel-caption h3{
-     font-size: 20px;
-     }
-}
 
 /*@media screen and (min-width: 1148px) {
      .dexuat .item img{
@@ -8104,8 +8078,7 @@
      }
 }*/
 
-
-/*.dexuat .item img{
+.dexuat .item img{
      min-height: 40vw;
      max-height: 40vw;
      height: 40vw;
@@ -8113,7 +8086,7 @@
 .dexuat .carousel-caption h3{
      font-size: 4vw;
 
-}*/
+}
 
 
 
@@ -8240,6 +8213,20 @@
 
 
 
+
+#select-search5 {
+     border: 2px solid #f4364f;
+     height: 45px;
+     border-radius: 2px;
+     padding: 0px 10px 0px 35px;
+     box-sizing: border-box;
+     font-size: 14px;
+     background-size: 17px;
+     background-position-x: 10px;
+}
+#select-search5:focus{
+     outline: none;
+}
 .tourz-search-10 {
      padding: 0px 0px 100px 0px;
      width: 70%;
@@ -8261,7 +8248,6 @@
 .tourz-search-10 #select-search
 {
      border: 1px solid;
-     border-radius: 30px;
      border-color: #C0C0C0;
 }
 
@@ -8272,7 +8258,10 @@
      box-shadow: 1px;
 }
 
-
+.askquestion-border{
+     height: 300px;
+    overflow: auto;
+}
 .askquestion{
 
      border-bottom: 1px solid;
@@ -8280,11 +8269,12 @@
      border-color: #f2f2f2;
      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
+
 }
 .askquestion:hover {
     background-color: #f2f2f2;
 }
-.modal-footer .form-control{
+.modal-footer textarea{
      margin: 6px 0;
 }
 
@@ -8293,14 +8283,14 @@
 }
 
 .manage-askquestion-border{
-    border: 1px solid #bfbfbf;
     height: 600px;
     overflow: auto;
-    border-radius: 10px;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     padding-top: 10px;
 }
-
+#btn-reply {
+     margin: 15px;
+}
 .askquestion .btn-light{
      border: 2px solid #bfbfbf;
      color: black;
@@ -8321,7 +8311,7 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888;
+  background: #5bc0de;
 }
 
 /* Handle on hover */
@@ -8329,3 +8319,23 @@
   background: #555;
 }
 
+.container-full{
+     width: 100%;
+     margin: 0 auto;
+}
+
+.modalask{
+     height: 590px;
+}
+
+#the-count span{
+     color: #bfbfbf;
+}
+
+.modal-poll {
+     height: 300px;
+}
+.modal-poll div
+{
+     margin: 5px 0;
+}

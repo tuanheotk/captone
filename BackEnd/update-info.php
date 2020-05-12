@@ -84,7 +84,8 @@ include('footer.php');
 <script type="text/javascript">
     // dont alow special character
     $('#name').on('keydown keyup', function(){
-        $(this).val($(this).val().replace(/[0123456789?,.!@#$%^&*()\-_+={}\[\]><|\/\\]+/g,''));
+        // $(this).val($(this).val().replace(/[0123456789?,.!@#$%^&*()\-_+={}\[\]><|\/\\]+/g,''));
+        $(this).val($(this).val().replace(/[0123456789?,.!:;"@#$%^&*()\-_+={}\[\]><|\/\\\']+/g,''));
     })
 
 

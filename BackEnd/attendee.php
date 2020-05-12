@@ -22,12 +22,16 @@ if (isset($_GET["id"])) {
 	}
 
     #error-checkin {
-        min-height: 20px;
+        margin-bottom: 0;
+        height: 20px;
     }
 
 </style>
     <!--DASHBOARD-->
     <section>
+        <audio>
+            <source src="audio/beep.wav" type="audio/wav">
+        </audio>
         <div class="db">
             <!--LEFT SECTION-->
             <div class="db-l db-2-com">
@@ -282,7 +286,7 @@ include('footer.php');
                 "sInfoFiltered": "(được lọc từ _MAX_ mục)",
                 "sInfoPostFix":  "",
                 "sSearch":       "",
-                "searchPlaceholder": "Tìm kiếm sự kiện",
+                "searchPlaceholder": "Tìm kiếm người tham dự",
                 "sUrl":          "",
                 "oPaginate": {
                     "sFirst":    "Đầu",
@@ -330,6 +334,8 @@ include('footer.php');
 
 
     // check in
+
+    var sound = $('audio')[0];
 
     var video = document.createElement("video");
     var canvasElement = document.getElementById("canvas");
@@ -405,6 +411,7 @@ include('footer.php');
     		            data: {'action': 'checkin','event-id': event_id, 'ticket-code': code.data}
     		        }).done(function(data){
     		            if(data.result){
+                            sound.play();
     		                alert(data.message);
                             $('#error-checkin').text('');
     		            } else {

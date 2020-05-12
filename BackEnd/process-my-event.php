@@ -49,16 +49,16 @@ if ($action == "delete-mod-cfg-event") {
 
 if ($action == "add") {
 	$account_id = $_POST["account-id"];
-	$title = $_POST["name"];
+	$title = mysqli_real_escape_string($conn, $_POST["name"]);
 	$category = $_POST["category"];
 	$faculty = $_POST["faculty"];
 	// $moderator = $_POST["moderator"];
 	$ticketNumber = $_POST["ticket-number"];
-	$place = $_POST["place"];
+	$place = mysqli_real_escape_string($conn, $_POST["place"]);
 	$startTime = $_POST["start-time"];
 	$endTime = $_POST["end-time"];
-	$shortDesc = $_POST["short-desc"];
-	$description = $_POST["description"];
+	$shortDesc = mysqli_real_escape_string($conn, $_POST["short-desc"]);
+	$description = mysqli_real_escape_string($conn, $_POST["description"]);
 	$status = $_POST["status"];
 
     $target_dir = "images/upload/";
@@ -125,22 +125,22 @@ if ($action == "add") {
     }else{
         $data["result"] = false;
         $data["error"] = "Error: ".mysqli_error($conn);
-        $data["error"] = $sqlInsertMod;
+        $data["sql"] = $sqlInsertEvent;
     }
 	
 } else if ($action == "edit") {
 
 	$eventID = $_POST["id"];
-    $title = $_POST["name"];
+    $title = mysqli_real_escape_string($conn, $_POST["name"]);
 	$category = $_POST["category"];
 	$faculty = $_POST["faculty"];
 	// $moderator = $_POST["moderator"];
 	$ticketNumber = $_POST["ticket-number"];
-	$place = $_POST["place"];
+	$place = mysqli_real_escape_string($conn, $_POST["place"]);
 	$startTime = $_POST["start-time"];
 	$endTime = $_POST["end-time"];
-	$shortDesc = $_POST["short-desc"];
-	$description = $_POST["description"];
+	$shortDesc = mysqli_real_escape_string($conn, $_POST["short-desc"]);
+	$description = mysqli_real_escape_string($conn, $_POST["description"]);
 	$status = $_POST["status"];
 
 	$target_dir = "images/upload/";

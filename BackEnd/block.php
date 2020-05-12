@@ -14,7 +14,7 @@
 			<div class="tr-regi-form v2-search-form">
 				<h4><span>Thông báo</span></h4>
 				<hr>
-				<p>Tài khoản của bạn đã bị tạm khóa</p>
+				<p>Tài khoản của bạn đã bị khóa</p>
 				<p>Liên hệ quản trị viên để được hổ trợ</p>
 				<br>
 				<a href="logout.php" class="btn btn-danger">Đăng xuất</a>

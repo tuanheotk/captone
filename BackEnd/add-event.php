@@ -342,13 +342,13 @@ include('footer.php');
             data: new FormData(eventForm)
 
         }).done(function(data){
-            console.log(data);
+            // console.log(data);
             if(data.result){
                 window.location = 'my-events.php';
             }else {
                 alert('Có lỗi xảy ra. Vui lòng thử lại');
-                console.log(data.error);
-                console.log(data.sql)
+                // console.log(data.error);
+                // console.log(data.sql);
             }
         }).fail(function(jqXHR, statusText, errorThrown){
             console.log("Fail:"+ jqXHR.responseText);

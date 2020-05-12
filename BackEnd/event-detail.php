@@ -46,7 +46,7 @@ if (isset($_GET["id"])) {
         $result=mysqli_query($conn,"select * from event where id = ".$event_id);
         
 
-         $sql_count_ticket = "SELECT COUNT(a.event_id) AS total_attendee FROM event e, attendee a WHERE e.id = a.event_id AND e.id = ".$event_id." AND a.status!=2";
+        $sql_count_ticket = "SELECT COUNT(a.event_id) AS total_attendee FROM event e, attendee a WHERE e.id = a.event_id AND e.id = ".$event_id." AND a.status!=2";
         $resultCount = mysqli_query($conn, $sql_count_ticket);
         $rowCount = mysqli_fetch_assoc($resultCount);
         $ticket_assign = $rowCount["total_attendee"];

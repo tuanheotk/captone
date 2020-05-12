@@ -65,8 +65,9 @@ include('footer.php');
 <script type="text/javascript">
 
 	$('#full-name').on('keydown keyup', function(){
-        $(this).val($(this).val().replace(/[0123456789?,.!@#$%^&*()\-_+={}\[\]><|\/\\]+/g,''));
-    })	
+        // $(this).val($(this).val().replace(/[0123456789?,.!@#$%^&*()\-_+={}\[\]><|\/\\]+/g,''));
+        $(this).val($(this).val().replace(/[0123456789?,.!:;"@#$%^&*()\-_+={}\[\]><|\/\\\']+/g,''));
+    })
 	$('#email').on('keydown keyup', function(){
         $(this).val($(this).val().replace(/[!#$%^&*()+={}\[\]><|\/\\]+/g,''));
     })
