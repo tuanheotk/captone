@@ -1,5 +1,6 @@
 <?php
-$title = 'Đặt câu hỏi';
+$title = (isset($_COOKIE['tab']) && $_COOKIE['tab'] == 'poll-tab') ? 'Bầu chọn' : 'Đặt câu hỏi';
+
 include('header.php');
 if (isset($_GET["id"])) {
     $event_id = $_GET["id"];
@@ -253,19 +254,18 @@ if (isset($_GET["id"])) {
 
     // Change tilte when change tab
     $('a[href^="#question-tab"]').click(function(){
-        document.title = 'Đặt câu hỏi - EventBox Văn Lang';
+        document.title = 'Đặt câu hỏi | EventBox Văn Lang';
 
         set_cookie('tab', 'question-tab', 1);
     })
     $('a[href^="#poll-tab"]').click(function(){
-        document.title = 'Bầu chọn - EventBox Văn Lang';
+        document.title = 'Bầu chọn | EventBox Văn Lang';
         
         set_cookie('tab', 'poll-tab', 1);
     })
 
 
     var selected_tab = get_cookie('tab');
-
     if (selected_tab == 'poll-tab') {
         $('a[href^="#poll-tab"]').click();
     }
@@ -767,6 +767,11 @@ if (isset($_GET["id"])) {
         get_published_poll();
     });
 
+    // Refresh percent vote
+    channel_poll.bind('refresh-percent-vote', function(data) {
+        get_percent_vote();
+    })
+
 
 
     // Disable button send vote when over choice
@@ -824,7 +829,9 @@ if (isset($_GET["id"])) {
                 data: {'action': 'vote-poll', 'user-id': user_id, 'poll-id': poll_id, 'list-option': list_selected_option_id}
             }).done(function(data){
                 if (data.result) {
-                    refresh_published_poll();
+                    // refresh_published_poll();
+                    refresh_percent_vote();
+                    get_published_poll();
 
                     // Refresh result poll manage page
                     refresh_result_poll(poll_id);
@@ -936,7 +943,7 @@ if (isset($_GET["id"])) {
                         rows+= '<p class="card-text" hidden><small class="text-muted">Số câu trả lời được phép chọn: '+max_choice+'</small></p>';
                         rows+= '<div class="list-option">';
 
-                        $.each(data.list_option, function(index, o) {
+                        $.each(data.list_option.filter(op => op.poll_id == poll_id), function(index, o) {
                             var option_id = o.id;
                             var option_content = o.content;
                             var option_voted = o.voted;
@@ -990,7 +997,7 @@ if (isset($_GET["id"])) {
                         rows+= '<p class="card-text"><small class="text-muted">Số câu trả lời được phép chọn: '+max_choice+'</small></p>';
                         rows+= '<div class="list-option">';
 
-                        $.each(data.list_option, function(index, o) {
+                        $.each(data.list_option.filter(op => op.poll_id == poll_id), function(index, o) {
 
                             var option_id = o.id;
                             var option_content = o.content;
@@ -1100,6 +1107,132 @@ if (isset($_GET["id"])) {
             url: 'process-poll.php',
             method: 'POST',
             data: {'action': 'refresh-published-poll', 'event-id': event_id}
+        })
+    }
+
+    function refresh_percent_vote() {
+        var event_id = $('#event-id').val();
+        $.ajax({
+            url: 'process-poll.php',
+            method: 'POST',
+            data: {'action': 'refresh-percent-vote', 'event-id': event_id}
+        })
+    }
+
+    function get_percent_vote() {
+        var event_id = $('#event-id').val();
+        var user_id = $('#user-id').val();
+
+        $.ajax({
+            url: 'process-poll.php',
+            method: 'POST',
+            data: {'action': 'get-percent-vote', 'event-id': event_id, 'user-id': user_id}
+        }).done(function(data) {
+            if (data.result) {
+                // console.log(data);
+
+                $.each(data.list_poll, function(index, p) {
+                    var poll_id = p.id
+                    var votes = p.votes;
+                    var voted = p.voted;
+
+                    // change num votes
+                    $('.poll-id[value="'+poll_id+'"]').parents('.poll-card').find('.num-votes').html(votes + ' <i class="fa fa-user"></>');
+
+                    var current_voted_state = $('.poll-id[value="'+poll_id+'"]').parents('.poll-card').parent('div').hasClass('poll-no-vote');
+
+                    if (voted == current_voted_state) {
+                        // Update status voted
+                        $('.poll-id[value="'+poll_id+'"]').parents('.poll-card').parent('div').removeClass('poll-no-vote').addClass('poll-voted');
+                        // Hide maxchoice text
+                        $('.poll-id[value="'+poll_id+'"]').parents('.poll-card').find('.text-muted').hide();
+
+                        // Change send to edit button
+                        $('.poll-id[value="'+poll_id+'"]').parents('.poll-card').find('.btn-send-vote').removeClass('btn-send-vote').removeClass('btn-info').addClass('btn-edit-vote').addClass('btn-success').text('Sửa bầu chọn');
+
+
+                        current_list_option = $('.poll-id[value="'+poll_id+'"]').parents('.poll-card').find('.list-option');
+                        var rows = '';
+
+                        $.each(data.list_option.filter(o => o.poll_id == poll_id), function(index, o) {
+
+                            var option_id = o.id;
+                            var option_content = o.content;
+                            var option_voted = o.voted;
+
+                            var option_votes = o.votes;
+                            var poll_id = o.poll_id;
+
+                            var total_vote = 0;
+                            // console.log(data.list_option.filter(op => op.poll_id == poll_id));
+
+                            total_vote = data.list_option.filter(op => op.poll_id == poll_id).reduce(function(prev, cur) {
+                              return prev + parseInt(cur.votes);
+                            }, 0);
+
+                            // console.log(total_vote);
+
+
+                            var percent = option_votes*100/total_vote;
+                            percent =  Math.round(percent * 100) / 100;
+                            if (total_vote == 0) percent = 0;
+
+                            rows+= '<div class="form-check form-check-inline one-option" id="'+o.id+'">';
+                            rows+= '<input type="hidden" class="option-voted" value="1">'
+                            rows+= '<p class="option-content">'+option_content+'</p>';
+                            rows+= '<div class="progress">';
+                            rows+= '<div class="progress-bar progress-bar-striped actives progress-bar-danger" role="progressbar" style="width: '+percent+'%;" aria-valuenow="'+percent+'" aria-valuemin="0" aria-valuemax="100">'+percent+'%</div>';
+                            rows+= '</div>';
+                            rows+= '</div>';
+                        })
+
+                        current_list_option.html(rows);
+                    }
+
+
+                })
+
+                $.each(data.list_option, function(index, o) {
+                    var option_id = o.id;
+                    var option_content = o.content;
+                    var option_voted = o.voted;
+
+                    var option_votes = o.votes;
+                    var poll_id = o.poll_id;
+
+                    var total_vote = 0;
+                    // console.log(data.list_option.filter(op => op.poll_id == poll_id));
+
+                    total_vote = data.list_option.filter(op => op.poll_id == poll_id).reduce(function(prev, cur) {
+                      return prev + parseInt(cur.votes);
+                    }, 0);
+
+                    // console.log(total_vote);
+
+
+                    var percent = option_votes*100/total_vote;
+                    percent =  Math.round(percent * 100) / 100;
+                    if (total_vote == 0) percent = 0;
+
+
+                    // change percent
+                    $('#'+option_id+' .progress-bar').css('width', percent+'%').text(percent+'%').attr('aria-valuenow', percent);
+
+                    // change color & hidden value voted
+                    if (option_voted) {
+                        // change hidden value
+                        $('#'+option_id+' .option-voted').val(1);
+                        $('#'+option_id+' .progress-bar').removeClass('progress-bar-grey').addClass('progress-bar-danger');
+                    } else {
+                        $('#'+option_id+' .option-voted').val(0);
+                        $('#'+option_id+' .progress-bar').removeClass('progress-bar-danger').addClass('progress-bar-grey');
+                    }
+
+                })
+            }
+        }).fail(function(jqXHR, statusText, errorThrown){
+              console.log("Fail:"+ jqXHR.responseText);
+              console.log(errorThrown);
         })
     }
 
