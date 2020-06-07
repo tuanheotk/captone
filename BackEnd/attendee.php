@@ -120,6 +120,8 @@ if (isset($_GET["id"])) {
                     </div>
                     <a href="#" data-toggle="modal" data-target="#check-in-modal" class="btn btn-success waves-effect waves-light" style="margin: 10px 15px;">Điểm danh</a>
 
+                    <a href="#" data-toggle="modal" data-target="#import-email-modal" class="btn btn-info waves-effect waves-light">Nhập danh sách khách mời</a>
+
                     <div class="db-2-main-com db-2-main-com-table">
                         <table class="table table-hover" id="attendee-table">
                             <thead>
@@ -231,6 +233,102 @@ if (isset($_GET["id"])) {
         
             <!--RIGHT SECTION-->
             
+            <!-- Import email -->
+            <div id="import-email-modal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <form id="import-email-form" method="POST" action="<?php  $_SERVER["PHP_SELF"] ?>">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Nhập danh sách khách mời</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Vui lòng chọn file excel chứa danh sách email khách mời</p>
+                                <input type="hidden" name="event-id" value="<?php echo $event_id ?>">
+                                <input type="file" name="excel" accept=".xls, .xlsx, .csv" required>
+                                <p></p>
+                                <p id="please-wait-text" hidden><i class="fa fa-spinner fa-spin"></i> Vui lòng đợi! Vé mời đang được gửi đến email của khách mời</p>
+                                <p id="error-import" class="text-danger" hidden></p>
+
+                                <!-- Show result -->
+                                <div id="result-import" hidden>
+                                    <h3>Kết quả</h3>
+                                    <p>Đã gửi vé mời tham dự sự kiện cho <strong id="sent-email">10</strong> email trong tổng số <strong id="total-email">15</strong> email có trong file excel</p>
+
+                                    <div class="panel-group" id="accordions">
+                                        <div class="panel panel-danger">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title" data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+                                                    <p>Email không hợp lệ<span class="badge" id="num-invalid">0</span></p>
+                                                </h4>
+                                            </div>
+                                            <div id="collapse1" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    <p class="text-danger">Vui lòng kiểm tra lại các email sau đây</p>
+                                                    <p id="list-invalid-email"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="panel panel-warning">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title" data-toggle="collapse" data-parent="#accordion" href="#collapse2">
+                                                    <p>Email đã đăng ký tham dự<span class="badge" id="num-duplicate">0</span></p>
+                                                </h4>
+                                            </div>
+                                            <div id="collapse2" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    <p class="text-warning">Các email này đã đăng ký tham dự sự kiện và đã có vé</p>
+                                                    <p id="list-duplicate-email"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="panel panel-success">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title" data-toggle="collapse" data-parent="#accordion" href="#collapse3">
+                                                    <p>Email đã duyệt vé<span class="badge" id="num-registered">0</span></p>
+                                                </h4>
+                                            </div>
+                                            <div id="collapse3" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    <p class="text-success">Các email này đã được duyệt và gửi vé</p>
+                                                    <p id="list-registered-email"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="panel panel-info">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title" data-toggle="collapse" data-parent="#accordion" href="#collapse4">
+                                                    <p>Email đã gửi vé<span class="badge" id="num-new">0</span></p>
+                                                </h4>
+                                            </div>
+                                            <div id="collapse4" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    <p class="text-info">Đã gửi vé mời tham dự sự kiện đến các email sau đây</p>
+                                                    <p id="list-new-email"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="hidden" name="action" value="import-email">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                                <button type="submit" class="btn btn-success">Nhập</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>              
+            </div>
+            <!-- End Import email -->
+
             <!-- Send Ticket -->
             <div id="send-ticket-modal" class="modal fade" role="dialog">
                 <div class="modal-dialog">
@@ -355,6 +453,8 @@ include('footer.php');
         });
     });
 
+
+    // Send ticket
     $('tbody').on('click', '.send-ticket', function(){
         var id = $(this).parents('tr').attr('id');
         if (id == undefined) var id = $(this).parents('tr').prev().attr('id');
@@ -547,6 +647,85 @@ include('footer.php');
             console.log("Fail:"+ jqXHR.responseText);
             console.log(errorThrown);
         })
+    })
+
+
+    // Import email
+    $('#import-email-form').on('submit', function(e) {
+        e.preventDefault();
+
+        $('#import-email-form button[type="submit"]').prop('disabled', true);
+        $('#import-email-form input[type="file"]').hide();
+
+        $('#please-wait-text').show();
+        $('#result-import').hide();
+
+        var email_import_form = document.querySelector('#import-email-form');
+        // console.log(email_import_form);
+
+        $.ajax({
+            url: 'process-my-event.php',
+            method: 'POST',
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            data: new FormData(email_import_form)
+
+        }).done(function(data){
+            // console.log(data);
+            $('#import-email-form button[type="submit"]').prop('disabled', false);
+            $('#import-email-form input[type="file"]').show();
+
+            $('#please-wait-text').hide();
+            
+            if(data.result){
+                $('#result-import').show();
+                $('#error-import').hide();
+                // console.log(data['duplicate-email'].join('\n'));
+
+                num_invalid = data['invalid-email'].length;
+                num_duplicate = data['duplicate-email'].length;
+                num_registered = data['registered-email'].length;
+                num_new = data['new-email'].length;
+
+                total_email = num_invalid + num_duplicate + num_registered + num_new;
+                sent_email = num_registered + num_new;
+
+                // invalid email
+                $('#num-invalid').text(num_invalid);
+                $('#list-invalid-email').html(data['invalid-email'].join('\n').replace(/\r?\n/g, '<br>'));
+                // duplicate email
+                $('#num-duplicate').text(num_duplicate);
+                $('#list-duplicate-email').html(data['duplicate-email'].join('\n').replace(/\r?\n/g, '<br>'));
+                // registered email
+                $('#num-registered').text(num_registered);
+                $('#list-registered-email').html(data['registered-email'].join('\n').replace(/\r?\n/g, '<br>'));
+                // new email
+                $('#num-new').text(num_new);
+                $('#list-new-email').html(data['new-email'].join('\n').replace(/\r?\n/g, '<br>'));
+
+                $('#total-email').text(total_email);
+                $('#sent-email').text(sent_email);
+
+                if (sent_email > 0) {
+                    $('#import-email-modal').on('hidden.bs.modal', function(){
+                        window.location.reload();
+                    });
+                }
+
+            }else {
+                $('#result-import').hide();
+                $('#error-import').text(data.message).show();
+
+            }
+        }).fail(function(jqXHR, statusText, errorThrown){
+            console.log("Fail:"+ jqXHR.responseText);
+            console.log(errorThrown);
+        })
+    })
+
+    $('#import-email-form input[type="file"]').on('change', function(){
+        $('#error-import').hide();
     })
 
 
