@@ -69,7 +69,12 @@ if (isset($_GET["id"])) {
         <div class="banner_book_1">
           <ul>
         <li class="dl1"><?php echo $resultevent["place"] ?></li>
-                        <li class="dl2">Vé còn lại: <?php echo ($resultevent["ticket_number"]-$ticket_assign)."/".$resultevent["ticket_number"] ?></li>
+                        <!-- <li class="dl2">Vé còn lại: <?php echo ($resultevent["ticket_number"]-$ticket_assign)."/".$resultevent["ticket_number"] ?></li> -->
+                        <?php
+                        $rest_ticket = $resultevent['ticket_number']-$ticket_assign;
+                        if ($rest_ticket < 0) $rest_ticket = 0;
+                         ?>
+                        <li class="dl2">Vé còn lại: <?php echo $rest_ticket."/".$resultevent["ticket_number"] ?></li>
                         <li class="dl3">Thời gian: <?php echo date ("H:i d/m/Y", strtotime($resultevent["start_date"])) ?></li>
                         <?php 
 
@@ -78,14 +83,23 @@ if (isset($_GET["id"])) {
         $row_sum_att=mysqli_fetch_assoc($resultSumAtt);
         $sum_att=$row_sum_att["sum_att"];
 
-                          if($sum_att==$resultevent["ticket_number"]){
-                            echo " <li class=''><a class='cancel_button' disabled  >Hết vé</a> </li>";
-                          }else if(isset($account_email)){
-                  echo " <li class='dl4'><a data-toggle='modal' data-target='#exampleModal1' class='cancel_button' >Đăng kí</a> </li>";
-                }else{
-                  echo " <li class='dl4'><a data-toggle='modal' data-target='#modalLogin' class='cancel_button' >Đăng kí</a> </li>";
-                }
-                        ?>
+        $time = $resultevent["start_date"];
+        $time = date_parse_from_format('Y-m-d H:i:s', $time);
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
+        $now = time();
+        $time_stamp = mktime($time['hour'],$time['minute'],$time['second'],$time['month'],$time['day'],$time['year']);
+        if (($now - $time_stamp) > 7*24*60*60){
+          echo " <li class=''><a class='cancel_button' disabled title='Thời gian đăng ký vé đã kết thúc' >Hết hạn</a> </li>";
+        } else {
+          if ($sum_att>=$resultevent["ticket_number"]){
+            echo " <li class=''><a class='cancel_button' disabled  >Hết vé</a> </li>";
+          } else if (isset($account_email)){
+            echo " <li class='dl4'><a data-toggle='modal' data-target='#exampleModal1' class='cancel_button' >Đăng kí</a> </li>";
+          } else {
+            echo " <li class='dl4'><a data-toggle='modal' data-target='#modalLogin' class='cancel_button' >Đăng kí</a> </li>";
+          }
+        }
+        ?>
                        
         </div>
       </div>
@@ -137,12 +151,12 @@ if (isset($_GET["id"])) {
                            <!--  <?php $start_date = date ('d/m/Y', strtotime($resultcomment['start']));  ?> -->
               <li>Địa điểm : <?php echo $resultevent["place"] ?></li>
               <li>Ngày bắt đầu: <?php echo date ("H:i d/m/Y", strtotime($resultevent["start_date"])) ?></li>
-              <li>Vé còn : <?php echo ($resultevent["ticket_number"]-$ticket_assign)."/".$resultevent["ticket_number"] ?></li>
+              <li>Vé còn : <?php echo $rest_ticket."/".$resultevent["ticket_number"] ?></li>
             
             </ul>
           </div>
           <!--====== PACKAGE SHARE ==========-->
-          <div class="tour_right head_right tour_social tour-ri-com">
+          <!-- <div class="tour_right head_right tour_social tour-ri-com">
             <h3>Chia sẻ</h3>
             <ul>
               <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a> </li>
@@ -151,7 +165,7 @@ if (isset($_GET["id"])) {
               <li><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a> </li>
               <li><a href="#"><i class="fa fa-whatsapp" aria-hidden="true"></i></a> </li>
             </ul>
-          </div>
+          </div> -->
           <!--====== HELP PACKAGE ==========-->
           <!-- <div class="tour_right head_right tour_help tour-ri-com">
             <h3>Liên hệ hỗ trợ</h3>
@@ -175,83 +189,73 @@ if (isset($_GET["id"])) {
 
 
     <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Xác nhận</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <form action="updateReviewOk.php" method="post">
-      <div class="modal-body">
-        Bạn chắc chắn <span style="color: green">duyệt</span> sự kiện này?
-        <input type="hidden" name="id" value="<?php echo $resultevent['id']; ?>">
-      </div>
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-primary">Duyệt</button>
-      </div>
-  </form>
-    </div>
-  </div>
-</div>
 
-<div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Xác nhận</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+    <?php
+    if (isset($account_email)) {
+    ?>
+    <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Xác nhận</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="event_register.php" method="post">
+        <div class="modal-body">
+          Bạn chắc chắn <span style="color: green">muốn đăng kí</span> tham gia sự kiện này?
+          <input type="hidden" name="id" value="<?php echo $resultevent['id']; ?>">
+             <input type="hidden" name="title" value="<?php echo $resultevent['title']; ?>">
+                <input type="hidden" name="start_date" value="<?php echo $resultevent['start_date']; ?>">
+                   <input type="hidden" name="place" value="<?php echo $resultevent['place']; ?>">
+                    <input type="hidden" name="photo" value="<?php echo $resultevent['avatar']; ?>">
+                    <input type="hidden" name="sum_ticket" value="<?php echo $resultevent['ticket_number']; ?>">
+          <input type="hidden" name="email" value="<?php echo $account_email ?>">
+          <input type="hidden" name="mail_check" value="<?php echo $mail_vlu ?>">
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-danger">Đăng ký</button>
+        </div>
+    </form>
       </div>
-      <form action="event_register.php" method="post">
-      <div class="modal-body">
-        Bạn chắc chắn <span style="color: green">muốn đăng kí</span> tham gia sự kiện này?
-        <input type="hidden" name="id" value="<?php echo $resultevent['id']; ?>">
-           <input type="hidden" name="title" value="<?php echo $resultevent['title']; ?>">
-              <input type="hidden" name="start_date" value="<?php echo $resultevent['start_date']; ?>">
-                 <input type="hidden" name="place" value="<?php echo $resultevent['place']; ?>">
-                  <input type="hidden" name="photo" value="<?php echo $resultevent['avatar']; ?>">
-                  <input type="hidden" name="sum_ticket" value="<?php echo $resultevent['ticket_number']; ?>">
-        <input type="hidden" name="email" value="<?php echo $account_email ?>">
-        <input type="hidden" name="mail_check" value="<?php echo $mail_vlu ?>">
-      </div>
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-danger">Đăng ký</button>
-      </div>
-  </form>
     </div>
   </div>
-</div>
 
-<div class="modal fade" id="modalLogin" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Xác nhận</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+    <?php
+    } else {
+    ?>
+    <div class="modal fade" id="modalLogin" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Xác nhận</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Vui lòng <a href="login.php">đăng nhập</a> trước khi đăng ký tham gia sự kiện này! 
+          <input type="hidden" name="id" value="<?php echo $resultevent['id']; ?>">
+             <input type="hidden" name="title" value="<?php echo $resultevent['title']; ?>">
+                <input type="hidden" name="start_date" value="<?php echo $resultevent['start_date']; ?>">
+                   <input type="hidden" name="place" value="<?php echo $resultevent['place']; ?>">
+                    <input type="hidden" name="photo" value="<?php echo $resultevent['avatar']; ?>">
+          <input type="hidden" name="email" value="<?php echo $email ?>">
+        </div>
+        <div class="modal-footer">
+         <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+        </div>
       </div>
-      <form action="event_register.php" method="post">
-      <div class="modal-body">
-        Vui lòng <a href="login.php">đăng nhập</a> trước khi đăng ký tham gia sự kiện này! 
-        <input type="hidden" name="id" value="<?php echo $resultevent['id']; ?>">
-           <input type="hidden" name="title" value="<?php echo $resultevent['title']; ?>">
-              <input type="hidden" name="start_date" value="<?php echo $resultevent['start_date']; ?>">
-                 <input type="hidden" name="place" value="<?php echo $resultevent['place']; ?>">
-                  <input type="hidden" name="photo" value="<?php echo $resultevent['avatar']; ?>">
-        <input type="hidden" name="email" value="<?php echo $email ?>">
-      </div>
-      <div class="modal-footer">
-       <button type="submit" class="btn btn-danger" data-dismiss="modal">Đóng</button>
-      </div>
-  </form>
     </div>
   </div>
-</div>
+    
+    <?php
+    }
+    ?>
+
+
+
 
 
  <?php } ?>
@@ -261,7 +265,6 @@ if (isset($_GET["id"])) {
   <script src="js/wow.min.js"></script>
   <script src="js/materialize.min.js"></script>
   <script src="js/custom.js"></script>
-      <script src="js/script.js"></script>
 </body>
 
 </html>

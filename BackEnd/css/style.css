@@ -1448,6 +1448,9 @@
  .footer {
 
      background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.8)), url("../images/footer.jpg");
+     background-position: center;
+     background-repeat: no-repeat;
+     background-size: cover;
      background-color: rgba(0, 0, 0);
      position: relative;
      overflow: hidden;
@@ -8209,7 +8212,7 @@
 }
 .category-fix-img .tour-mig-like-com:before {
      /*background: linear-gradient(to top, rgba(0, 0, 0, 0.91) 10%, rgba(208, 105, 105, 0.66) 80%);*/
-     background: linear-gradient(to top, rgba(139, 66, 66, 0.88) 20%, rgba(255, 255, 255, 0) 80%);
+     background: linear-gradient(to top, rgba(212, 69, 69, 0.76) 20%, rgba(255, 255, 255, 0) 80%);
      border-radius: 0;
 }
 
@@ -8606,8 +8609,8 @@ hr {
 }
 
 #section-category {
-     /*background-image: url('https://jooinn.com/images/abstract-background-280.jpg');*/
-     background-image: url('https://media.idownloadblog.com/wp-content/uploads/2019/07/iOS-13-wallpaper-iphone-ipad-ar72014-dark-red.jpeg');
+     /*background-image: url('https://media.idownloadblog.com/wp-content/uploads/2019/07/iOS-13-wallpaper-iphone-ipad-ar72014-dark-red.jpeg');*/
+     background-image: url('../images/category-bg.jpg');
      background-repeat: no-repeat;
      background-position: center;
      background-size: cover;
@@ -8615,4 +8618,12 @@ hr {
 
 #section-category h2, #section-category p {
      color: #fff;
+}
+
+.footer a, .footer a:focus {
+     color: #fff !important;
+}
+.footer a:hover {
+     color: #fff !important;
+     text-decoration: underline;
 }

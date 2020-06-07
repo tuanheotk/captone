@@ -402,6 +402,76 @@ if ($action == 'get-all-poll') {
 
 	// Pusher
 	$pusher->trigger('vote-page-'.$data, 'refresh-published-poll', $data);
+} else if ($action == 'refresh-percent-vote') {
+	$data = $_POST['event-id'];
+
+	// Pusher
+	$pusher->trigger('vote-page-'.$data, 'refresh-percent-vote', $data);
+} else if ($action == 'get-percent-vote') {
+	$event_id = $_POST['event-id'];
+	$user_id = $_POST['user-id'];
+
+	$sql_get_list_option = "SELECT po.*, COUNT(pv.option_id) AS votes FROM poll_option po LEFT JOIN poll_vote pv ON po.id = pv.option_id WHERE po.poll_id IN (SELECT id FROM poll WHERE status = 1 AND event_id = $event_id) GROUP BY po.id";
+	$result_list_option = mysqli_query($conn, $sql_get_list_option);
+	
+	if (mysqli_num_rows($result_list_option) > 0) {
+		while ($row_list_option = mysqli_fetch_assoc($result_list_option)) {
+			$list_option[] = $row_list_option;
+
+			$option_id = $row_list_option['id'];
+
+			$sql_get_option_voted = "SELECT * FROM poll_vote WHERE user_id = '$user_id' AND option_id = $option_id";
+			$result_option_voted = mysqli_query($conn, $sql_get_option_voted);
+			$voted = (mysqli_num_rows($result_option_voted) > 0) ? true : false ;
+
+			$list_option_voted[] = $voted;
+		}
+		// Add key voted for list option
+		for ($i=0; $i < count($list_option); $i++) {
+			$list_option[$i]['voted'] = $list_option_voted[$i];
+		}
+
+		// get poll info
+		$sql_get_poll_info = "SELECT p.id, COUNT(DISTINCT(user_id)) AS votes FROM poll p
+		LEFT JOIN poll_option po ON p.id = po.poll_id
+		LEFT JOIN poll_vote pv ON po.id = pv.option_id
+		WHERE event_id = $event_id AND p.status = 1
+		GROUP BY p.id ORDER BY p.id DESC";
+
+		$result_poll_info = mysqli_query($conn, $sql_get_poll_info);
+		if ($result_poll_info) {
+			while ($row_poll_info = mysqli_fetch_assoc($result_poll_info)) {
+				$list_poll[] = $row_poll_info;
+
+				$poll_id = $row_poll_info['id'];
+
+				$sql_get_poll_voted = "SELECT COUNT(DISTINCT(pv.user_id)) as voted FROM poll p, poll_option po, poll_vote pv WHERE p.id = po.poll_id AND po.id = pv.option_id AND p.id = $poll_id AND pv.user_id = '$user_id'";
+				$result_poll_voted = mysqli_query($conn, $sql_get_poll_voted);
+
+				if ($result_poll_voted) {
+					$row_poll_voted = mysqli_fetch_assoc($result_poll_voted);
+					$voted = ($row_poll_voted['voted'] == 1) ? true : false ;
+					
+					$list_poll_voted[] = $voted;
+				}
+			}
+
+			// Add key voted for list poll
+			for ($i=0; $i < count($list_poll); $i++) {
+				$list_poll[$i]['voted'] = $list_poll_voted[$i];
+			}
+		}
+
+		$data['result'] = true;
+		$data['list_option'] = $list_option;
+		$data['list_poll'] = $list_poll;
+	} else {
+		$data['result'] = false;
+	}
+
+
+	// Pusher
+	// $pusher->trigger('vote-page-'.$event_id, 'get-percent-vote', $data);
 } else if ($action == 'vote-poll') {
 	$user_id = $_POST['user-id'];
 	$poll_id = $_POST['poll-id'];

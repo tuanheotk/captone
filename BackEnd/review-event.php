@@ -7,7 +7,7 @@
 
     // $sql = "SELECT id, title, start_date, place, status from event e, reviewer r where  status IN (1,2,3) and faculty_id = ".$account_faculty_id." UNION SELECT id, title, start_date, place, status from event e, reviewer r where e.id = r.event_id and e.status in (1,2,3) and  email = '".$account_email."' ";
 
-    $sql = "SELECT id, title, start_date, place, status FROM event WHERE status IN (1,2,3) AND faculty_id = ".$account_faculty_id." OR id IN (SELECT event_id FROM reviewer WHERE email = '".$account_email."')";
+    $sql = "SELECT id, title, start_date, place, status FROM event WHERE status IN (1,2,3) AND faculty_id = ".$account_faculty_id." OR id IN (SELECT event_id FROM reviewer WHERE email = '".$account_email."' AND reviewer.event_id = event.id AND event.status IN (1,2,3)) ORDER BY id DESC";
     
     $result = mysqli_query($conn, $sql);
    
@@ -59,7 +59,7 @@
 				<div class="db-2-com db-2-main">
 					<h4>Danh sách sự kiện cần duyệt</h4>
 					<div class="db-2-main-com db-2-main-com-table">
-						<table class="" id="review-table">
+						<table class="table table-hover" id="review-table">
 							<thead>
 								<tr>
 									<th>#</th>
@@ -73,6 +73,32 @@
 							</thead>
 							<tbody id="tbodylistevent">
                                 <?php
+                                // Function short title
+                                function shortTitle($title)
+                                {
+                                    $space = 0;
+                                    $end = 0;
+                                    $shorted = "";
+                                    $num_of_char = 10;
+
+                                    for ($i = 0; $i < strlen($title); $i++) {
+                                        if ($title[$i] == " ")
+                                            $space++;
+                                        if ($space == $num_of_char) {
+                                            $end = $i;
+                                            break;
+                                        }
+                                    }
+                                    
+                                    if ($space < $num_of_char) {
+                                        return $title;
+                                    } else {
+                                        $shorted = substr($title, 0, $end).'...';
+                                        return $shorted;
+                                    }
+
+                                }
+
                                 $count = 0;
                                 while($resultreview=mysqli_fetch_assoc($result)){?>
                                     <?php
@@ -96,7 +122,7 @@
                                     ?>
                                     <tr>
                                        <td><?php echo $count ?></td>
-                                      <td><?php echo $resultreview["title"] ?></td>
+                                      <td title="<?php echo htmlspecialchars($resultreview["title"]) ?>"><?php echo shortTitle($resultreview["title"]) ?></td>
                                        <td><?php echo date ("H:i - d/m/Y", strtotime($resultreview["start_date"])) ?></td>
                                        <td><?php echo $resultreview["place"] ?></td>
                                         <td><span class="event-status <?php echo $color ?>"><?php echo $status1 ?></span></td>

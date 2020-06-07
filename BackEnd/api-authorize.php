@@ -53,7 +53,7 @@
     
     
     // Redirect back to home page
-    header("Location: index.php");
+    header("Location: /event");
   }
   else
   {

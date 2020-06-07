@@ -10,7 +10,7 @@ include('header.php');
 		<div class="tr-register">
 			<div class="tr-regi-form v2-search-form">
 				<h4><span>Chúc mừng</span></h4>
-				<p>Bạn đã đăng ký thành công sự kiện</p>
+				<p>Bạn đã đăng ký tham gia sự kiện thành công</p>
 				<hr>
 							<p>
 								Thông tin xác nhận và vé đính kèm đã được gửi đến Email Văn Lang của bạn, xin vui lòng kiểm tra. 
@@ -20,7 +20,7 @@ include('header.php');
 								Chúc bạn một ngày tốt lành!!!
 							</p>
 							<br>
-							<a href="index.php"><Button  class="btn btn-danger"> Trở về trang chủ
+							<a href="/event"><Button  class="btn btn-danger"> Trở về trang chủ
 							 </Button></a>
 						
 			</div>

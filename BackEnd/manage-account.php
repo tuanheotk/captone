@@ -2,7 +2,7 @@
 $title = 'Quản lý tài khoản';
 include('header.php');
 if (!isset($account_role) || $account_role != 4) {
-    header('Location: index.php');
+    header('Location: /event');
     // header('Location: javascript://history.go(-1)');
 }
 ?>
@@ -63,7 +63,7 @@ if (!isset($account_role) || $account_role != 4) {
 							<tbody>
                                 <?php 
                                 require("database-config.php");
-                                $sql = "SELECT a.*, f.name AS faculty_name FROM account a, faculty f WHERE a.faculty_id = f.faculty_id AND a.role < 4";
+                                $sql = "SELECT a.*, f.name AS faculty_name FROM account a, faculty f WHERE a.faculty_id = f.faculty_id AND a.role < 4 ORDER BY a.id DESC";
                                 $result = mysqli_query($conn, $sql);
                                 $count = 0;
                                 while ($row = mysqli_fetch_assoc($result)) {

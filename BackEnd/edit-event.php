@@ -165,7 +165,7 @@ if (isset($_GET["id"])) {
                             <div class="row db-file-upload">
                                 <div class="file-field input-field">
                                     <div class="db-up-btn"> <span>File</span>
-                                        <input type="file" id="cover-image" name="cover-image">
+                                        <input type="file" id="cover-image" name="cover-image" accept=".jpg, .jpeg, .png, .gif">
                                         <input type="hidden" name="current-image" id="current-image-link" value="<?php echo $avatar ?>">
                                     </div>
                                     <div class="file-path-wrapper">
@@ -296,22 +296,21 @@ if (isset($_GET["id"])) {
                             <div class="row footernoop">
                                 <div class="col-sm-3 foot-spec foot-com">
                                     <div class="wed-logo2">
-                                        <a href="index.php"><img src="images/preloader.png" alt="" />
+                                        <a href="/event"><img src="images/preloader.png" alt="" />
                                         </a>
                                     </div>
                                 </div>
                                 <div class="col-sm-3 foot-spec foot-com">
-                                    <h4>Địa chỉ & Thông tin liên hệ</h4>
-                                    <p>45 Nguyễn Khắc Nhu, Phường Cô Giang, Quận 1, Hồ Chí Minh.</p>
-                                    <p><span class="strong">Số điện thoại: </span></p>
-                                    <p><span class="highlighted">028 3836 7933</span> </p>
+                                    <h4>Địa chỉ</h4>
+                                    <p><a style="color: #fff" href="https://goo.gl/maps/2CcxCxTxQXPDDYwW8" target="_blank"><i class="fa fa-home" aria-hidden="true"></i> Trụ sở: <br>45 Nguyễn Khắc Nhu, P.Cô Giang, Q.1, Hồ Chí Minh.</a></p>
+                                    <p><a style="color: #fff" href="https://goo.gl/maps/H4RCpcajjiNjpjZ8A" target="_blank"><i class="fa fa-home" aria-hidden="true"></i> Cơ sở 2: <br> 233A Phan Văn Trị, P.11, Q.Bình Thạnh, Hồ Chí Minh.</a></p>
+                                    <p><a style="color: #fff" href="https://goo.gl/maps/UdzN3SB64pcwUyGGA" target="_blank"><i class="fa fa-home" aria-hidden="true"></i> Cơ sơ 3: <br> 80/68 Dương Quảng Hàm, P.5, Q.Gò Vấp, Hồ Chí Minh. <br> 69/68 Đặng Thùy Trâm, P.13, Q.Bình Thạnh, Hồ Chí Minh.</a></p>
                                 </div>
                                 <div class="col-sm-3 col-md-3 foot-spec foot-com">
-                                    <h4>Hỗ Trợ & Giúp đỡ</h4>
-                                    <ul class="two-columns">
-                                        <li> <a href="#">Thông tin</a> </li>
-                                        <li> <a href="#">Liên hệ</a> </li>
-                                    </ul>
+                                    <h4>Điện thoại</h4>
+                                    <p"><a style="color: #fff" href="tel:02871099218,3310"><i class="fa fa-phone" aria-hidden="true"></i> 028 7109 9218 (Ext: 3310)</a></p>
+                                    <p><a style="color: #fff" href="tel:02871099218,3311"><i class="fa fa-phone" aria-hidden="true"></i> 028 7109 9218 (Ext: 3311)</a></p>
+                                    <p><a style="color: #fff" href="mailto:sukien.vanlanguni.edu.vn"><i class="fa fa-envelope-o" aria-hidden="true"></i> sukien.vanlanguni.edu.vn</a></p>
                                 </div>
                                 <div class="col-sm-3 foot-social foot-spec foot-com">
                                     <h4>Theo dõi chúng tôi</h4>
@@ -524,7 +523,7 @@ if (isset($_GET["id"])) {
             if(data.result){
                 window.location = 'my-events.php';
             }else {
-                alert('Có lỗi xảy ra. Vui lòng thử lại');
+                alert(data.message);
                 // console.log(data.error);
                 // console.log(data.sql)
             }

@@ -69,6 +69,7 @@
             <h2>The Best of Brazil & Argentina <span class="tour_star"><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star-half-o" aria-hidden="true"></i></span><span class="tour_rat">4.5</span></h2> </div> -->
           <!--====== TOUR DESCRIPTION ==========-->
           <div class="tour_head1">
+            <a href="review-event.php" style="position: fixed; bottom: 10px; left: 10px" class="btn btn-danger" title="Quay lại danh sách sự kiện cần duyệt"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
             <h3>Nội dung sự kiện</h3>
             <p><?php echo $resultevent["description"]; ?></p>
             <!-- <p>Brazil’s view takes you through clouds of mist and the opportunity to see these 275 falls, spanning nearly two miles! Argentina’s side allows you to walk along the boardwalk network and embark on a jungle train through the forest for unforgettable views. Hear the deafening roar and admire the brilliant rainbows created by the clouds of spray, and take in the majesty of this wonder of the world. From vibrant cities to scenic beauty, this vacation to Rio de Janeiro, Iguassu Falls, and Buenos Aires will leave you with vacation memories you’ll cherish for life.</p> -->
@@ -110,7 +111,7 @@
             </ul>
           </div>
           <!--====== PACKAGE SHARE ==========-->
-          <div class="tour_right head_right tour_social tour-ri-com">
+          <!-- <div class="tour_right head_right tour_social tour-ri-com">
             <h3>Chia sẻ</h3>
             <ul>
               <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a> </li>
@@ -119,14 +120,14 @@
               <li><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a> </li>
               <li><a href="#"><i class="fa fa-whatsapp" aria-hidden="true"></i></a> </li>
             </ul>
-          </div>
+          </div> -->
           <!--====== HELP PACKAGE ==========-->
-          <div class="tour_right head_right tour_help tour-ri-com">
+          <!-- <div class="tour_right head_right tour_help tour-ri-com">
             <h3>Liên hệ hỗ trợ</h3>
             <div class="tour_help_1">
               <h4 class="tour_help_1_call">Thầy Hoà</h4>
               <h4><i class="fa fa-phone" aria-hidden="true"></i> 0933.999.000</h4> </div>
-          </div>
+          </div> -->
           <!--====== PUPULAR TOUR PACKAGES ==========-->
           
         </div>
@@ -208,7 +209,7 @@
                     <table class="responsive-table" style="margin-top: 30px;">
                             <thead>
                                 <tr>
-                                    <th>Danh sách Reviewer</th>
+                                    <th>Danh sách người kiểm duyệt</th>
                                     <th></th>
                                 </tr>
                             </thead>

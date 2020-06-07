@@ -127,7 +127,7 @@ if (!isset($_SESSION["user_email"])) {
                             <div class="row db-file-upload">
                                 <div class="file-field input-field">
                                     <div class="db-up-btn"> <span>File</span>
-                                        <input type="file" id="cover-image" name="cover-image">
+                                        <input type="file" id="cover-image" name="cover-image" accept=".jpg, .jpeg, .png, .gif">
                                     </div>
                                     <div class="file-path-wrapper">
                                         <input class="file-path validate" type="text" placeholder="Vui lòng chọn hình ảnh"> </div>
@@ -369,7 +369,7 @@ include('footer.php');
             if(data.result){
                 window.location = 'my-events.php';
             }else {
-                alert('Có lỗi xảy ra. Vui lòng thử lại');
+                alert(data.message);
                 // console.log(data.error);
                 // console.log(data.sql);
             }

@@ -244,7 +244,7 @@ if (isset($_GET["id"])) {
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
                             <div class="modal-body">
-                                <p>Vui lòng chọn file excel chứa danh sách email khách mời</p>
+                                <p id="please-select-file-text">Vui lòng chọn file excel chứa danh sách email khách mời</p>
                                 <input type="hidden" name="event-id" value="<?php echo $event_id ?>">
                                 <input type="file" name="excel" accept=".xls, .xlsx, .csv" required>
                                 <p></p>
@@ -254,7 +254,7 @@ if (isset($_GET["id"])) {
                                 <!-- Show result -->
                                 <div id="result-import" hidden>
                                     <h3>Kết quả</h3>
-                                    <p>Đã gửi vé mời tham dự sự kiện cho <strong id="sent-email">10</strong> email trong tổng số <strong id="total-email">15</strong> email có trong file excel</p>
+                                    <p>Đã gửi vé mời tham dự sự kiện cho <strong id="sent-email"></strong> email trong tổng số <strong id="total-email"></strong> email có trong file <strong id="file-name"></strong></p>
 
                                     <div class="panel-group" id="accordions">
                                         <div class="panel panel-danger">
@@ -655,7 +655,7 @@ include('footer.php');
         e.preventDefault();
 
         $('#import-email-form button[type="submit"]').prop('disabled', true);
-        $('#import-email-form input[type="file"]').hide();
+        // $('#import-email-form input[type="file"]').hide();
 
         $('#please-wait-text').show();
         $('#result-import').hide();
@@ -673,12 +673,15 @@ include('footer.php');
 
         }).done(function(data){
             // console.log(data);
-            $('#import-email-form button[type="submit"]').prop('disabled', false);
+            // $('#import-email-form button[type="submit"]').prop('disabled', false);
             $('#import-email-form input[type="file"]').show();
 
             $('#please-wait-text').hide();
+
+            $('#import-email-modal').modal();
             
             if(data.result){
+                $('#file-name').text(data['file-name']);
                 $('#result-import').show();
                 $('#error-import').hide();
                 // console.log(data['duplicate-email'].join('\n'));
@@ -714,6 +717,7 @@ include('footer.php');
                 }
 
             }else {
+                $('#import-email-form button[type="submit"]').prop('disabled', false);
                 $('#result-import').hide();
                 $('#error-import').text(data.message).show();
 
@@ -726,6 +730,9 @@ include('footer.php');
 
     $('#import-email-form input[type="file"]').on('change', function(){
         $('#error-import').hide();
+        $('#import-email-form button[type="submit"]').prop('disabled', false);
+
+        ($(this).val() != '') ? $('#please-select-file-text').hide() : $('#please-select-file-text').show();
     })
 
 

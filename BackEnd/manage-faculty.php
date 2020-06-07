@@ -2,7 +2,7 @@
 $title = 'Quản lý khoa';
 include('header.php');
 if (!isset($account_role) || $account_role != 4) {
-    header('Location: index.php');
+    header('Location: /event');
     // header('Location: javascript://history.go(-1)');
 }
 ?>

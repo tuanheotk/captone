@@ -63,6 +63,7 @@ include('header.php');
                                 <tr>
                                     <th>#</th>
                                     <th>Tên sự kiện</th>
+                                    <th>Mã sự kiện</th>
                                     <th>Thời gian bắt đầu</th>
                                     <th>Trạng thái</th>
                                     <th>Thao tác</th>
@@ -71,14 +72,41 @@ include('header.php');
                             <tbody>
                                 <?php 
                                 require("database-config.php");
-                                $sql = "SELECT a.event_id , e.title, e.start_date, a.ticket_code, a.status FROM attendee a, event e WHERE e.status = 4 AND a.event_id = e.id AND a.email = '".$_SESSION["user_email"]."'";
+                                $sql = "SELECT a.event_id , e.title, e.code, e.start_date, a.ticket_code, a.status FROM attendee a, event e WHERE e.status = 4 AND a.event_id = e.id AND a.email = '".$_SESSION["user_email"]."'";
                                 $result = mysqli_query($conn, $sql);
                                 $count = 0;
+                                // Function short title
+                                function shortTitle($title)
+                                {
+                                    $space = 0;
+                                    $end = 0;
+                                    $shorted = "";
+                                    $num_of_char = 10;
+
+                                    for ($i = 0; $i < strlen($title); $i++) {
+                                        if ($title[$i] == " ")
+                                            $space++;
+                                        if ($space == $num_of_char) {
+                                            $end = $i;
+                                            break;
+                                        }
+                                    }
+                                    
+                                    if ($space < $num_of_char) {
+                                        return $title;
+                                    } else {
+                                        $shorted = substr($title, 0, $end).'...';
+                                        return $shorted;
+                                    }
+
+                                }
+
                                 if (mysqli_num_rows($result) > 0) {
                                     while ($row = mysqli_fetch_assoc($result)) {
                                     $count++;
                                     $event_id = $row["event_id"];
                                     $name = $row["title"];
+                                    $code = $row["code"];
                                     $ticket_code = $row["ticket_code"];
                                     $start = date("H:i - d/m/Y", strtotime($row["start_date"]));
                                     $status = $row["status"];
@@ -105,7 +133,8 @@ include('header.php');
                                     ?>
                                     <tr id="<?php if ($status != 2) echo $ticket_code ?>">
                                         <td><?php echo $count ?></td>
-                                        <td class="event-name"><?php echo $name ?></td>
+                                        <td class="event-name" title="<?php echo htmlspecialchars($name) ?>"><?php echo shortTitle($name) ?></td>
+                                        <td class="event-name"><?php echo $code ?></td>
                                         <td><?php echo $start ?></td>
                                         <td><span class="event-status <?php echo $color ?>"><?php echo $status_text ?></span></td>
                                         <td>
@@ -121,7 +150,7 @@ include('header.php');
                                  else {
                                     ?>
                                     <tr>
-                                        <td colspan="5" class="text-center">Bạn chưa đăng ký tham gia sự kiện nào</td>
+                                        <td colspan="6" class="text-center">Bạn chưa đăng ký tham gia sự kiện nào</td>
                                     </tr>
                                     <?php
                                 }

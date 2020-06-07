@@ -3,7 +3,7 @@ $title = 'Cập nhật thông tin';
 include('header.php');
 
 if (!isset($_SESSION["user_email"]) || ($account_faculty_id != -1 && $account_name != "")) {
-    header("Location: index.php");
+    header("Location: /event");
     // header('Location: javascript://history.go(-1)');
 }
 ?>
@@ -44,7 +44,7 @@ if (!isset($_SESSION["user_email"]) || ($account_faculty_id != -1 && $account_na
                                     <select name="faculty" id="faculty">
                                         <option selected disabled>Vui lòng chọn khoa...</option>
                                         <?php
-                                        $sql = "SELECT * FROM faculty WHERE status = 1";
+                                        $sql = "SELECT * FROM faculty WHERE faculty_id >= 0";
                                         $result = mysqli_query($conn, $sql);
                                         while ($row = mysqli_fetch_assoc($result)) {
                                             if ($row["faculty_id"] == $account_faculty_id) {

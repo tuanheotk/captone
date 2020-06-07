@@ -2,7 +2,7 @@
 	$title = "Bị khóa";
 	include 'header.php';
 	if ($account_status != 0 || !isset($_SESSION["user_email"])) {
-		header('Location: index.php');
+		header('Location: /event');
 	}
 ?>
     <!--END HEADER SECTION-->

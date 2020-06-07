@@ -40,12 +40,18 @@ ob_start();
 <html lang="en">
 
 <head>
-    <title><?php echo $title ?> - EventBox Văn Lang</title>
+    <?php 
+    if ($_SERVER['REQUEST_URI'] == '/event/' || $_SERVER['REQUEST_URI'] == '/event/index.php') {
+        echo "<title>EventBox Văn Lang</title>";
+    } else {
+        echo "<title>$title | EventBox Văn Lang</title>";
+    }
+    ?>
     <!--== META TAGS ==-->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <!-- FAV ICON -->
-    <link rel="shortcut icon" href="images/fav.ico">
+    <link rel="shortcut icon" href="images/fav.png">
     <!-- GOOGLE FONTS -->
     <link href="https://fonts.googleapis.com/css?family=Poppins%7CQuicksand:400,500,700" rel="stylesheet">
     <!-- FONT-AWESOME ICON CSS -->
@@ -89,7 +95,7 @@ ob_start();
             <div class="ed-mob-menu-con">
                 <div class="ed-mm-left">
                     <div class="wed-logo">
-                        <a href="index.php"><img src="images/logo.png" alt="" />
+                        <a href="/event"><img src="images/logo.png" alt="" />
                         </a>
                     </div>
                 </div>
@@ -100,7 +106,7 @@ ob_start();
                             <a href="javascript:void(0)" class="ed-mi-close"><i class="fa fa-times"></i></a>
                             <h4>EventBox</h4>
                             <ul>
-                                <li><a href="index.php">Trang chủ</a></li>
+                                <li><a href="/event">Trang chủ</a></li>
                                 <li><a href="events.php">Hội nghị - Sự kiện</a></li>
                                 
                             </ul>
@@ -171,9 +177,9 @@ ob_start();
                     <div class="col-md-12">
                         <div class="ed-com-t1-left">
                             <ul>
-                                <li><a href="http://vanlanguni.edu.vn/trang-chu/ban-do-den-van-lang" target="_blank">Địa chỉ: 45 Nguyễn Khắc Nhu, Phường Cô Giang, Quận 1, Hồ Chí Minh.</a>
+                                <li><a href="http://vanlanguni.edu.vn/trang-chu/ban-do-den-van-lang" target="_blank">Trung tâm Hỗ trợ Sinh viên Trường Đại học Văn Lang</a>
                                 </li>
-                                <li><a href="tel:02838367933">Điện thoại: 028 3836 7933</a>
+                                <li><a href="tel:02871099218">Điện thoại: 028 7109 9218 (Ext: 3310/3311)</a>
                                 </li>
                             </ul>
                         </div>
@@ -220,12 +226,12 @@ ob_start();
                 <div class="row">
                     <div class="col-md-12">
                         <div class="wed-logo">
-                            <a href="index.php"><img src="images/logo.png" alt="" />
+                            <a href="/event"><img src="images/logo.png" alt="" />
                             </a>
                         </div>
                         <div class="main-menu dropdowncc">
                             <ul>
-                                <li><a href="index.php">Trang chủ</a>
+                                <li><a href="/event">Trang chủ</a>
                                 </li>
                                 
                                

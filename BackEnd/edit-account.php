@@ -102,7 +102,7 @@ if (isset($_GET["id"]) && $account_role == 4) {
                                         <option selected disabled>Vui lòng chọn khoa...</option>
                                         <?php 
                                         require("database-config.php");
-                                        $sql = "SELECT * FROM faculty WHERE status = 1";
+                                        $sql = "SELECT * FROM faculty WHERE faculty_id >= 0";
                                         $result = mysqli_query($conn, $sql);
                                         while ($row = mysqli_fetch_assoc($result)) {
                                             if ($faculty_id == $row["faculty_id"]) {

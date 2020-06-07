@@ -10,9 +10,9 @@ if (isset($_SESSION['user_email'])) {
 	session_destroy();
 
 	// header("Location: https://login.microsoftonline.com/common/oauth2/logout");
-	header("Location: index.php");
+	header("Location: /event");
 } else {
-	header("Location: index.php");
+	header("Location: /event");
 	// header('Location: javascript://history.go(-1)');
 }
 ?>

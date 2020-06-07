@@ -146,7 +146,7 @@ include('header.php');
                                     ?>
                                     <tr id="<?php echo $id ?>">
                                         <td><?php echo $count ?></td>
-                                        <td class="event-name"><?php echo shortTitle($name) ?></td>
+                                        <td class="event-name" title="<?php echo htmlspecialchars($name) ?>"><?php echo shortTitle($name) ?></td>
                                         <td class="event-code"><?php echo $code ?></td>
                                         <td><?php echo $start ?></td>
                                         <td><span class="event-status <?php echo $color ?>"><?php echo $status ?></span></td>
