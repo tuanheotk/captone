@@ -1,14 +1,19 @@
 <?php
+// remove index.php
+if ($_SERVER['REQUEST_URI'] == '/event/index.php') {
+  header('Location: /event');
+}
+
 $title = 'Trang chủ';
 include('header.php');
 
-$sqlFeature = "SELECT e.id, e.title, e.avatar, e.start_date, e.place, COUNT(a.event_id) AS total FROM event e LEFT JOIN attendee a ON e.id = a.event_id WHERE e.status = 4 GROUP BY e.id ORDER BY total DESC LIMIT 6";
+$sqlFeature = "SELECT e.id, e.title, e.avatar, e.start_date, e.place, COUNT(a.event_id) AS total FROM event e LEFT JOIN attendee a ON e.id = a.event_id WHERE e.status = 4 GROUP BY e.id ORDER BY total DESC, e.public_at DESC LIMIT 6";
 
 $sqlAcademic = "SELECT e.id, e.title, e.avatar, c.name FROM event e, category c WHERE e.category_id = c.id AND c.id = 1 AND e.status = 4 ORDER BY e.public_at DESC";
 $sqlCulture = "SELECT e.id, e.title, e.avatar, c.name FROM event e, category c WHERE e.category_id = c.id AND c.id = 2 AND e.status = 4 ORDER BY e.public_at DESC";
 $sqlSport = "SELECT e.id, e.title, e.avatar, c.name FROM event e, category c WHERE e.category_id = c.id AND c.id = 3 AND e.status = 4 ORDER BY e.public_at DESC";
 
-$sqlRecommend = "SELECT title, avatar, MAX(id) as id FROM event WHERE status = 4 GROUP BY faculty_id";
+$sqlRecommend = "SELECT id, title, avatar FROM event WHERE id IN ((SELECT MAX(id) FROM event WHERE status = 4 GROUP BY faculty_id))";
 
 $resultFeature = mysqli_query($conn, $sqlFeature);
 $resultAcademic = mysqli_query($conn, $sqlAcademic);
@@ -153,11 +158,12 @@ $resultRecommend = mysqli_query($conn, $sqlRecommend);
 		                    } else {
 		                    ?>
 		                    <div class="item active">
-		                    	<img src="images/listing/home.jpg" alt="Los Angeles" style="width:100%;">
-		                    	<div class="carousel-caption">
-			                        <!-- <h3>Học THuật</h3> -->
-			                        <p>Chưa có sự kiện</p>
-			                    </div>
+		                    	<div class="tour-mig-like-com">
+                            <div class="tour-mig-lc-img"> <img src="images/listing/home.jpg" alt=""> </div>
+                            <div class="tour-mig-lc-con">
+                                <p class="text-center">Chưa có sự kiện</p>
+                            </div>
+                          </div>
 			                </div>
 		                    <?php
 		                    }
@@ -216,11 +222,12 @@ $resultRecommend = mysqli_query($conn, $sqlRecommend);
 		                    } else {
 		                    ?>
 		                    <div class="item active">
-		                    	<img src="images/listing/home.jpg" alt="Los Angeles" style="width:100%;">
-		                    	<div class="carousel-caption">
-			                        <!-- <h3>Văn Hoá</h3> -->
-			                        <p>Chưa có sự kiện</p>
-			                    </div>
+		                    	<div class="tour-mig-like-com">
+                            <div class="tour-mig-lc-img"> <img src="images/listing/home.jpg" alt=""> </div>
+                            <div class="tour-mig-lc-con">
+                                <p class="text-center">Chưa có sự kiện</p>
+                            </div>
+                          </div>
 			                </div>
 		                    <?php
 		                    }
@@ -284,11 +291,12 @@ $resultRecommend = mysqli_query($conn, $sqlRecommend);
 		                    } else {
 		                    ?>
 		                    <div class="item active">
-		                    	<img src="images/listing/home.jpg" alt="Los Angeles" style="width:100%;">
-		                    	<div class="carousel-caption">
-			                        <!-- <h3>Thể Thao</h3> -->
-			                        <p>Chưa có sự kiện</p>
-			                    </div>
+		                    	<div class="tour-mig-like-com">
+                            <div class="tour-mig-lc-img"> <img src="images/listing/home.jpg" alt=""> </div>
+                            <div class="tour-mig-lc-con">
+                                <p class="text-center">Chưa có sự kiện</p>
+                            </div>
+                          </div>
 			                </div>
 		                    <?php
 		                    }
