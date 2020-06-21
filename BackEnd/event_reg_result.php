@@ -20,7 +20,7 @@ include('header.php');
 								Chúc bạn một ngày tốt lành!!!
 							</p>
 							<br>
-							<a href="/event"><Button  class="btn btn-danger"> Trở về trang chủ
+							<a href="my-registered-events.php"><Button  class="btn btn-danger"> Trở về trang chủ
 							 </Button></a>
 						
 			</div>

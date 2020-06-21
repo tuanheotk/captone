@@ -2,7 +2,7 @@
 $title = 'Thông báo';
 include('header.php');
 if (isset($_SESSION['user_email'])) {
-	header('Location: /event');
+	header('Location: /');
 }
 ?>
     <!--END HEADER SECTION-->
@@ -17,7 +17,7 @@ if (isset($_SESSION['user_email'])) {
 				<p>Bạn đã đăng ký tài khoản thành công. Vui lòng kiểm tra email của bạn để kích hoạt tài khoản</p>
 				<br>
 				<hr>
-				<a href="/event" class="btn btn-danger">Về trang chủ</a>
+				<a href="/" class="btn btn-danger">Về trang chủ</a>
 						
 			</div>
 

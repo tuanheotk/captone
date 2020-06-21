@@ -69,6 +69,8 @@ if ($action == "get-pending-question") {
 						$json_liked[] = $row_user_like;
 					}
 					$data["liked"] = $json_liked;
+				} else {
+					$data['liked'] = [];
 				}
 			}
 			$data["result"] = true;
@@ -119,31 +121,53 @@ if ($action == "get-pending-question") {
 	$check_question = $row_status_event["check_question"];
 	$user_make_question = $row_status_event["user_make_question"];
 
-	if ($user_make_question == 0) {
-		// user can't make question
-		$data["result"] = false;
-		$data["message"] = "Quản trị viên đã tắt chức năng đặt câu hỏi";
-	} else {
-		// insert question
-		// Status check question
-		$status = ($check_question == 0) ? 1 : 0;
+	$now = date('Y-m-d H:i:s');
 
-		$sql_insert_question = "INSERT INTO question (event_id, user_id, user_fullname, content, status) VALUES ($event_id, '$user_id', '$user_fullname', '$content', $status)";
+	$sql_get_id_host_mod = "SELECT a.id FROM event e, account a WHERE e.account_id = a.id AND e.id = $event_id UNION SELECT a.id FROM account a, moderator m WHERE m.event_id = $event_id AND m.email = a.email";
+	$result_id_host_mod = mysqli_query($conn, $sql_get_id_host_mod);
+	$array_id_host_mod = array();
+
+	while ($row_id_host_mod = mysqli_fetch_assoc($result_id_host_mod)) {
+		array_push($array_id_host_mod, $row_id_host_mod['id']);
+	}
+
+	$is_host_mod = (in_array($user_id, $array_id_host_mod)) ? true : false ;
+
+	if ($is_host_mod) {
+		$sql_insert_question = "INSERT INTO question (event_id, user_id, user_fullname, content, status, create_at) VALUES ($event_id, '$user_id', '$user_fullname', '$content', 1, '$now')";
 		$result_insert_question = mysqli_query($conn, $sql_insert_question);
-		// $result_insert_question = true;
-
 		if ($result_insert_question) {
 			$data["result"] = true;
 		} else {
 			$data["result"] = false;
+			$data["message"] = "Có lỗi xảy ra. Vui lòng thử lại!";
 		}
+	} else {
+		if ($user_make_question == 0) {
+			// user can't make question
+			$data["result"] = false;
+			$data["message"] = "Quản trị viên đã tắt chức năng đặt câu hỏi";
+		} else {
+			// insert question
+			// Status check question
+			$status = ($check_question == 0) ? 1 : 0;
 
-		if ($status == 0) {
-			$data["pending"] = true;
-			$data["message"] = "Câu hỏi của bạn đang chờ duyệt";
+			$sql_insert_question = "INSERT INTO question (event_id, user_id, user_fullname, content, status, create_at) VALUES ($event_id, '$user_id', '$user_fullname', '$content', $status, '$now')";
+			$result_insert_question = mysqli_query($conn, $sql_insert_question);
+			// $result_insert_question = true;
+
+			if ($result_insert_question) {
+				$data["result"] = true;
+				if ($status == 0) {
+					$data["pending"] = true;
+					$data["message"] = "Câu hỏi của bạn đang chờ duyệt";
+				}
+			} else {
+				$data["result"] = false;
+				$data["message"] = "Có lỗi xảy ra. Vui lòng thử lại!";
+			}
 		}
 	}
-
 } else if ($action == "mod-edit-question") {
 	$question_id = $_POST["question-id"];
 	$question_content = $_POST["question-content"];
@@ -333,24 +357,42 @@ if ($action == "get-pending-question") {
 	$row_status_reply = mysqli_fetch_assoc($result_status_reply);
 	$user_reply_question = $row_status_reply["user_reply_question"];
 
+	$now = date('Y-m-d H:i:s');
+
+	$sql_get_id_host_mod = "SELECT a.id FROM event e, account a WHERE e.account_id = a.id AND e.id = $event_id UNION SELECT a.id FROM account a, moderator m WHERE m.event_id = $event_id AND m.email = a.email";
+	$result_id_host_mod = mysqli_query($conn, $sql_get_id_host_mod);
+	$array_id_host_mod = array();
+
+	while ($row_id_host_mod = mysqli_fetch_assoc($result_id_host_mod)) {
+		array_push($array_id_host_mod, $row_id_host_mod['id']);
+	}
+
+	$is_host_mod = (in_array($user_id, $array_id_host_mod)) ? true : false ;
+
+	$sql_insert_answer = "INSERT INTO answer (event_id, question_id, user_id, user_fullname, content, create_at) VALUES($event_id, $question_id, '$user_id', '$user_fullname', '$content', '$now')";
+
 	if ($user_reply_question == 0) {
-		$data["result"] = false;
-		$data["message"] = "Quản trị viên đã tắt chức năng trả lời câu hỏi";
+		if ($is_host_mod) {
+			$result_insert_answer = mysqli_query($conn, $sql_insert_answer);
+			if ($result_insert_answer) {
+				$data["result"] = true;
+			} else {
+				$data["result"] = false;
+				$data["message"] = "Có lỗi xảy ra. Vui lòng thử lại!";
+			}
+		} else {
+			$data["result"] = false;
+			$data["message"] = "Quản trị viên đã tắt chức năng trả lời câu hỏi";
+		}
 	} else {
-		$sql_insert_answer = "INSERT INTO answer (event_id, question_id, user_id, user_fullname, content) VALUES($event_id, $question_id, '$user_id', '$user_fullname', '$content')";
-
 		$result_insert_answer = mysqli_query($conn, $sql_insert_answer);
-		// $result_insert_answer = true;
-
 		if ($result_insert_answer) {
 			$data["result"] = true;
 		} else {
 			$data["result"] = false;
-		}
-		
+			$data["message"] = "Có lỗi xảy ra. Vui lòng thử lại!";
+		}	
 	}
-	
-
 } else if ($action == "join-room") {
 	$event_code = $_POST["event-code"];
 	$sql_search_event = "SELECT id FROM event WHERE status = 4 AND code = '$event_code'";

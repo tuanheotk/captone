@@ -1,7 +1,7 @@
 <?php
     $title = 'Chi tiết sự kiện';
     include "header.php";
-    if (!isset($account_role) && $account_role != 2) {
+    if (!isset($account_role) || ($account_role != 2 && $account_role != 4)) {
         header("Location: my-events.php");
     }
  ?>
@@ -11,7 +11,12 @@
     <?php 
         require 'database-config.php';
         $event_id = $_GET["id"];
-       $sqlCheck = "SELECT id from event e, reviewer r where  status IN (1,2,3) and faculty_id = ".$account_faculty_id." UNION SELECT id from event e, reviewer r where e.id = r.event_id and e.status in (1,2,3) and  email = '".$account_email."' ";
+
+        if ($account_role == 4) {
+          $sqlCheck = "SELECT id FROM event WHERE status IN (1,2,3)";
+        } else {
+          $sqlCheck = "SELECT id from event e, reviewer r where  status IN (1,2,3) and faculty_id = ".$account_faculty_id." UNION SELECT id from event e, reviewer r where e.id = r.event_id and e.status in (1,2,3) and  email = '".$account_email."' ";
+        }
       $count=0;
       $result = mysqli_query($conn, $sqlCheck);
       while($resultCheck=mysqli_fetch_assoc($result)){
@@ -36,7 +41,7 @@
     ?>
   <section>
         <?php while($resultevent=mysqli_fetch_assoc($result)){?>
-    <div class="rows inner_banner inner_banner_4" style="background-image: url(<?php echo $resultevent['avatar'] ?>);">
+    <div class="rows inner_banner inner_banner_4" style="background-image: url('<?php echo $resultevent['avatar'] ?>');">
       <div class="container">
                 
         <h2><span><?php echo $resultevent["title"];   ?></span> </h2>
@@ -125,7 +130,7 @@
           <!-- <div class="tour_right head_right tour_help tour-ri-com">
             <h3>Liên hệ hỗ trợ</h3>
             <div class="tour_help_1">
-              <h4 class="tour_help_1_call">Thầy Hoà</h4>
+              <h4 class="tour_help_1_call"></h4>
               <h4><i class="fa fa-phone" aria-hidden="true"></i> 0933.999.000</h4> </div>
           </div> -->
           <!--====== PUPULAR TOUR PACKAGES ==========-->
@@ -243,7 +248,7 @@
                     <table class="responsive-table" >
                             <thead>
                                 <tr>
-                                    <th>Ngày</th>
+                                    <th>Thời gian</th>
                                     <th>Hành động</th>
                                     <th>Lí do</th>
                                     <th>Người từ chối</th>
@@ -254,7 +259,7 @@
                                             <tr>
                                                 <?php 
                                                     // $day = explode(" ",$resultcomment["day_comment"]);
-                                                    $date = date ("d/m/Y", strtotime($resultcomment["day_comment"]));
+                                                    $date = date ("H:i  d/m/Y", strtotime($resultcomment["day_comment"]));
                                                 ?>
                                                  <td><?php echo $date; ?></td>
                                                   <td><a href='#'><span class='db-cancel'>Từ chối</span></a>&nbsp;&nbsp;</td>

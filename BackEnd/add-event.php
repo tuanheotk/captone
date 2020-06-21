@@ -31,14 +31,34 @@ if (!isset($_SESSION["user_email"])) {
 
                 <div class="db-l-2 <?php if (!isset($_SESSION['user_email'])) echo 'info-fix-top';?>">
                     <ul>
+                        <?php
+                        if (isset($account_role) && $account_role == 4) {
+                        ?>
+                        <li>
+                            <a href="all-events.php"><i class="fa fa-calendar-check-o" aria-hidden="true"></i> Tất cả sự kiện</a>
+                        </li>
+                        <?php
+                        }
+                        ?>
                         <li>
                             <a href="my-events.php"><i class="fa fa-calendar" aria-hidden="true"></i> Sự kiện của tôi</a>
                         </li>
+
+                        <?php
+                        if (isset($is_mod) && $is_mod) {
+                        ?>
+                        <li>
+                            <a href="my-support-events.php"><i class="fa fa-handshake-o" aria-hidden="true"></i> Sự kiện hỗ trợ</a>
+                        </li>
+                        <?php
+                        }
+                        ?>
+                        
                         <li>
                             <a href="my-registered-events.php"><i class="fa fa-check" aria-hidden="true"></i> Sự kiện đã đăng ký tham gia</a>
                         </li>
                         <?php 
-                        if (isset($account_role) && $account_role == 2) {
+                        if (isset($account_role) && $account_role == 2 || isset($account_role) && $account_role == 4) {
                         ?>
 
                         <li>

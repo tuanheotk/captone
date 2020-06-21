@@ -1,9 +1,9 @@
 <?php
 // database-config.php
 $servername = "localhost";
-$username = "root";
-$password = "";
-$database = "db_event";
+$username = "sukien_sukien";
+$password = "Vanlang2020";
+$database = "sukien_sukien";
 
 // Create connection
 $conn = mysqli_connect($servername, $username, $password, $database);

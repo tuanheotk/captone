@@ -2,7 +2,7 @@
 $title = 'Quản lý khoa';
 include('header.php');
 if (!isset($account_role) || $account_role != 4) {
-    header('Location: /event');
+    header('Location: /');
     // header('Location: javascript://history.go(-1)');
 }
 ?>
@@ -36,7 +36,10 @@ if (!isset($account_role) || $account_role != 4) {
                             <a href="manage-account.php"><i class="fa fa-users" aria-hidden="true"></i> Quản lý tài khoản</a>
                         </li>
                         <li>
-                            <a href="manage-account.php"><i class="fa fa-th-large" aria-hidden="true"></i> Quản lý tài khoa</a>
+                            <a href="manage-faculty.php"><i class="fa fa-th-large" aria-hidden="true"></i> Quản lý khoa</a>
+                        </li>
+                        <li>
+                            <a href="manage-cover.php"><i class="fa fa-picture-o" aria-hidden="true"></i> Quản lý ảnh bìa</a>
                         </li>
                     </ul>
                 </div>

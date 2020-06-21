@@ -39,12 +39,20 @@ if ($action == "get-mod-list-cfg-event") {
 if ($action == "add-mod-cfg-event") {
 	$event_id = $_POST["event-id"];
 	$email_mod = $_POST["email-mod"];
-	$sql = "INSERT INTO moderator (event_id, email) VALUES (".$event_id.", '".$email_mod."')";
-	$result = mysqli_query($conn, $sql);
-	if($result){
-		$data["result"] = true;
-	}else{
-		$data["result"] = false;
+
+	$sql_check_exist = "SELECT id FROM moderator WHERE event_id = $event_id AND email = '$email_mod'";
+	$result_check_exist = mysqli_query($conn, $sql_check_exist);
+	if (mysqli_num_rows($result_check_exist) > 0) {
+		$data['result'] = false;
+		$data['message'] = $email_mod.' đã là người hỗ trợ của sự kiện';
+	} else {
+		$sql = "INSERT INTO moderator (event_id, email) VALUES (".$event_id.", '".$email_mod."')";
+		$result = mysqli_query($conn, $sql);
+		if($result){
+			$data["result"] = true;
+		}else{
+			$data["result"] = false;
+		}
 	}
 }
 if ($action == "delete-mod-cfg-event") {
@@ -71,6 +79,7 @@ if ($action == "add") {
 	$shortDesc = mysqli_real_escape_string($conn, $_POST["short-desc"]);
 	$description = mysqli_real_escape_string($conn, $_POST["description"]);
 	$status = $_POST["status"];
+	$now = date('Y-m-d H:i:s');
 
     $target_dir = "images/upload/";
     if (!file_exists($_FILES["cover-image"]["tmp_name"])) {
@@ -78,6 +87,7 @@ if ($action == "add") {
     } else{
         $target_file = $target_dir.date("YmdHis").basename($_FILES["cover-image"]["name"]);
     }
+
 
 	// Check image type
 	$image_type = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
@@ -124,28 +134,14 @@ if ($action == "add") {
 			
 		} while ($duplicate == true);
 	}
+
 	
-
 	// Insert event
-	$sqlInsertEvent = "INSERT INTO event(title, account_id, code, place, ticket_number, start_date, end_date, short_desc, description, faculty_id, category_id, status, avatar) VALUES('".$title."', '".$account_id."', '".$code."', '".$place."', ".$ticketNumber." ,'".$startTime."' , '".$endTime."', '".$shortDesc."', '".$description."', ".$faculty.", ".$category.", ".$status.", '".$target_file."')";
-
-
+	$sqlInsertEvent = "INSERT INTO event(title, account_id, code, place, ticket_number, start_date, end_date, short_desc, description, faculty_id, category_id, status, avatar, last_modified) VALUES('".$title."', '".$account_id."', '".$code."', '".$place."', ".$ticketNumber." ,'".$startTime."' , '".$endTime."', '".$shortDesc."', '".$description."', ".$faculty.", ".$category.", ".$status.", '".$target_file."', '".$now."')";
 	// $resultInsertEvent = mysqli_query($conn, $sqlInsertEvent);
-	// $resultInsertEvent = true;
 
-	// $getMaxID = mysqli_query($conn, "SELECT MAX(id) from event");
-	// if (mysqli_num_rows($getMaxID) == 0) {
-	// 	$event_id = 1;
-	// } else {
-	// 	$row = mysqli_fetch_assoc($getMaxID);
-	// 	$event_id = $row["MAX(id)"];
-	// }
 
-    // $sqlInsertMod = "INSERT INTO moderator(email, event_id) VALUES('".$_SESSION["user_email"]."', ".$event_id.")";
-    // $resultInsertMod = mysqli_query($conn, $sqlInsertMod);
-    // $resultInsertMod = true;
-
-    if ($is_image) {
+	if ($is_image) {
     	$resultInsertEvent = mysqli_query($conn, $sqlInsertEvent);
 	    if($resultInsertEvent){
 	    	move_uploaded_file($_FILES["cover-image"]["tmp_name"], $target_file);
@@ -159,7 +155,7 @@ if ($action == "add") {
 		$data["result"] = false;
 		$data["message"] = "Xin lỗi, chỉ cho phép hình ảnh có định dạng là: JPG, JPEG, PNG và GIF";
 	}
-	
+
 } else if ($action == "edit") {
 
 	$eventID = $_POST["id"];
@@ -174,6 +170,7 @@ if ($action == "add") {
 	$shortDesc = mysqli_real_escape_string($conn, $_POST["short-desc"]);
 	$description = mysqli_real_escape_string($conn, $_POST["description"]);
 	$status = $_POST["status"];
+	$now = date('Y-m-d H:i:s');
 
 	$target_dir = "images/upload/";
     if (!file_exists($_FILES["cover-image"]["tmp_name"])) {
@@ -183,6 +180,8 @@ if ($action == "add") {
     	unlink($_POST["current-image"]);
         $target_file = $target_dir.date("YmdHis").basename($_FILES["cover-image"]["name"]);
     }
+
+
 	// Check image type
 	$image_type = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 	$is_image = true;
@@ -191,20 +190,10 @@ if ($action == "add") {
 		$is_image = false;
 	}
 
-    if ($status == 4) {
-		$sqlUpdateEvent = "UPDATE event SET title = '".$title."', category_id = '".$category."', place = '".$place."', ticket_number = '".$ticketNumber."', start_date = '".$startTime."', end_date = '".$endTime."', short_desc = '".$shortDesc."', description = '".$description."', faculty_id = '".$faculty."', status ='".$status."', avatar = '".$target_file."', public_at = NOW() WHERE id = ".$eventID;
-    } else {
-    	$sqlUpdateEvent = "UPDATE event SET title = '".$title."', category_id = '".$category."', place = '".$place."', ticket_number = '".$ticketNumber."', start_date = '".$startTime."', end_date = '".$endTime."', short_desc = '".$shortDesc."', description = '".$description."', faculty_id = '".$faculty."', status ='".$status."', avatar = '".$target_file."', last_modified = NOW() WHERE id = ".$eventID;
-    }
-    
+	$sqlUpdateEvent = "UPDATE event SET title = '".$title."', category_id = '".$category."', place = '".$place."', ticket_number = '".$ticketNumber."', start_date = '".$startTime."', end_date = '".$endTime."', short_desc = '".$shortDesc."', description = '".$description."', faculty_id = '".$faculty."', status ='".$status."', avatar = '".$target_file."', last_modified = '".$now."' WHERE id = ".$eventID;
+
     if ($is_image) {
 		$updateEvent = mysqli_query($conn, $sqlUpdateEvent);
-		// $updateEvent = true;
-
-
-	    // $sqlupdateMod = "UPDATE moderator SET account_id = '".$moderator."' WHERE status = 0 AND event_id =". $eventID;
-	    // $updateMod = mysqli_query($conn, $sqlupdateMod);
-	    // $updateMod = true;
 
 	    if($updateEvent){
 	    	move_uploaded_file($_FILES["cover-image"]["tmp_name"], $target_file);
@@ -218,16 +207,36 @@ if ($action == "add") {
 		$data["result"] = false;
 		$data["message"] = "Xin lỗi, chỉ cho phép hình ảnh có định dạng là: JPG, JPEG, PNG và GIF";
     }
+} else if ($action == "public") {
+	$event_id = $_POST["event-id"];
+	$now = date('Y-m-d H:i:s');
 
+	$sql_check_status = "SELECT status FROM event WHERE id = $event_id";
+	$result_check_status = mysqli_query($conn, $sql_check_status);
+	$row_check_status = mysqli_fetch_assoc($result_check_status);
+	$status = $row_check_status['status'];
+
+	if ($status == 3 || $status == 4) {
+		$sql_public_event = "UPDATE event SET status = 4, public_at = '".$now."' WHERE id = $event_id";
+		$result_public_event = mysqli_query($conn, $sql_public_event);
+		if ($result_public_event) {
+			$data['message'] = 'Sự kiện đã được công khai';
+		} else {
+			$data['message'] = 'Có lỗi xảy ra. Vui lòng thử lại!';
+		}
+		
+	} else {
+		$data['message'] = 'Sự kiện bạn chưa được duyệt';
+	}
 } else if ($action == "delete") {
-	$even_id = $_POST["id"];
+	$event_id = $_POST["id"];
 	$user_id = $_POST["uid"];
 
-	$sql_check_owner = "SELECT id FROM event WHERE id = $even_id AND account_id = $user_id";
+	$sql_check_owner = "SELECT id FROM event WHERE id = $event_id AND account_id = $user_id";
 	$result_check_owner = mysqli_query($conn, $sql_check_owner);
 
 	if (mysqli_num_rows($result_check_owner) > 0) {
-		$sql_delete_event = "UPDATE event SET status = 5 WHERE id = ".$even_id;
+		$sql_delete_event = "UPDATE event SET status = 5 WHERE id = ".$event_id;
 		$result_delete_event = mysqli_query($conn, $sql_delete_event);
 		if($result_delete_event){
 			$data["result"]=true;
@@ -269,64 +278,147 @@ if ($action == "add") {
 	$event_id = $_POST["event-id"];
 	$ticket_code = $_POST["ticket-code"];
 
-	$sqlCheckStatus = "SELECT status FROM attendee WHERE ticket_code = '".$ticket_code."' AND event_id = ".$event_id;
-	$resultCheckStatus = mysqli_query($conn, $sqlCheckStatus);
-	
-	if (mysqli_num_rows($resultCheckStatus) > 0) {
-		$row = mysqli_fetch_assoc($resultCheckStatus);
+	$now = date('Y-m-d H:i:s');
 
-		$status = $row["status"];
+	$true_ticket = (preg_match('/^[a-z0-9]{32}$/', $ticket_code)) ? true : false;
 
-		if ($status == 0) {
-			$sqlCheckIn = "UPDATE attendee SET status = 1 WHERE status = 0 AND ticket_code = '".$ticket_code."' AND event_id = ".$event_id;
-			$resultCheckIn = mysqli_query($conn, $sqlCheckIn);
-			$data["result"] = true;
-			$data["message"] = "Điểm danh thành công";
-		} else if ($status == 1) {
-			$data["result"] = false;
-			$data["message"] = "Vé này đã được điểm danh";
-		} else if ($status == 2) {
-			$data["result"] = false;
-			$data["message"] = "Vé của bạn chưa được duyệt nên không thể điểm danh";
-		}
+	$student_code = (preg_match('/^[a-zA-Z]{1}+[0-9]{6}$/', $ticket_code) || preg_match('/^[0-9]{3}+[a-zA-Z]{2}+[0-9]{5}$/', $ticket_code) || preg_match('/^[a-zA-Z]{1}+[0-9]{2}+[a-zA-Z]{1}+[0-9]{3}$/', $ticket_code)) ? true : false;
+
+	if (!$true_ticket && !$student_code) {
+		$data['result'] = false;
+		$data['message'] = 'Mã QR không hợp lệ';
 	} else {
-		$data["result"] = false;
-		$data["message"] = "Vé không hợp lệ";
+		if ($true_ticket) {
+			$sqlCheckStatus = "SELECT status FROM attendee WHERE ticket_code = '".$ticket_code."' AND event_id = ".$event_id;
+			$resultCheckStatus = mysqli_query($conn, $sqlCheckStatus);
+
+			if (mysqli_num_rows($resultCheckStatus) > 0) {
+				$row = mysqli_fetch_assoc($resultCheckStatus);
+
+				$status = $row["status"];
+
+				if ($status == 0) {
+					$sqlCheckIn = "UPDATE attendee SET status = 1, check_in_at = '$now' WHERE status = 0 AND ticket_code = '".$ticket_code."' AND event_id = ".$event_id;
+					$resultCheckIn = mysqli_query($conn, $sqlCheckIn);
+					$data["result"] = true;
+					$data["message"] = 'Điểm danh thành công';
+				} else if ($status == 1) {
+					$data["result"] = false;
+					$data["message"] = 'Vé này đã được điểm danh';
+				} else if ($status == 2) {
+					$data["result"] = false;
+					$data["message"] = 'Vé của bạn chưa được duyệt nên không thể điểm danh';
+				}
+			} else {
+				$data['result'] = false;
+				$data['message'] = 'Vé không hợp lệ. Vui lòng kiểm tra lại chắc chắn đã sử dụng đúng vé!';
+			}
+		} else if ($student_code) {
+			$sql_check_registered = "SELECT id, status FROM attendee WHERE (email LIKE '%$ticket_code@vanlanguni.vn' OR email LIKE '%$ticket_code%') AND event_id = $event_id";
+			$result_check_registered = mysqli_query($conn, $sql_check_registered);
+
+			if (mysqli_num_rows($result_check_registered) > 0) {
+				$row = mysqli_fetch_assoc($result_check_registered);
+				$id_tbl_attendee = $row['id'];
+				$status = $row['status'];
+
+				if ($status == 0) {
+					$sql_update_status = "UPDATE attendee SET status = 1, check_in_at = '$now' WHERE id = $id_tbl_attendee";
+					$result_update_status = mysqli_query($conn, $sql_update_status);
+					$data['result'] = true;
+					$data['message'] = 'Điểm danh thành công';
+				} else if ($status == 1){
+					$data['result'] = false;
+					$data['message'] = 'Thẻ sinh viên này đã được điểm danh';
+				} else {
+					$data['result'] = false;
+					$data['message'] = 'Bạn không được duyệt tham dự sự kiện này';
+				}
+
+			} else {
+				// Insert new attendee
+				$sql_insert_new_attendee = "INSERT INTO attendee (email, event_id, status, check_in_at) VALUES ('$ticket_code', $event_id, 1, '$now')";
+				$result_insert_new_attendee = mysqli_query($conn, $sql_insert_new_attendee);
+
+				if ($result_insert_new_attendee) {
+					$data['result'] = true;
+					$data['message'] = 'Điểm danh thành công';
+				} else {
+					$data['result'] = false;
+				}
+			}
+		}
 	}
 } else if ($action == "checkin-no-ticket") {
 	$event_id = $_POST["event-id"];
 	$email = $_POST["attendee-email"];
 
-	// $email = $attendee_code."@vanlanguni.vn";
+	$now = date('Y-m-d H:i:s');
 
-	$sql_check_registered = "SELECT id FROM attendee WHERE email = '$email' AND event_id = $event_id";
+	$code = strstr($email, '@vanlanguni.vn', true);
+	$arr = explode('.', $code, 2);
+	if (substr_count($code, '.') == 1) {
+		$code = $arr[1];
+	} else {
+		$code = $arr[0];
+	}
+
+	$student_code = (preg_match('/^[a-zA-Z]{1}+[0-9]{6}$/', $code) || preg_match('/^[0-9]{3}+[a-zA-Z]{2}+[0-9]{5}$/', $code) || preg_match('/^[a-zA-Z]{1}+[0-9]{2}+[a-zA-Z]{1}+[0-9]{3}$/', $code)) ? true : false;
+
+	if ($student_code) {
+		$sql_check_registered = "SELECT id, status FROM attendee WHERE (email LIKE '%$code@vanlanguni.vn' OR email LIKE '%$code%') AND event_id = $event_id";
+	} else {
+		$sql_check_registered = "SELECT id, status FROM attendee WHERE email = '$email' AND event_id = $event_id";
+	}
+
+	// $sql_check_registered = "SELECT id FROM attendee WHERE email = '$email' AND event_id = $event_id";
 	$result_check_registered = mysqli_query($conn, $sql_check_registered);
 
 	if (mysqli_num_rows($result_check_registered) > 0) {
-		// Update status for registered attendee
-		$sql_update_status = "UPDATE attendee SET status = 1 WHERE email = '$email' AND event_id = $event_id";
-		$result_update_status = mysqli_query($conn, $sql_update_status);
-		
-		if ($result_update_status) {
-			$data["result"] = true;
-			$data["message"] = "Điểm danh thành công";
+		$row = mysqli_fetch_assoc($result_check_registered);
+		$status = $row['status'];
+
+		if ($status == 0) {
+			// Update status for registered attendee
+			$sql_update_status = "UPDATE attendee SET status = 1, check_in_at = '$now' WHERE email = '$email' AND event_id = $event_id";
+			$result_update_status = mysqli_query($conn, $sql_update_status);
+			
+			if ($result_update_status) {
+				$data["result"] = true;
+				$data["message"] = "Điểm danh thành công";
+			} else {
+				$data["result"] = false;
+			}
+		} else if ($status == 1) {
+			$data['result'] = true;
+			$data['message'] = 'Email '.$email.' đã được điểm danh';
 		} else {
-			$data["result"] = false;
-		}
-		
+			$data['result'] = true;
+			$data['message'] = 'Email '.$email.' không được duyệt tham dự sự kiện này';
+		}		
 	} else {
 		// Insert new attendee
-		$sql_insert_new_attendee = "INSERT INTO attendee (email, event_id, status) VALUES ('$email', $event_id, 1)";
+		$sql_insert_new_attendee = "INSERT INTO attendee (email, event_id, status, check_in_at) VALUES ('$email', $event_id, 1, '$now')";
 		$result_insert_new_attendee = mysqli_query($conn, $sql_insert_new_attendee);
 
 		if ($result_insert_new_attendee) {
 			$data["result"] = true;
-			$data["message"] = "Điểm danh thành công";
+			$data["message"] = 'Điểm danh thành công';
 		} else {
 			$data["result"] = false;
 		}
 	}	
+} else if ($action == "delete-checkin") {
+	$id = $_POST["id-table-attendee"];
+	$sql_delete_attendee = "DELETE FROM attendee WHERE id = $id";
+	$result_delete_attendee = mysqli_query($conn, $sql_delete_attendee);
+	if ($result_delete_attendee) {
+		$data['result'] = true;
+	} else {
+		$data['result'] = false;
+	}	
 } else if ($action == "import-email") {
+	ini_set('max_execution_time', 86400);
 	if(file_exists($_FILES["excel"]["tmp_name"])){
 		$file_name = basename($_FILES["excel"]["name"]);
 		$extension = strtolower(pathinfo($file_name,PATHINFO_EXTENSION));
@@ -336,13 +428,7 @@ if ($action == "add") {
 			require('vendor/PHPExcel/PHPExcel.php');
 			$objPHPExcel = PHPExcel_IOFactory::load($file);
 
-
-
-			// change post
 			$event_id = $_POST['event-id'];
-
-			// $sent_email = 0;
-
 			$invalid_email_array = array();
 			$duplicate_email_array = array();
 			$registered_email_array = array();
@@ -409,59 +495,83 @@ if ($action == "add") {
 }
 
 function send_mail($email, $ticket_code, $type) {
-	global $event_title, $event_time, $event_place, $invalid_email_array, $new_email_array, $row;
+	global $event_id, $event_title, $event_time, $event_place, $invalid_email_array, $new_email_array, $row;
 
 	// content
 	if ($type == 'old') {
 		$content = "<b>Thân gửi bạn!</b><br>
-		Vé mời của bạn đã được đính kèm trong email này. Xin vui lòng mang vé tới sự kiện để được điểm danh<br>
+		Vé mời của bạn đã được đính kèm trong email này. Xin vui lòng mang vé tới sự kiện để được điểm danh.<br>
+    	Phòng trường hợp nơi diễn ra sự kiện không có kết nối internet, bạn có thể tải vé về trước để việc điểm danh được thực hiện nhanh chóng.<br>
 		Cảm ơn bạn đã đăng ký tham gia sự kiện!
-		<br>-----------------------------------------
-		<br>
+		<hr>
 		<table>
-		<tr>
-		<td><b>Sự kiện:</b></td>
-		<td>".$event_title."</td>
-		</tr>
-		<tr>
-		<td><b>Thời gian:</b></td>
-		<td>".$event_time."</td>
-		</tr>
-		<tr>
-		<td><b>Địa điểm:</b></td>
-		<td>".$event_place."</td>
-		</tr>
-		</table>";
-
+			<tr>
+				<td><b>Sự kiện:</b></td>
+				<td>".$event_title."</td>
+			</tr>
+			<tr>
+				<td><b>Thời gian:</b></td>
+				<td>".$event_time."</td>
+			</tr>
+			<tr>
+				<td><b>Địa điểm:</b></td>
+				<td>".$event_place."</td>
+			</tr>
+		</table>
+        <a href='https://sukien.vanlanguni.edu.vn/event-detail.php?id=$event_id' target='_blank'>Chi tiết sự kiện</a>
+        <hr>
+        <p>Vui lòng không trả lời email này</p>";
 	} else if ($type == 'new') {
 		$content = "<b>Thân gửi bạn!</b><br>
 		Trân trọng kính mời bạn đến tham gia sự kiện. <br>
-		Vé mời của bạn đã được đính kèm trong email này. Xin vui lòng mang vé tới sự kiện để được điểm danh<br>
+		Vé mời của bạn đã được đính kèm trong email này. Xin vui lòng mang vé tới sự kiện để được điểm danh.<br>
+    	Phòng trường hợp nơi diễn ra sự kiện không có kết nối internet, bạn có thể tải vé về trước để việc điểm danh được thực hiện nhanh chóng.<br>
 		Rất mong sự có mặt của bạn ở sự kiện!
-		<br>-----------------------------------------
-		<br>
+		<hr>
 		<table>
-		<tr>
-		<td><b>Sự kiện:</b></td>
-		<td>".$event_title."</td>
-		</tr>
-		<tr>
-		<td><b>Thời gian:</b></td>
-		<td>".$event_time."</td>
-		</tr>
-		<tr>
-		<td><b>Địa điểm:</b></td>
-		<td>".$event_place."</td>
-		</tr>
-		</table>";
+			<tr>
+				<td><b>Sự kiện:</b></td>
+				<td>".$event_title."</td>
+			</tr>
+			<tr>
+				<td><b>Thời gian:</b></td>
+				<td>".$event_time."</td>
+			</tr>
+			<tr>
+				<td><b>Địa điểm:</b></td>
+				<td>".$event_place."</td>
+			</tr>
+		</table>
+		<a href='https://sukien.vanlanguni.edu.vn/event-detail.php?id=$event_id' target='_blank'>Chi tiết sự kiện</a>
+        <hr>
+        <p>Vui lòng không trả lời email này</p>";
 	}
 
 	// setup qr code
 	$PNG_TEMP_DIR = dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR;
-	$PNG_WEB_DIR = 'temp/';
-	if (!file_exists($PNG_TEMP_DIR)) mkdir($PNG_TEMP_DIR);
-	$filename = $PNG_TEMP_DIR.'test.png';
-	QRcode::png($ticket_code, $filename, 'H', 10, 2);
+    $PNG_WEB_DIR = 'temp/';
+    if (!file_exists($PNG_TEMP_DIR))
+        mkdir($PNG_TEMP_DIR);
+    $filename = $PNG_TEMP_DIR.'test.png';
+    $errorCorrectionLevel = 'H';
+    $matrixPointSize = 10;
+    
+    if (isset($ticket_code)) {
+        //it's very important!
+        if (trim($ticket_code) == '')
+            die('data cannot be empty! <a href="?">back</a>');
+            
+        // user data
+        $filename = $PNG_TEMP_DIR.'test'.$ticket_code.'.png';
+        QRcode::png($ticket_code, $filename, $errorCorrectionLevel, $matrixPointSize, 2);    
+        
+    } else {    
+    
+        //default data
+       
+        QRcode::png($ticket_code, $filename, $errorCorrectionLevel, $matrixPointSize, 2);    
+        
+    }
 
 
 	// send mail
@@ -473,7 +583,7 @@ function send_mail($email, $ticket_code, $type) {
 		$mail->Host = 'smtp.office365.com';  // Specify main and backup SMTP servers
 		$mail->SMTPAuth = true;                               // Enable SMTP authentication
 		$mail->Username = 'sukien@vanlanguni.edu.vn';                 // SMTP username
-		$mail->Password = 'Events2020';                           // SMTP password
+		$mail->Password = 'Vanlang2020';                           // SMTP password
 		$mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
 		$mail->Port = 587;                                    // TCP port to connect to
 
@@ -493,8 +603,10 @@ function send_mail($email, $ticket_code, $type) {
 		$mail->send();
 		// echo 'Message has been sent';
 		$successful_mailing = true;
-		// array_push($new_email_array, 'Dòng '.$row.': '.$email);
-		array_push($new_email_array, $email);
+		if ($type == 'new') {
+			// array_push($new_email_array, 'Dòng '.$row.': '.$email);
+			array_push($new_email_array, $email);
+		}
 	} catch (Exception $e) {
 		$successful_mailing = false;
 		array_push($invalid_email_array, 'Dòng '.$row.': '.$email);

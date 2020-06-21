@@ -18,17 +18,17 @@ try {
     //Server settings
     $mail->SMTPDebug = 0;                                 // Enable verbose debug output
     $mail->isSMTP();                                      // Set mailer to use SMTP
-    $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
-    // $mail->Host = 'smtp.office365.com';  // Specify main and backup SMTP servers
+    // $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
+    $mail->Host = 'smtp.office365.com';  // Specify main and backup SMTP servers
     $mail->SMTPAuth = true;                               // Enable SMTP authentication
-    $mail->Username = 'eventbox.vanlang@gmail.com';                 // SMTP username
-    $mail->Password = 'vluvlu2020';                           // SMTP password
+    $mail->Username = 'sukien@vanlanguni.edu.vn';                 // SMTP username
+    $mail->Password = 'Vanlang2020';                           // SMTP password
     $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
     $mail->Port = 587;                                    // TCP port to connect to
  
     //Recipients
     $mail->CharSet = 'UTF-8';
-    $mail->setFrom('eventbox.vanlang@gmail.com', 'EventBox - Văn Lang');
+    $mail->setFrom('sukien@vanlanguni.edu.vn', 'EventBox - Văn Lang');
     // $mail->addAddress('kiyof44715@fxmail.ws', 'Joe User');     // Add a recipient
     $mail->addAddress($user_email);               // Name is optional
     // $mail->addReplyTo('info@example.com', 'Information');
@@ -47,7 +47,7 @@ try {
     <em>Thông tin đăng nhập của bạn:</em><br>
     Email: '.$user_email.'<br>
     Mật khẩu: '.$user_pass.'<br><br>
-    Chỉ còn bước cuối cùng là có thể tham gia cùng chúng tôi. Vui lòng bấm vào <a href="http://localhost/event/activate.php?code='.$verify_code.'">đây</a> để kích hoạt tài khoản của bạn.';
+    Chỉ còn bước cuối cùng là có thể tham gia cùng chúng tôi. Vui lòng bấm vào <a href="https://sukien.vanlanguni.edu.vn/activate.php?code='.$verify_code.'">đây</a> để kích hoạt tài khoản của bạn.';
     $mail->AltBody = '';
  
     $mail->send();

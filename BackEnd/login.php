@@ -15,7 +15,7 @@ if (isset($_SESSION['user_email'])) {
 
 // $loggedIn = !is_null($_SESSION['access_token']);
 $loggedIn = isset($_SESSION['access_token']);
-$redirectUri = 'http://localhost/event/api-authorize.php';
+$redirectUri = 'https://sukien.vanlanguni.edu.vn/api-authorize.php';
 
 if (!$loggedIn) {
 
@@ -46,13 +46,18 @@ if (!$loggedIn) {
 							<button type="submit" class="waves-effect waves-light btn-large full-btn" id="btn-login">Đăng nhập</button>
 						</div>
 					</div>
+					<div class="title-line">
+						<div class="tl-1"></div>
+						<div class="tl-2k"><p>hoặc</p></div>
+						<div class="tl-3"></div>
+					</div>
+					<div class="row">
+						<div class="input-field col s12">
+							<a href="<?php echo oAuthService::getLoginUrl($redirectUri) ?>" class="waves-effect waves-light btn-large full-btn">Đăng nhập bằng email Văn Lang</a>
+						</div>
+					</div>
 				</form>
 				<p><a href="register.php">Chưa có tài khoản?</a></p>
-				<div class="soc-login">
-					<ul>
-						<li><a href="<?php echo oAuthService::getLoginUrl($redirectUri) ?>" class="waves-effect waves-light">Đăng nhập bằng email Văn Lang</a> </li>
-					</ul>
-				</div>
 			</div>
 		</div>
 	</section>
@@ -111,7 +116,7 @@ include('footer.php');
         }).done(function(data){
             if(data.result){
 				$('#btn-login').html('<i class="fa fa-check"></i> Thành công');
-                window.location = '/event';
+                window.location = '/';
                 
                 // window.history.back();
                 // if (document.referrer.includes('register.php')) {

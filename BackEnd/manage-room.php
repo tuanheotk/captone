@@ -4,7 +4,12 @@ include('header.php');
 if (isset($_GET["id"])) {
     $event_id = $_GET["id"];
     // $sqlCheckAuthor = "SELECT id, title, check_question FROM event WHERE id = ".$event_id." AND account_id = '".$account_id."'";
-    $sqlCheckAuthor = "SELECT id, title, check_question, user_make_question, user_reply_question FROM event WHERE status != 5 AND id = ".$event_id." AND account_id = ".$account_id." UNION SELECT e.id, e.title, e.check_question, e.user_make_question, e.user_reply_question FROM event e, moderator m WHERE e.status !=5 AND e.id = m.event_id AND m.event_id = ".$event_id." AND m.email = '".$account_email."'";
+    if ($account_role == 4) {
+        $sqlCheckAuthor = "SELECT id, title, check_question, user_make_question, user_reply_question FROM event WHERE status != 5 AND id = $event_id";
+    } else {
+        $sqlCheckAuthor = "SELECT id, title, check_question, user_make_question, user_reply_question FROM event WHERE status != 5 AND id = ".$event_id." AND account_id = ".$account_id." UNION SELECT e.id, e.title, e.check_question, e.user_make_question, e.user_reply_question FROM event e, moderator m WHERE e.status !=5 AND e.id = m.event_id AND m.event_id = ".$event_id." AND m.email = '".$account_email."'";
+    }
+    
     $resultCheckAuthor = mysqli_query($conn, $sqlCheckAuthor);
 
     if (mysqli_num_rows($resultCheckAuthor) != 0) {
@@ -76,15 +81,35 @@ if (isset($_GET["id"])) {
 
                 <div class="db-l-2 <?php if (!isset($_SESSION['user_email'])) echo 'info-fix-top';?>">
                     <ul>
+                        <?php
+                        if (isset($account_role) && $account_role == 4) {
+                        ?>
+                        <li>
+                            <a href="all-events.php"><i class="fa fa-calendar-check-o" aria-hidden="true"></i> Tất cả sự kiện</a>
+                        </li>
+                        <?php
+                        }
+                        ?>
                         <li>
                             <a href="my-events.php"><i class="fa fa-calendar" aria-hidden="true"></i> Sự kiện của tôi</a>
                         </li>
+
+                        <?php
+                        if (isset($is_mod) && $is_mod) {
+                        ?>
+                        <li>
+                            <a href="my-support-events.php"><i class="fa fa-handshake-o" aria-hidden="true"></i> Sự kiện hỗ trợ</a>
+                        </li>
+                        <?php
+                        }
+                        ?>
+
                         <li>
                             <a href="my-registered-events.php"><i class="fa fa-check" aria-hidden="true"></i> Sự kiện đã đăng ký tham gia</a>
                         </li>
 
                         <?php 
-                        if (isset($account_role) && $account_role == 2) {
+                        if (isset($account_role) && $account_role == 2 || isset($account_role) && $account_role == 4) {
                         ?>
 
                         <li>
@@ -745,20 +770,24 @@ include('footer.php');
                 rows+= '<p class="card-text question-content">'+q.content+'</p>';
                 rows+= '<p class="card-text question-time"><small class="text-muted">'+q.create_at+'</small></p>';
 
-                $.each(data.liked, function(index, l) {
-                    if (question_id == l.question_id) {
-                        if (user_id == l.user_id) {
-                            liked = true;
-                            return false;
+                if (data.liked.length > 0) {
+                    $.each(data.liked, function(index, l) {
+                        if (question_id == l.question_id) {
+                            if (user_id == l.user_id) {
+                                liked = true;
+                                return false;
+                            } else {
+                                liked = false;
+
+                            }
+
                         } else {
                             liked = false;
-
                         }
-
-                    } else {
-                        liked = false;
-                    }
-                })
+                    })
+                } else {
+                    liked = false;
+                }
 
                 if (liked) {
                     rows+= '<button type="button" class="custom-btn custom-liked btn-unlike-question" title="Bỏ yêu thích">'+num_like+' <i class="fa fa-heart" aria-hidden="true"></i></button> ';
@@ -899,20 +928,24 @@ include('footer.php');
                     rows+= '<p class="card-text question-content">'+q.content+'</p>';
                     rows+= '<p class="card-text question-time"><small class="text-muted">'+q.create_at+'</small></p>';
 
-                    $.each(data.liked, function(index, l) {
-                        if (question_id == l.question_id) {
-                            if (user_id == l.user_id) {
-                                liked = true;
-                                return false;
+                    if (data.liked.length > 0) {
+                        $.each(data.liked, function(index, l) {
+                            if (question_id == l.question_id) {
+                                if (user_id == l.user_id) {
+                                    liked = true;
+                                    return false;
+                                } else {
+                                    liked = false;
+
+                                }
+
                             } else {
                                 liked = false;
-
                             }
-
-                        } else {
-                            liked = false;
-                        }
-                    })
+                        })
+                    } else {
+                        liked = false;
+                    }
 
                     if (liked) {
                         rows+= '<button type="button" class="custom-btn custom-liked btn-unlike-question" title="Bỏ yêu thích">'+num_like+' <i class="fa fa-heart" aria-hidden="true"></i></button> ';

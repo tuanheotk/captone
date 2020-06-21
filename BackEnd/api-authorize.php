@@ -3,7 +3,7 @@
   require_once('api-oauth.php');
   require_once('api-outlook.php');
   $auth_code = $_GET['code'];
-  $redirectUri = 'http://localhost/event/api-authorize.php';
+  $redirectUri = 'https://sukien.vanlanguni.edu.vn/api-authorize.php';
   
   $tokens = oAuthService::getTokenFromAuthCode($auth_code, $redirectUri);
   if ($tokens['access_token']) {
@@ -53,7 +53,7 @@
     
     
     // Redirect back to home page
-    header("Location: /event");
+    header("Location: /");
   }
   else
   {

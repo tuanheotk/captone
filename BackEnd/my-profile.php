@@ -2,7 +2,7 @@
 $title = 'Thông tin cá nhân';
 include('header.php');
 if (!isset($_SESSION["user_email"])) {
-    header("Location: /event");
+    header("Location: /");
     // header('Location: javascript://history.go(-1)');
 }
 ?>
@@ -58,7 +58,7 @@ if (!isset($_SESSION["user_email"])) {
                                 if ($account_code != '') {
                                 ?>
                                 <div class="input-field col s12">
-                                    <input type="text" class="validates" id="code" name="code" title="Mã số sinh viên" value="<?php echo $account_code ?>" readonly>
+                                    <input type="text" class="validates" id="code" name="code" title="Mã số" value="<?php echo $account_code ?>" readonly>
                                     <label for="code"></label>
                                 </div>
 

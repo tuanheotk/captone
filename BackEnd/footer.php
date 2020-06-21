@@ -6,13 +6,13 @@
                     <div class="foot-sec2">
                         <div>
                             <div class="row footernoop">
-                                <div class="col-sm-3 foot-spec foot-com">
+                                <div class="col-sm-2 foot-spec foot-com">
                                     <div class="wed-logo2">
-                                        <a href="/event"><img src="images/preloader.png" alt="" />
+                                        <a href="/"><img src="images/preloader.png" alt="" />
                                         </a>
                                     </div>
                                 </div>
-                                <div class="col-sm-3 foot-spec foot-com">
+                                <div class="col-sm-4 foot-spec foot-com">
                                     <h4>Địa chỉ</h4>
                                     <p><a style="color: #fff" href="https://goo.gl/maps/2CcxCxTxQXPDDYwW8" target="_blank"><i class="fa fa-home" aria-hidden="true"></i> Trụ sở: <br>45 Nguyễn Khắc Nhu, P.Cô Giang, Q.1, Hồ Chí Minh.</a></p>
                                     <p><a style="color: #fff" href="https://goo.gl/maps/H4RCpcajjiNjpjZ8A" target="_blank"><i class="fa fa-home" aria-hidden="true"></i> Cơ sở 2: <br> 233A Phan Văn Trị, P.11, Q.Bình Thạnh, Hồ Chí Minh.</a></p>
@@ -41,19 +41,20 @@
             </div>
         </div>
     </section>
-	<!--========= Scripts ===========-->
-	<script src="js/jquery-latest.min.js"></script>
-	<!-- <script src="js/bootstrap.js"></script> -->
-	<script src="js/wow.min.js"></script>
-	<script src="js/materialize.min.js"></script>
+    <!--========= Scripts ===========-->
+    <script src="js/jquery-latest.min.js"></script>
+    <!-- <script src="js/bootstrap.js"></script> -->
+    <script src="js/wow.min.js"></script>
+    <script src="js/materialize.min.js"></script>
     <script src="js/bootstrap.js"></script>
-	<script src="js/custom.js"></script>
+    <script src="js/custom.js"></script>
     <script src="js/bootstrap-datepicker.js"></script>
     <script src="js/bootstrap-datetimepicker.js"></script>
+    <script src="js/moment.js"></script>
     
-
     <!-- Datatables -->
     <script type="text/javascript" src="vendor/DataTables/datatables.min.js"></script>
+    <script type="text/javascript" src="vendor/DataTables/datetime-moment.js"></script>
     <!-- Slick -->
     <script type="text/javascript" src="vendor/slick/slick.min.js"></script>
     <!-- CKEditor -->

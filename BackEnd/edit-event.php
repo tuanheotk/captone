@@ -4,7 +4,12 @@ include('header.php');
 if (isset($_GET["id"])) {
     $event_id = $_GET["id"];
     // $sqlCheckAuthor = "SELECT id FROM event WHERE id = ".$event_id." AND status != 5 AND account_id = '".$account_id."'";
-    $sqlCheckAuthor = "SELECT id FROM event WHERE status != 5 AND id = ".$event_id." AND account_id = ".$account_id." UNION SELECT e.id FROM event e, moderator m WHERE e.status !=5 AND e.id = m.event_id AND m.event_id = ".$event_id." AND m.email = '".$account_email."'";
+    if ($account_role == 4) {
+        $sqlCheckAuthor = "SELECT id FROM event WHERE status != 5 AND id = $event_id";
+    } else {
+        $sqlCheckAuthor = "SELECT id FROM event WHERE status != 5 AND id = ".$event_id." AND account_id = ".$account_id." UNION SELECT e.id FROM event e, moderator m WHERE e.status !=5 AND e.id = m.event_id AND m.event_id = ".$event_id." AND m.email = '".$account_email."'";
+    }
+
     $resultCheckAuthor = mysqli_query($conn, $sqlCheckAuthor);
 
     if (mysqli_num_rows($resultCheckAuthor) > 0) {
@@ -60,15 +65,35 @@ if (isset($_GET["id"])) {
 
                 <div class="db-l-2 <?php if (!isset($_SESSION['user_email'])) echo 'info-fix-top';?>">
                     <ul>
+                        <?php
+                        if (isset($account_role) && $account_role == 4) {
+                        ?>
+                        <li>
+                            <a href="all-events.php"><i class="fa fa-calendar-check-o" aria-hidden="true"></i> Tất cả sự kiện</a>
+                        </li>
+                        <?php
+                        }
+                        ?>
                         <li>
                             <a href="my-events.php"><i class="fa fa-calendar" aria-hidden="true"></i> Sự kiện của tôi</a>
                         </li>
+
+                        <?php
+                        if (isset($is_mod) && $is_mod) {
+                        ?>
+                        <li>
+                            <a href="my-support-events.php"><i class="fa fa-handshake-o" aria-hidden="true"></i> Sự kiện hỗ trợ</a>
+                        </li>
+                        <?php
+                        }
+                        ?>
+
                         <li>
                             <a href="my-registered-events.php"><i class="fa fa-check" aria-hidden="true"></i> Sự kiện đã đăng ký tham gia</a>
                         </li>
 
                         <?php 
-                        if (isset($account_role) && $account_role == 2) {
+                        if (isset($account_role) && $account_role == 2 || isset($account_role) && $account_role == 4) {
                         ?>
 
                         <li>
@@ -204,7 +229,7 @@ if (isset($_GET["id"])) {
                                 if ($status == 3) {
                                 ?>
                                 <div class="input-field col s12 m12">
-                                    <button type="submit" id="public-btn" class="full-btn btn btn-primary waves-light waves-effect"><i class="fa fa-globe" aria-hidden="true"></i> Đăng sự kiện</button>
+                                    <button type="button" id="public-btn" class="full-btn btn btn-primary waves-light waves-effect"><i class="fa fa-globe" aria-hidden="true"></i> Đăng sự kiện</button>
                                 </div>
                                 <?php
                                 }
@@ -217,7 +242,7 @@ if (isset($_GET["id"])) {
                                     <button type="submit" id="save-btn" class="full-btn btn btn-warning waves-light waves-effect"><i class="fa fa-floppy-o" aria-hidden="true"></i> Lưu Nháp</button>
                                 </div>
                                 <div class="input-field col s12 m4">
-                                    <a href="my-events.php" class="full-btn btn btn-danger waves-light waves-effect"><i class="fa fa-times" aria-hidden="true"></i> Huỷ</a>
+                                    <button type="button" onclick="window.history.back()" class="full-btn btn btn-danger waves-light waves-effect"><i class="fa fa-times" aria-hidden="true"></i> Huỷ</button>
                                 </div>
                             </div>
                         </form>
@@ -294,13 +319,13 @@ if (isset($_GET["id"])) {
                     <div class="foot-sec2">
                         <div>
                             <div class="row footernoop">
-                                <div class="col-sm-3 foot-spec foot-com">
+                                <div class="col-sm-2 foot-spec foot-com">
                                     <div class="wed-logo2">
-                                        <a href="/event"><img src="images/preloader.png" alt="" />
+                                        <a href="/"><img src="images/preloader.png" alt="" />
                                         </a>
                                     </div>
                                 </div>
-                                <div class="col-sm-3 foot-spec foot-com">
+                                <div class="col-sm-4 foot-spec foot-com">
                                     <h4>Địa chỉ</h4>
                                     <p><a style="color: #fff" href="https://goo.gl/maps/2CcxCxTxQXPDDYwW8" target="_blank"><i class="fa fa-home" aria-hidden="true"></i> Trụ sở: <br>45 Nguyễn Khắc Nhu, P.Cô Giang, Q.1, Hồ Chí Minh.</a></p>
                                     <p><a style="color: #fff" href="https://goo.gl/maps/H4RCpcajjiNjpjZ8A" target="_blank"><i class="fa fa-home" aria-hidden="true"></i> Cơ sở 2: <br> 233A Phan Văn Trị, P.11, Q.Bình Thạnh, Hồ Chí Minh.</a></p>
@@ -403,10 +428,6 @@ if (isset($_GET["id"])) {
     $('#save-btn').click(function(){
         $('#event-status').val('0');
         // alert('Đã lưu sự kiện');
-    })
-    $('#public-btn').click(function(){
-        $('#event-status').val('4');
-        // alert('Sự kiện đã được công khai');
     })
 
 
@@ -521,7 +542,7 @@ if (isset($_GET["id"])) {
         }).done(function(data){
             // console.log(data);
             if(data.result){
-                window.location = 'my-events.php';
+                window.history.back();
             }else {
                 alert(data.message);
                 // console.log(data.error);
@@ -532,6 +553,25 @@ if (isset($_GET["id"])) {
             console.log(errorThrown);
         })
 
+    })
+
+    // Public event
+    $('#public-btn').click(function() {
+        var event_id = $('#event-id').val()
+        q = confirm('Bạn có muốn công khai sự kiện');
+        if (q == true) {
+            $.ajax({
+                url: 'process-my-event.php',
+                method: 'POST',
+                data: {'action': 'public', 'event-id': event_id}
+            }).done(function(data) {
+                alert(data.message);
+                window.history.back();
+            }).fail(function(jqXHR, statusText, errorThrown){
+                console.log("Fail:"+ jqXHR.responseText);
+                console.log(errorThrown);
+            })
+        }
     })
 
     $(function () {

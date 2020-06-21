@@ -28,15 +28,35 @@ include('header.php');
 
                 <div class="db-l-2 <?php if (!isset($_SESSION['user_email'])) echo 'info-fix-top';?>">
                     <ul>
+                        <?php
+                        if (isset($account_role) && $account_role == 4) {
+                        ?>
+                        <li>
+                            <a href="all-events.php"><i class="fa fa-calendar-check-o" aria-hidden="true"></i> Tất cả sự kiện</a>
+                        </li>
+                        <?php
+                        }
+                        ?>
                         <li>
                             <a href="my-events.php"><i class="fa fa-calendar" aria-hidden="true"></i> Sự kiện của tôi</a>
                         </li>
+
+                        <?php
+                        if (isset($is_mod) && $is_mod) {
+                        ?>
+                        <li>
+                            <a href="my-support-events.php"><i class="fa fa-handshake-o" aria-hidden="true"></i> Sự kiện hỗ trợ</a>
+                        </li>
+                        <?php
+                        }
+                        ?>
+                        
                         <li>
                             <a href="my-registered-events.php"><i class="fa fa-check" aria-hidden="true"></i> Sự kiện đã đăng ký tham gia</a>
                         </li>
 
                         <?php 
-                        if (isset($account_role) && $account_role == 2) {
+                        if (isset($account_role) && $account_role == 2 || isset($account_role) && $account_role == 4) {
                         ?>
 
                         <li>
@@ -78,9 +98,9 @@ include('header.php');
                             </thead>
                             <tbody>
                                 <?php
-                                // $sql = "SELECT e.*, a.email FROM event e, account a WHERE e.status < 5 AND e.account_id = a.id AND a.email = '".$_SESSION["user_email"]."'";
+                                // $sql = "SELECT e.* FROM event e, account a WHERE e.status < 5 AND e.account_id = a.id AND a.email = '".$account_email."' UNION SELECT e.* FROM event e, moderator m WHERE e.status < 5 AND e.id = m.event_id AND m.email = '".$account_email."' ORDER BY id DESC";
 
-                                $sql = "SELECT e.* FROM event e, account a WHERE e.status < 5 AND e.account_id = a.id AND a.email = '".$account_email."' UNION SELECT e.* FROM event e, moderator m WHERE e.status < 5 AND e.id = m.event_id AND m.email = '".$account_email."' ORDER BY id DESC";
+                                $sql = "SELECT e.* FROM event e, account a WHERE e.status < 5 AND e.account_id = a.id AND a.email = '".$account_email."' ORDER BY id DESC";
 
                                 $result = mysqli_query($conn, $sql);
                                 $count = 0;
@@ -222,6 +242,7 @@ include('footer.php');
 
 <script type="text/javascript">
     $(document).ready( function (){
+        $.fn.dataTable.moment('HH:mm - DD/MM/YYYY');
         $('#event-table').DataTable({
             responsive: true,
             language: {

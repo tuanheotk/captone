@@ -2,8 +2,10 @@
 
 class oAuthService {
 
-    private static $clientId = "db6950e9-dd30-48f0-ba9d-6d250724b04b";
-    private static $clientSecret = "ENm/Z3dPv6B/PCbi?Nx3W.PfYLsKoS4=";
+    // private static $clientId = "db6950e9-dd30-48f0-ba9d-6d250724b04b";
+    // private static $clientSecret = "ENm/Z3dPv6B/PCbi?Nx3W.PfYLsKoS4=";
+    private static $clientId = "2ffdf843-f5a4-4b99-aa37-6414d50fc57a";
+    private static $clientSecret = "uG.xv8.mT_6Yih2Gi1JA-l7Q-.65dcZizC";
     private static $authority = "https://login.microsoftonline.com";
     private static $authorizeUrl = '/common/oauth2/v2.0/authorize?client_id=%1$s&redirect_uri=%2$s&response_type=code&scope=%3$s';
     private static $tokenUrl = "/common/oauth2/v2.0/token";

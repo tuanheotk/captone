@@ -4,7 +4,13 @@ include('header.php');
 if (isset($_GET["id"])) {
     $event_id = $_GET["id"];
     // $sqlCheckAuthor = "SELECT id FROM event WHERE id = ".$event_id." AND account_id = '".$account_id."'";
-    $sqlCheckAuthor = "SELECT id FROM event WHERE status != 5 AND id = ".$event_id." AND account_id = ".$account_id." UNION SELECT e.id FROM event e, moderator m WHERE e.status !=5 AND e.id = m.event_id AND m.event_id = ".$event_id." AND m.email = '".$account_email."'";
+    
+    if ($account_role == 4) {
+        $sqlCheckAuthor = "SELECT id FROM event WHERE status != 5 AND id = $event_id";
+    } else {
+        $sqlCheckAuthor = "SELECT id FROM event WHERE status != 5 AND id = ".$event_id." AND account_id = ".$account_id." UNION SELECT e.id FROM event e, moderator m WHERE e.status !=5 AND e.id = m.event_id AND m.event_id = ".$event_id." AND m.email = '".$account_email."'";
+    }
+
     $resultCheckAuthor = mysqli_query($conn, $sqlCheckAuthor);
 
     if (mysqli_num_rows($resultCheckAuthor) == 0) {
@@ -17,12 +23,12 @@ if (isset($_GET["id"])) {
 }
 ?>
 <style>
-	#canvas {
-		width: 80%;
-		margin: 0 auto;
-		border: 10px double #f79259;
-		/*filter: brightness(1.4) grayscale(1) contrast(1.8);*/
-	}
+    #canvas {
+        width: 80%;
+        margin: 0 auto;
+        border: 10px double #3DA7DA;
+        /*filter: brightness(1.4) grayscale(1) contrast(1.8);*/
+    }
 
     #error-checkin {
         margin-bottom: 0;
@@ -61,15 +67,35 @@ if (isset($_GET["id"])) {
 
                 <div class="db-l-2 <?php if (!isset($_SESSION['user_email'])) echo 'info-fix-top';?>">
                     <ul>
+                        <?php
+                        if (isset($account_role) && $account_role == 4) {
+                        ?>
+                        <li>
+                            <a href="all-events.php"><i class="fa fa-calendar-check-o" aria-hidden="true"></i> Tất cả sự kiện</a>
+                        </li>
+                        <?php
+                        }
+                        ?>
                         <li>
                             <a href="my-events.php"><i class="fa fa-calendar" aria-hidden="true"></i> Sự kiện của tôi</a>
                         </li>
+
+                        <?php
+                        if (isset($is_mod) && $is_mod) {
+                        ?>
+                        <li>
+                            <a href="my-support-events.php"><i class="fa fa-handshake-o" aria-hidden="true"></i> Sự kiện hỗ trợ</a>
+                        </li>
+                        <?php
+                        }
+                        ?>
+
                         <li>
                             <a href="my-registered-events.php"><i class="fa fa-check" aria-hidden="true"></i> Sự kiện đã đăng ký tham gia</a>
                         </li>
 
                         <?php 
-                        if (isset($account_role) && $account_role == 2) {
+                        if (isset($account_role) && $account_role == 2 || isset($account_role) && $account_role == 4) {
                         ?>
 
                         <li>
@@ -115,12 +141,14 @@ if (isset($_GET["id"])) {
 
                         <h5>Số người đăng ký: <?php echo $num_registered ?></h5>
                         <h5>Số người tham dự: <?php echo $num_joined ?></h5>
-                        <h5>Số người tham dự phát sinh: <?php echo $num_guest ?></h5>
+                        <h5>Số người tham dự (không vé): <?php echo $num_guest ?></h5>
                         
                     </div>
-                    <a href="#" data-toggle="modal" data-target="#check-in-modal" class="btn btn-success waves-effect waves-light" style="margin: 10px 15px;">Điểm danh</a>
+                    <a href="#" data-toggle="modal" data-target="#check-in-modal" class="btn btn-success waves-effect waves-light" style="margin: 5px 0 5px 15px;">Điểm danh</a>
 
-                    <a href="#" data-toggle="modal" data-target="#import-email-modal" class="btn btn-info waves-effect waves-light">Nhập danh sách khách mời</a>
+                    <a href="#" data-toggle="modal" data-target="#import-email-modal" class="btn btn-info waves-effect waves-light" style="margin: 5px 0 5px 15px">Nhập danh sách khách mời</a>
+
+                    <a href="#" data-toggle="modal" data-target="#export-attendee-modal" class="btn btn-primary waves-effect waves-light" style="margin: 5px 10px 5px 15px">Xuất danh sách người tham dự</a>
 
                     <div class="db-2-main-com db-2-main-com-table">
                         <table class="table table-hover" id="attendee-table">
@@ -128,8 +156,8 @@ if (isset($_GET["id"])) {
                                 <tr>
                                     <th>#</th>
                                     <th>Tên người tham dự</th>
-                                    <th>Email</th>
-                                    <th>Mã tài khoản</th>
+                                    <th>Email/ Mã sinh viên</th>
+                                    <!-- <th>Mã tài khoản</th> -->
                                     <th>Loại tài khoản</th>
                                     <th>Trạng thái</th>
                                 </tr>
@@ -152,7 +180,7 @@ if (isset($_GET["id"])) {
                                         $ticket = $rowAtt["ticket_code"];
 
                                         if ($rowAtt["code"] == "") {
-                                            if ((strstr($email, "@") == "@vanlanguni.vn")) {
+                                            if ((strstr($email, "@") == "@vanlanguni.vn") || (strstr($email, "@") == "@vanlanguni.edu.vn") || (preg_match('/^[a-zA-Z]{1}+[0-9]{6}$/', $email) || preg_match('/^[0-9]{3}+[a-zA-Z]{2}+[0-9]{5}$/', $email) || preg_match('/^[a-zA-Z]{1}+[0-9]{2}+[a-zA-Z]{1}+[0-9]{3}$/', $email))) {
                                                 $code = strstr($email, "@", true);
                                                 $type = "Văn Lang";
                                                 $colorType = "event-reject";
@@ -172,20 +200,27 @@ if (isset($_GET["id"])) {
                                             case 0:
                                                 $status = "Chưa điểm danh";
                                                 $colorStatus = "event-reject";
-                                                $modal = "";
+                                                // $modal = 'data-toggle="modal" data-target="#checkin-click-modal"';
+                                                $modal = '';
+                                                $action = 'checkin-click';
                                                 break;
                                             case 1:
                                                 $status = "Đã điểm danh";
                                                 $colorStatus = "event-accept";
                                                 $modal = "";
+                                                $action = '';
 
-                                                if ($ticket == "") $status = "Đã điểm danh (phát sinh)";
+                                                if ($ticket == "") {
+                                                    $status = "Đã điểm danh (không vé)";
+                                                    $action = 'delete-checkin-click';
+                                                }
 
                                                 break;
                                             case 2:
                                                 $status = "Chờ duyệt vé";
                                                 $colorStatus = "event-wait";
                                                 $modal = 'data-toggle="modal" data-target="#send-ticket-modal"';
+                                                $action = 'send-ticket';
                                                 break;
                                         }
                                         
@@ -195,10 +230,10 @@ if (isset($_GET["id"])) {
                                             <td><?php echo $count ?></td>
                                             <td class="attendee-name"><?php echo $name ?></td>
                                             <td class="attendee-email"><?php echo $email ?></td>
-                                            <td><?php echo $code ?></td>
+                                            <!-- <td><?php echo $code ?></td> -->
                                             <td><span class="event-status <?php echo $colorType ?>"><?php echo $type ?></span></td>
                                             <!-- <td><span class="event-status <?php echo $colorStatus ?>"<?php $modal ?>><?php echo $status ?></span></td> -->
-                                            <td><span class="event-status <?php echo $colorStatus ?> send-ticket" <?php echo $modal ?> ><?php echo $status ?></span></td>
+                                            <td><span class="event-status <?php echo $colorStatus . ' '.$action ?>" <?php echo $modal ?> ><?php echo $status ?></span></td>
                                         </tr>
 
                                         <?php
@@ -346,13 +381,39 @@ if (isset($_GET["id"])) {
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
-                                <button type="button" class="btn btn-success" data-dismiss="modal" id="btn-send-ticket">Gửi vé</button>
+                                <button type="button" class="btn btn-success" id="btn-send-ticket">Gửi vé</button>
                             </div>
                         </div>
                     </form>
                 </div>              
             </div>
             <!-- End Send Ticket -->
+
+
+            <!-- Check In By Click -->
+            <div id="checkin-click-modal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <form id="checkin-click" method="POST" action="<?php  $_SERVER["PHP_SELF"] ?>">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Điểm danh</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" name="event-id" value="<?php echo $event_id ?>">
+                                <input type="hidden" name="attendee-email" id="attendee-email-value" value="">
+                                <p>Bạn có chắc chắn điểm danh cho: <strong id="attendee-email-text"></strong> ?</p>             
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                <button type="submit" class="btn btn-success" data-dismiss="modal">Điểm danh</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>              
+            </div>
+            <!-- End Check In By Click -->
 
              <!-- Check in -->
             <div id="check-in-modal" class="modal fade" role="dialog">
@@ -366,10 +427,10 @@ if (isset($_GET["id"])) {
                         <div class="modal-body">
                             <ul class="nav nav-tabs nav-justified">
                                 <li class="active">
-                                    <a data-toggle="tab" href="#ticket-checkin">Có vé</a>
+                                    <a data-toggle="tab" href="#ticket-checkin">Quét mã vé/ thẻ sinh viên</a>
                                 </li>
                                 <li>
-                                    <a data-toggle="tab" href="#no-ticket-checkin">Không có vé</a>
+                                    <a data-toggle="tab" href="#no-ticket-checkin">Nhập email</a>
                                 </li>
                             </ul>
 
@@ -380,15 +441,15 @@ if (isset($_GET["id"])) {
                                         <p class="text-danger" id="no-internet" hidden>Không có kết nối internet không thể điểm danh</p>
                                         <div id="loadingMessage">🎥 Vui lòng cho phép truy cập camera</div>
 
-        								<canvas id="canvas" hidden></canvas>
+                                        <canvas id="canvas" hidden></canvas>
                                         <p class="text-danger" id="error-checkin"></p>
-        								<div id="output" hidden>
+                                        <div id="output" hidden>
 
-        									<!-- <div id="outputMessage">No QR code detected.</div> -->
+                                            <!-- <div id="outputMessage">No QR code detected.</div> -->
 
-        									<!-- <div hidden><b>Data:</b> <span id="outputData"></span></div> -->
+                                            <!-- <div hidden><b>Data:</b> <span id="outputData"></span></div> -->
 
-        								</div>
+                                        </div>
                                     </div>
 
                                 </div>
@@ -417,6 +478,28 @@ if (isset($_GET["id"])) {
                 </div>              
             </div>
             <!-- End check in -->
+
+            <!-- Export Attendee Modal -->
+            <div id="export-attendee-modal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title"> Xuất file danh sách người tham dự</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>Bạn có muốn xuất danh sách người tham dự sang định dạng excel không?</p>
+                            <iframe name="attendee" src="" hidden></iframe>          
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                            <button type="button" class="btn btn-success" data-dismiss="modal" id="btn-export-attendee">Xuất</button>
+                        </div>
+                    </div>
+                </div>              
+            </div>
+            <!-- End export attendee -->
 
 
         </div>
@@ -469,6 +552,7 @@ include('footer.php');
 
     $('#btn-send-ticket').click(function(){
         var id = $('#id-table-attendee').val();
+        $(this).html('<i class="fa fa-spinner fa-spin"></i>');
         $.ajax({
             url: 'send-ticket.php',
             method: 'POST',
@@ -479,7 +563,7 @@ include('footer.php');
                 alert('Gửi vé thành công');
                 location.reload();
             } else {
-                console.log(data.error);
+                alert(data.message);
             }
         }).fail(function(jqXHR, statusText, errorThrown){
             console.log("Fail:"+ jqXHR.responseText);
@@ -487,6 +571,80 @@ include('footer.php');
         })
     })
 
+
+
+    // Check in by click
+    $('tbody').on('click', '.checkin-click', function(){
+        var label = $(this);
+
+        var id = $(this).parents('tr').attr('id');
+        if (id == undefined) var id = $(this).parents('tr').prev().attr('id');
+        var name = $(this).parents('tr').find('.attendee-name').text();
+        if (name == '') var name = $(this).parents('tr').prev().find('.attendee-name').text();
+        var email = $(this).parents('tr').find('.attendee-email').text();
+        if (email == '') var email = $(this).parents('tr').prev().find('.attendee-email').text();
+
+
+        $('#attendee-email-value').val(email);
+        $('#attendee-email-text').text(email);
+
+        var q = confirm('Bạn có chắc chắn điểm danh cho: ' + email)
+
+        if (q) {
+            var event_id = $('#event-id').val();
+
+           $.ajax({
+                url: 'process-my-event.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {'action': 'checkin-no-ticket', 'event-id': event_id, 'attendee-email': email}
+            }).done(function(data){
+                if (data.result){
+                    alert(data.message);
+                    label.text('Đã điểm danh').removeClass('checkin-click').removeClass('event-reject').addClass('event-accept')
+                } else {
+                    alert('Có lỗi xảy ra. Vui lòng thử lại!')
+                }
+            }).fail(function(jqXHR, statusText, errorThrown){
+                console.log("Fail:"+ jqXHR.responseText);
+                console.log(errorThrown);
+            })
+        }
+    })
+
+    // Delete checkin click
+    $('tbody').on('click', '.delete-checkin-click', function(){
+        var label = $(this);
+
+        var id = $(this).parents('tr').attr('id');
+        if (id == undefined) var id = $(this).parents('tr').prev().attr('id');
+        var name = $(this).parents('tr').find('.attendee-name').text();
+        if (name == '') var name = $(this).parents('tr').prev().find('.attendee-name').text();
+        var email = $(this).parents('tr').find('.attendee-email').text();
+        if (email == '') var email = $(this).parents('tr').prev().find('.attendee-email').text();
+
+        var q = confirm('Bạn có chắc chắn xóa "' + email + '" khỏi danh sách người tham dự');
+
+        if (q) {
+            var event_id = $('#event-id').val();
+
+           $.ajax({
+                url: 'process-my-event.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {'action': 'delete-checkin', 'id-table-attendee': id}
+            }).done(function(data){
+                if (data.result){
+                    location.reload();
+                } else {
+                    alert('Có lỗi xảy ra. Vui lòng thử lại!')
+                }
+            }).fail(function(jqXHR, statusText, errorThrown){
+                console.log("Fail:"+ jqXHR.responseText);
+                console.log(errorThrown);
+            })
+        }
+    })
 
     // check in
 
@@ -527,8 +685,12 @@ include('footer.php');
             track.stop();
         }
         video.srcObject = null;
+
+        temp_code = '';
     }
 
+    var temp_code = '';
+    var try_scan = 0;
     function tick() {
         loadingMessage.innerText = "⌛ Đang tải..."
         if (video.readyState === video.HAVE_ENOUGH_DATA) {
@@ -556,34 +718,54 @@ include('footer.php');
                 // alert('Đã thấy vé');
                 // console.log(code.data)
 
-                var event_id = $('#event-id').val();
-
-                if (window.navigator.onLine == true) {
-                    $.ajax({
-    		            url: 'process-my-event.php',
-    		            method: 'POST',
-    		            dataType: 'json',
-    		            data: {'action': 'checkin','event-id': event_id, 'ticket-code': code.data}
-    		        }).done(function(data){
-    		            if(data.result){
-                            sound.play();
-    		                alert(data.message);
-                            $('#error-checkin').text('');
-    		            } else {
-    		                // alert(data.message);
-                            $('#error-checkin').text(data.message);
-                            setTimeout(function(){
-                                $('#error-checkin').text('');
-                            }, 1500)
-    		            }
-    		        }).fail(function(jqXHR, statusText, errorThrown){
-    		            console.log("Fail:"+ jqXHR.responseText);
-    		            console.log(errorThrown);
-    		        })
+                if (code.data.length > 32) {
+                    start = code.data.indexOf('MÃ SINH VIÊN:') + 14;
+                    end = code.data.indexOf('ĐỊNH DANH:') - 1;
+                    qrcode = code.data.substring(start, end)
+                } else {
+                    qrcode = code.data
                 }
 
 
+                var event_id = $('#event-id').val();
 
+                if (window.navigator.onLine == true) {
+                    $('#no-internet').hide();
+
+                    if (temp_code != code.data) {
+                        temp_code = code.data;
+
+                        $.ajax({
+                            url: 'process-my-event.php',
+                            method: 'POST',
+                            dataType: 'json',
+                            data: {'action': 'checkin','event-id': event_id, 'ticket-code': qrcode}
+                        }).done(function(data){
+                            if(data.result){
+                                sound.play();
+                                alert(data.message);
+                                $('#error-checkin').text('');
+                            } else {
+                                alert(data.message);
+                                // $('#error-checkin').text(data.message);
+                                // setTimeout(function(){
+                                //     $('#error-checkin').text('');
+                                // }, 2000)
+                            }
+                        }).fail(function(jqXHR, statusText, errorThrown){
+                            console.log("Fail:"+ jqXHR.responseText);
+                            console.log(errorThrown);
+                        })
+                    } else {
+                        try_scan++;
+                        if (try_scan == 10) {
+                            temp_code = '';
+                            try_scan = 0;
+                        }
+                    }
+                } else {
+                    $('#no-internet').show();
+                }
             } else {
                 // outputMessage.hidden = false;
                 // outputData.parentElement.hidden = true;
@@ -593,14 +775,21 @@ include('footer.php');
         requestAnimationFrame(tick);
     }
 
+    $('a[href^="#ticket-checkin"]').click(function(){
+        startCheckIn();
+    })
+    $('a[href^="#no-ticket-checkin"]').click(function(){
+        stopCheckIn();
+    })
+
 
     $('#check-in-modal').on('shown.bs.modal', function(){
-    	startCheckIn();
-	});
+        if($('#ticket-checkin').hasClass('active')) startCheckIn();
+    });
     $('#check-in-modal').on('hidden.bs.modal', function(){
-    	stopCheckIn();
+        stopCheckIn();
         $('#error-checkin').text('');
-	});
+    });
 
     setInterval(function(){
         if (window.navigator.onLine == true) {
@@ -733,6 +922,11 @@ include('footer.php');
         $('#import-email-form button[type="submit"]').prop('disabled', false);
 
         ($(this).val() != '') ? $('#please-select-file-text').hide() : $('#please-select-file-text').show();
+    })
+
+    $('#btn-export-attendee').click(function() {
+        var event_id = $('#event-id').val();
+        window.frames['attendee'].location = 'export-attendee.php?id='+event_id;
     })
 
 

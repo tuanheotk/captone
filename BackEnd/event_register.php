@@ -90,21 +90,18 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // if (isset($_REQUEST['size']))
     //     $matrixPointSize = min(max((int)$_REQUEST['size'], 1), 10);
 
-
-    if (isset($_REQUEST['data'])) { 
-    
+if (isset($ticket_code)) { 
         //it's very important!
-        if (trim($_REQUEST['data']) == '')
+        if (trim($ticket_code) == '')
             die('data cannot be empty! <a href="?">back</a>');
             
         // user data
-        $filename = $PNG_TEMP_DIR.'test'.md5($_REQUEST['data'].'|'.$errorCorrectionLevel.'|'.$matrixPointSize).'.png';
-        QRcode::png($_REQUEST['data'], $filename, $errorCorrectionLevel, $matrixPointSize, 2);    
+        $filename = $PNG_TEMP_DIR.'test'.$ticket_code.'.png';
+        QRcode::png($ticket_code, $filename, $errorCorrectionLevel, $matrixPointSize, 2);    
         
     } else {    
     
         //default data
-       
         QRcode::png($ticket_code, $filename, $errorCorrectionLevel, $matrixPointSize, 2);    
         
     }    
@@ -117,17 +114,17 @@ try {
     //Server settings
     $phpmailer->SMTPDebug=0;                              // Enable verbose debug output
     $mail->isSMTP();                                      // Set mailer to use SMTP
-    $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
+    $mail->Host = 'smtp.office365.com';  // Specify main and backup SMTP servers
     $mail->SMTPAuth = true;                               // Enable SMTP authentication
-     $mail->Username = 'eventbox.vanlang@gmail.com';                 // SMTP username
-    $mail->Password = 'vluvlu2020';               // SMTP username
+     $mail->Username = 'sukien@vanlanguni.edu.vn';                 // SMTP username
+    $mail->Password = 'Vanlang2020';               // SMTP username
     $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, ssl also accepted
     $mail->Port = 587;       
     $mail->CharSet = 'UTF-8';                          // TCP port to connect to
  
     //Recipients
      
-    $mail->setFrom('EventBox.Vanlang@gmail.com', 'Event '.$title);
+    $mail->setFrom('sukien@vanlanguni.edu.vn', 'EventBox - Văn Lang');
     $mail->addAddress($email);     // nlangAdd a recipient
     // $mail->addAddress('ellen@example.com');               // Name is optional
     // $mail->addReplyTo('info@example.com', 'Information');
@@ -138,45 +135,30 @@ try {
     // $mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
     $mail->addAttachment($PNG_WEB_DIR.basename($filename), 'ticket.jpg');    // Optional name
     $content = "<b>Thân gửi bạn!</b><br>
-    Vé mời của bạn đã được đính kèm trong email này. Xin vui lòng mang vé tới sự kiện để được điểm danh<br>
+    Vé mời của bạn đã được đính kèm trong email này. Xin vui lòng mang vé tới sự kiện để được điểm danh.<br>
+    Phòng trường hợp nơi diễn ra sự kiện không có kết nối internet, bạn có thể tải vé về trước để việc điểm danh được thực hiện nhanh chóng.<br>
     Cảm ơn bạn đã đăng ký tham gia sự kiện!
-        <br>-----------------------------------------
-        <br>
-                        <table>
-                          
-                                  <tr>
-                                    <td><b>Sự kiện:</b></td>
-                                       <td>".$title."</td>
-                                  </tr>
-                                  <tr>
-                                    <td><b>Thời gian:</b></td>
-                                     <td>".$time."</td>
-                                  </tr>
-                                  <tr>
-                                    <td><b>Địa điểm:</b></td>
-                                    <td>".$place."</td>
-                                  </tr>
-                            </table>
-                          
-    ";
-    // $content += "<table>";
-    // $content +=       "                 <thead>";
-    // $content +=       "                             <tr>";
-    //    $content +=       "                               <th>ID</th>";
-    //    $content +=       "                               <th>Tên sự kiện</th>";
-    //     $content +=       "                              <th>Thời gian</th>";
-    //     $content +=       "                              <th>Địa điểm</th>";
-    //                          $content +=       "         <th>Trạng thái</th>";
-    //        $content +=       "                           <th>Xét duyệt</th>";
-                                   
-    //         $content +=       "                      </tr>";
-    //          $content +=       "                 </thead>";
-    //            $content +=       "               <tbody>";
-    //             $content +=       "              </tbody>";
-    //      $content +=       " </table>";
+    <hr>
+    <table>
+        <tr>
+            <td><b>Sự kiện:</b></td>
+            <td>".$title."</td>
+        </tr>
+        <tr>
+            <td><b>Thời gian:</b></td>
+            <td>".$time."</td>
+        </tr>
+        <tr>
+            <td><b>Địa điểm:</b></td>
+            <td>".$place."</td>
+        </tr>
+    </table>
+    <a href='https://sukien.vanlanguni.edu.vn/event-detail.php?id=$id' target='_blank'>Chi tiết sự kiện</a>
+    <hr>
+    <p>Vui lòng không trả lời email này</p>";
     //Content
     $mail->isHTML(true);                                  // Set email format to HTML
-    $mail->Subject = 'Vé tham dự sự kiện ['.$title.']';
+    $mail->Subject = 'Vé mời tham dự sự kiện - EventBox Văn Lang';
     $mail->Body    = $content;
    
     $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';

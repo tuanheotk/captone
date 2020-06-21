@@ -1,37 +1,44 @@
 <?php
 // remove index.php
-if ($_SERVER['REQUEST_URI'] == '/event/index.php') {
-  header('Location: /event');
+if ($_SERVER['REQUEST_URI'] == '/index.php') {
+  header('Location: /');
 }
 
 $title = 'Trang chủ';
 include('header.php');
 
-$sqlFeature = "SELECT e.id, e.title, e.avatar, e.start_date, e.place, COUNT(a.event_id) AS total FROM event e LEFT JOIN attendee a ON e.id = a.event_id WHERE e.status = 4 GROUP BY e.id ORDER BY total DESC, e.public_at DESC LIMIT 6";
+$sqlFeature = "SELECT e.id, e.title, e.avatar, e.start_date, e.place, COUNT(a.event_id) AS total FROM event e LEFT JOIN attendee a ON e.id = a.event_id WHERE e.status = 4 GROUP BY e.id ORDER BY (CASE WHEN e.start_date > NOW() THEN 0 ELSE 1 END), total DESC, e.public_at DESC LIMIT 6";
 
 $sqlAcademic = "SELECT e.id, e.title, e.avatar, c.name FROM event e, category c WHERE e.category_id = c.id AND c.id = 1 AND e.status = 4 ORDER BY e.public_at DESC";
 $sqlCulture = "SELECT e.id, e.title, e.avatar, c.name FROM event e, category c WHERE e.category_id = c.id AND c.id = 2 AND e.status = 4 ORDER BY e.public_at DESC";
 $sqlSport = "SELECT e.id, e.title, e.avatar, c.name FROM event e, category c WHERE e.category_id = c.id AND c.id = 3 AND e.status = 4 ORDER BY e.public_at DESC";
 
-$sqlRecommend = "SELECT id, title, avatar FROM event WHERE id IN ((SELECT MAX(id) FROM event WHERE status = 4 GROUP BY faculty_id))";
+$sqlRecommend = "SELECT id, title, avatar FROM event WHERE id IN (SELECT MAX(id) FROM event WHERE status = 4 GROUP BY faculty_id)";
 
 $resultFeature = mysqli_query($conn, $sqlFeature);
 $resultAcademic = mysqli_query($conn, $sqlAcademic);
 $resultCulture = mysqli_query($conn, $sqlCulture);
 $resultSport = mysqli_query($conn, $sqlSport);
 $resultRecommend = mysqli_query($conn, $sqlRecommend);
+$sql_get_cover = "SELECT link FROM cover WHERE selected = 1";
 
-
+$result_cover = mysqli_query($conn, $sql_get_cover);
+if (mysqli_num_rows($result_cover) > 0) {
+  $rows_cover = mysqli_fetch_assoc($result_cover);
+  $link_cover_image = $rows_cover['link'];
+  if (!file_exists($link_cover_image)) $link_cover_image = 'images/cover/_default.jpg';
+} else {
+  $link_cover_image = 'images/cover/_default.jpg';
+}
 ?>
 
     <!--HEADER SECTION-->
     <section>
-        <div class="tourz-search">
+        <div class="tourz-search" style="background-image: url('<?php echo $link_cover_image ?>');">
             <div class="container">
                 <div class="row">
                     <div class="tourz-search-1">
-                        <h1>Nhập mã sự kiện</h1>
-                        
+                        <h1>Nhập mã sự kiện để đặt câu hỏi & bầu chọn</h1>
                         <form class="tourz-search-form" id="join-room-form">
                             <div class="input-field">
                                 <input type="text" id="select-city" class="autocomplete">
@@ -360,7 +367,7 @@ $resultRecommend = mysqli_query($conn, $sqlRecommend);
                         </div>
                         <div class="b_pack rows">
                             <div class="col-md-12 col-sm-12">
-                              <h4 title="<?php echo $name ?>"><?php echo $name ?></h4>
+                              <h4 title="<?php echo htmlspecialchars($name) ?>"><?php echo $name ?></h4>
                             </div>
                         </div>
                       </a>

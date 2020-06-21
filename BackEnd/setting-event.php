@@ -4,7 +4,12 @@ include('header.php');
 if (isset($_GET["id"])) {
     $event_id = $_GET["id"];
     // $sqlCheckAuthor = "SELECT id FROM event WHERE id = ".$event_id." AND account_id = '".$account_id."'";
-    $sqlCheckAuthor = "SELECT id FROM event WHERE status != 5 AND id = ".$event_id." AND account_id = ".$account_id." UNION SELECT e.id FROM event e, moderator m WHERE e.status !=5 AND e.id = m.event_id AND m.event_id = ".$event_id." AND m.email = '".$account_email."'";
+    if ($account_role == 4) {
+        $sqlCheckAuthor = "SELECT id FROM event WHERE status != 5 AND id = $event_id";
+    } else {
+        $sqlCheckAuthor = "SELECT id FROM event WHERE status != 5 AND id = ".$event_id." AND account_id = ".$account_id." UNION SELECT e.id FROM event e, moderator m WHERE e.status !=5 AND e.id = m.event_id AND m.event_id = ".$event_id." AND m.email = '".$account_email."'";
+    }
+    
     $resultCheckAuthor = mysqli_query($conn, $sqlCheckAuthor);
 
     if (mysqli_num_rows($resultCheckAuthor) > 0) {
@@ -57,15 +62,35 @@ if (isset($_GET["id"])) {
 
                 <div class="db-l-2 <?php if (!isset($_SESSION['user_email'])) echo 'info-fix-top';?>">
                     <ul>
+                        <?php
+                        if (isset($account_role) && $account_role == 4) {
+                        ?>
+                        <li>
+                            <a href="all-events.php"><i class="fa fa-calendar-check-o" aria-hidden="true"></i> Tất cả sự kiện</a>
+                        </li>
+                        <?php
+                        }
+                        ?>
                         <li>
                             <a href="my-events.php"><i class="fa fa-calendar" aria-hidden="true"></i> Sự kiện của tôi</a>
                         </li>
+
+                        <?php
+                        if (isset($is_mod) && $is_mod) {
+                        ?>
+                        <li>
+                            <a href="my-support-events.php"><i class="fa fa-handshake-o" aria-hidden="true"></i> Sự kiện hỗ trợ</a>
+                        </li>
+                        <?php
+                        }
+                        ?>
+
                         <li>
                             <a href="my-registered-events.php"><i class="fa fa-check" aria-hidden="true"></i> Sự kiện đã đăng ký tham gia</a>
                         </li>
 
                         <?php 
-                        if (isset($account_role) && $account_role == 2) {
+                        if (isset($account_role) && $account_role == 2 || isset($account_role) && $account_role == 4) {
                         ?>
 
                         <li>
@@ -134,13 +159,13 @@ if (isset($_GET["id"])) {
                                 <input type="hidden" name="id" value="<?php echo $event_id ?>">
                                 <input type="hidden" name="action" value="setting">
                                 <div class="input-field col s12 m12">
-                                    <a href="#" class="full-btn btn btn-info waves-light waves-effect" data-toggle="modal" data-target="#moderator-modal"><i class="fa fa-plus-circle" aria-hidden="true"></i> Thêm người hổ trợ</a>
+                                    <a href="#" class="full-btn btn btn-info waves-light waves-effect" data-toggle="modal" data-target="#moderator-modal"><i class="fa fa-plus-circle" aria-hidden="true"></i> Thêm người hỗ trợ</a>
                                 </div>
                                 <div class="input-field col s12 m6">
                                     <button type="submit" id="submit-btn" class="full-btn btn btn-success waves-light waves-effect"><i class="fa fa-check" aria-hidden="true"></i> Lưu</button>
                                 </div>
                                 <div class="input-field col s12 m6">
-                                    <a href="my-events.php" class="full-btn btn btn-danger waves-light waves-effect"><i class="fa fa-times" aria-hidden="true"></i> Huỷ</a>
+                                    <button type="button" onclick="window.history.back()" class="full-btn btn btn-danger waves-light waves-effect"><i class="fa fa-times" aria-hidden="true"></i> Huỷ</button>
                                 </div>
                             </div>
                         </form>
@@ -155,15 +180,15 @@ if (isset($_GET["id"])) {
                     <form id="add-moderator-form" method="POST" action="<?php  $_SERVER["PHP_SELF"] ?>">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h4 class="modal-title"> Thêm người hổ trợ</h4>
+                                <h4 class="modal-title"> Thêm người hỗ trợ</h4>
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
                             <div class="modal-body">
                                 <div class="row">
                                     <div class="input-field col s12 m9">
-                                        <!-- <input type="email" class="validate" id="email-mod" placeholder="Email người hổ trợ" title="Email người hổ trợ" maxlength="50" required="" style="height: 36px; padding-left: 10px;"> -->
+                                        <!-- <input type="email" class="validate" id="email-mod" placeholder="Email người hỗ trợ" title="Email người hỗ trợ" maxlength="50" required="" style="height: 36px; padding-left: 10px;"> -->
 
-                                        <input type="email" class="form-control" id="email-mod" placeholder="Email người hổ trợ" title="Email người hổ trợ" maxlength="50" required="">
+                                        <input type="email" class="form-control" id="email-mod" placeholder="Email người hỗ trợ" title="Email người hỗ trợ" maxlength="50" required="">
 
 
                                     </div>
@@ -199,8 +224,8 @@ if (isset($_GET["id"])) {
                                         ?>
                                         <tr id="<?php echo $id_table_mod ?>">
                                             <td><?php echo $count ?></td>
-                                            <td><?php echo $email_mod ?></td>
-                                            <td><button type="button" class="btn btn-danger btn-sm delete-moderator" title="Xoá người hổ trợ"><i class="fa fa-trash-o"></i></button></td>
+                                            <td class="mod-email"><?php echo $email_mod ?></td>
+                                            <td><button type="button" class="btn btn-danger btn-sm delete-moderator" title="Xoá người hỗ trợ"><i class="fa fa-trash-o"></i></button></td>
                                         </tr>
 
                                         <?php
@@ -208,7 +233,7 @@ if (isset($_GET["id"])) {
                                         } else {
                                         ?>
                                         <tr>
-                                            <td colspan="3" class="text-center">Chưa có người hổ trợ</td>
+                                            <td colspan="3" class="text-center">Chưa có người hỗ trợ</td>
                                         </tr>
 
                                         <?php
@@ -261,7 +286,7 @@ include('footer.php');
         }).done(function(data){
             console.log(data);
             if(data.result){
-                window.location = 'my-events.php';
+                window.history.back();
             }else {
                 console.log(data.error);
                 console.log(data.sql)
@@ -285,6 +310,8 @@ include('footer.php');
             if(data.result){
                 $('#email-mod').val('');
                 getModList();
+            } else {
+                alert(data.message)
             }
         }).fail(function(jqXHR, statusText, errorThrown){
             console.log("Fail:"+ jqXHR.responseText);
@@ -298,21 +325,28 @@ include('footer.php');
     $('tbody#moderator-list').on('click', '.delete-moderator', function(e) {
         e.preventDefault();
         var id_table_mod = $(this).parents('tr').attr('id');
-        $.ajax({
-            method: 'POST',
-            dataType: 'json',
-            url: 'process-my-event.php',
-            data: {'action' : 'delete-mod-cfg-event', 'id-table-mod' : id_table_mod},
-        }).done(function(data){
-            if(data.result){
-                getModList();
-            }
-        }).fail(function(jqXHR, statusText, errorThrown){
-            console.log("Fail:"+ jqXHR.responseText);
-            console.log(errorThrown);
-        }).always(function(){
-            // do something
-        })
+        var mod_email = $(this).parents('tr').find('.mod-email').text();
+
+        var q = confirm('Bạn có muốn xóa người hỗ trợ: ' + mod_email);
+
+        if (q) {
+            $.ajax({
+                method: 'POST',
+                dataType: 'json',
+                url: 'process-my-event.php',
+                data: {'action' : 'delete-mod-cfg-event', 'id-table-mod' : id_table_mod},
+            }).done(function(data){
+                if(data.result){
+                    getModList();
+                }
+            }).fail(function(jqXHR, statusText, errorThrown){
+                console.log("Fail:"+ jqXHR.responseText);
+                console.log(errorThrown);
+            }).always(function(){
+                // do something
+            })
+        }
+
     });
 
     var event_id = $('#event-id').val();
@@ -332,12 +366,12 @@ include('footer.php');
                     var count = index + 1;
                     rows += '<tr id="'+mod.id+'">';
                     rows += '<td>'+count+'</td>';
-                    rows += '<td>'+mod.email+'</td>';
-                    rows += '<td><button type="button" class="btn btn-danger btn-sm delete-moderator" title="Xoá người hổ trợ"><i class="fa fa-trash-o"></i></button></td>';
+                    rows += '<td class="mod-email">'+mod.email+'</td>';
+                    rows += '<td><button type="button" class="btn btn-danger btn-sm delete-moderator" title="Xoá người hỗ trợ"><i class="fa fa-trash-o"></i></button></td>';
                     rows += '</tr>';
                 })
             }else {
-                rows = '<tr><td colspan="3" class="text-center">Chưa có người hổ trợ</td></tr>';
+                rows = '<tr><td colspan="3" class="text-center">Chưa có người hỗ trợ</td></tr>';
             }
             $("tbody#moderator-list").html(rows);
         }).fail(function(jqXHR, statusText, errorThrown){

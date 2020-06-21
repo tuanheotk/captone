@@ -1,23 +1,25 @@
 <?php
     $title = "Duyệt sự kiện";
     include "header.php";
-    if (!isset($account_role) || $account_role != 2) {
+    if (!isset($account_role) || ($account_role != 2 && $account_role != 4)) {
         header("Location: my-events.php");
     }
 
-    // $sql = "SELECT id, title, start_date, place, status from event e, reviewer r where  status IN (1,2,3) and faculty_id = ".$account_faculty_id." UNION SELECT id, title, start_date, place, status from event e, reviewer r where e.id = r.event_id and e.status in (1,2,3) and  email = '".$account_email."' ";
-
-    $sql = "SELECT id, title, start_date, place, status FROM event WHERE status IN (1,2,3) AND faculty_id = ".$account_faculty_id." OR id IN (SELECT event_id FROM reviewer WHERE email = '".$account_email."' AND reviewer.event_id = event.id AND event.status IN (1,2,3)) ORDER BY id DESC";
+    if ($account_role == 4) {
+        $sql = "SELECT e.*, a.name as host_name, a.email, f.name AS faculty_name FROM event e, account a, faculty f WHERE e.status IN (1,2,3) AND e.account_id = a.id AND e.faculty_id = f.faculty_id ORDER BY e.last_modified DESC";
+    } else {
+        $sql = "SELECT e.*, a.name as host_name, a.email, f.name AS faculty_name FROM event e, account a, faculty f WHERE e.status IN (1,2,3) AND e.account_id = a.id AND e.faculty_id = f.faculty_id AND (e.faculty_id = $account_faculty_id OR e.id IN (SELECT event_id FROM reviewer WHERE email = '$account_email' AND reviewer.event_id = e.id AND e.status IN (1,2,3))) ORDER BY e.last_modified DESC";
+    }
     
     $result = mysqli_query($conn, $sql);
    
  ?>
-	
-	<!--DASHBOARD-->
-	<section>
-		<div class="db">
-			<!--LEFT SECTION-->
-			<div class="db-l db-2-com">
+    
+    <!--DASHBOARD-->
+    <section>
+        <div class="db">
+            <!--LEFT SECTION-->
+            <div class="db-l db-2-com">
                 <?php
                 if (isset($_SESSION["user_email"])) {
                 ?>
@@ -39,13 +41,30 @@
 
                 <div class="db-l-2 <?php if (!isset($_SESSION['user_email'])) echo 'info-fix-top';?>">
                     <ul>
+                        <?php
+                        if (isset($account_role) && $account_role == 4) {
+                        ?>
+                        <li>
+                            <a href="all-events.php"><i class="fa fa-calendar-check-o" aria-hidden="true"></i> Tất cả sự kiện</a>
+                        </li>
+                        <?php
+                        }
+                        ?>
                         <li>
                             <a href="my-events.php"><i class="fa fa-calendar" aria-hidden="true"></i> Sự kiện của tôi</a>
                         </li>
-                        
-                       
+
+                        <?php
+                        if (isset($is_mod) && $is_mod) {
+                        ?>
                         <li>
-                            <a href="my-events.php"><i class="fa fa-check" aria-hidden="true"></i> Sự kiện đã đăng ký tham gia</a>
+                            <a href="my-support-events.php"><i class="fa fa-handshake-o" aria-hidden="true"></i> Sự kiện hỗ trợ</a>
+                        </li>
+                        <?php
+                        }
+                        ?>
+                        <li>
+                            <a href="my-registered-events.php"><i class="fa fa-check" aria-hidden="true"></i> Sự kiện đã đăng ký tham gia</a>
                         </li>
                          <li>
                             <a href="review-event.php"><i class="fa fa-hourglass-end" aria-hidden="true"></i> Duyệt sự kiện</a>
@@ -54,24 +73,25 @@
                     </ul>
                 </div>
             </div>
-			<!--CENTER SECTION-->
-			<div class="db-2">
-				<div class="db-2-com db-2-main">
-					<h4>Danh sách sự kiện cần duyệt</h4>
-					<div class="db-2-main-com db-2-main-com-table">
-						<table class="table table-hover" id="review-table">
-							<thead>
-								<tr>
-									<th>#</th>
-									<th>Tên sự kiện</th>
-									<th>Thời gian</th>
-									<th>Địa điểm</th>
+            <!--CENTER SECTION-->
+            <div class="db-2">
+                <div class="db-2-com db-2-main">
+                    <h4>Danh sách sự kiện cần duyệt</h4>
+                    <div class="db-2-main-com db-2-main-com-table">
+                        <table class="table table-hover" id="review-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Tên sự kiện</th>
+                                    <th>Thời gian</th>
+                                    <th>Người đăng</th>
+                                    <th>Đơn vị tổ chức</th>
                                     <th>Trạng thái</th>
-									<th>Xét duyệt</th>
+                                    <th>Xét duyệt</th>
                                    
-								</tr>
-							</thead>
-							<tbody id="tbodylistevent">
+                                </tr>
+                            </thead>
+                            <tbody id="tbodylistevent">
                                 <?php
                                 // Function short title
                                 function shortTitle($title)
@@ -124,23 +144,24 @@
                                        <td><?php echo $count ?></td>
                                       <td title="<?php echo htmlspecialchars($resultreview["title"]) ?>"><?php echo shortTitle($resultreview["title"]) ?></td>
                                        <td><?php echo date ("H:i - d/m/Y", strtotime($resultreview["start_date"])) ?></td>
-                                       <td><?php echo $resultreview["place"] ?></td>
+                                       <td><?php echo $resultreview["host_name"] . '('. $resultreview["email"] .')' ?></td>
+                                       <td><?php echo $resultreview["faculty_name"] ?></td>
                                         <td><span class="event-status <?php echo $color ?>"><?php echo $status1 ?></span></td>
                                        <td><a href='review-event-detail.php?id=<?php echo $resultreview["id"] ?>'><span class='db-done'>Chi tiết</span></a>&nbsp;&nbsp;</td>
                                      </tr>
 
                                 <?php } ?>
 
-								<!-- <tr>
-									<td>1</td>
-									<td>Talkshow AI - Blockchain</td>
-									<td>04/12/2019</td>
-									<td>Hội trường Trịnh Công Sơn</td>
-									<td><a href="review-event-detail.html"><span class="db-done">Chi tiết</span></a>&nbsp;&nbsp;
+                                <!-- <tr>
+                                    <td>1</td>
+                                    <td>Talkshow AI - Blockchain</td>
+                                    <td>04/12/2019</td>
+                                    <td>Hội trường Trịnh Công Sơn</td>
+                                    <td><a href="review-event-detail.html"><span class="db-done">Chi tiết</span></a>&nbsp;&nbsp;
                                         
                                     </td>
-								</tr> -->
-								<!-- <tr>
+                                </tr> -->
+                                <!-- <tr>
                                     <td>12</td>
                                     <td>Đêm nhạc Trịnh Công Sơn</td>
                                     <td>05/12/2019</td>
@@ -185,29 +206,30 @@
                                         
                                     </td>
                                 </tr> -->
-							</tbody>
-						</table>
-					</div>
-				</div>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-			</div>
+            </div>
 
 
            <!-- Modal -->
                      
-			
+            
 
-		</div>
-	</section>
+        </div>
+    </section>
 
-	<!--END DASHBOARD-->
-	<!--====== TIPS BEFORE TRAVEL ==========-->
-	
-	<?php 
+    <!--END DASHBOARD-->
+    <!--====== TIPS BEFORE TRAVEL ==========-->
+    
+    <?php 
         include "footer.php"
     ?>
      <script type="text/javascript">
     $(document).ready( function (){
+        $.fn.dataTable.moment('HH:mm - DD/MM/YYYY');
         $('#review-table').DataTable({
             responsive: true,
             language: {

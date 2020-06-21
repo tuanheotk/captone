@@ -1,11 +1,11 @@
 <?php
 
 if (isset($_GET["id"])) {
-	require("database-config.php");
-	$sql = "SELECT title FROM event WHERE id = ".$_GET["id"];
-	$result = mysqli_query($conn, $sql);
-	$row = mysqli_fetch_assoc($result);
-	$title = $row["title"];
+  require("database-config.php");
+  $sql = "SELECT title FROM event WHERE id = ".$_GET["id"];
+  $result = mysqli_query($conn, $sql);
+  $row = mysqli_fetch_assoc($result);
+  $title = $row["title"];
 }
     include "header.php";
 
@@ -13,32 +13,32 @@ if (isset($_GET["id"])) {
     if (isset($account_email)) {
         if((strstr($account_email,"@") == "@vanlanguni.vn") || (strstr($account_email,"@") == "@vanlanguni.edu.vn") )
         {   
-        	$mail_vlu=1;
+          $mail_vlu=1;
            
         }else{
-        	$mail_vlu=0;
+          $mail_vlu=0;
         }
     }
 
         if(isset($_GET["id"])){
-        	$event_id=$_GET["id"];
-        	if(isset($account_email)){
-        		$email=$account_email;
-	            $check_reg_sql = "select id from attendee where email= '".$email."' and id=".$event_id;
-	            $resultCheck = mysqli_query($conn,$check_reg_sql);
-	            $count_reg=mysqli_num_rows($resultCheck);
-	        }
+          $event_id=$_GET["id"];
+          if(isset($account_email)){
+            $email=$account_email;
+              $check_reg_sql = "select id from attendee where email= '".$email."' and id=".$event_id;
+              $resultCheck = mysqli_query($conn,$check_reg_sql);
+              $count_reg=mysqli_num_rows($resultCheck);
+          }
         
 
 
-			$sqlCheckStatus = "SELECT status FROM event WHERE id = ".$event_id;
-			$resultCheckStatus = mysqli_query($conn, $sqlCheckStatus);
-			$row = mysqli_fetch_assoc($resultCheckStatus);
-			$statusEvent = $row['status'];
+      $sqlCheckStatus = "SELECT status FROM event WHERE id = ".$event_id;
+      $resultCheckStatus = mysqli_query($conn, $sqlCheckStatus);
+      $row = mysqli_fetch_assoc($resultCheckStatus);
+      $statusEvent = $row['status'];
 
-			if ($statusEvent != 4) {
-			  header('Location: events.php');
-			}
+      if ($statusEvent != 4) {
+        header('Location: events.php');
+      }
         }else{
             $event_id=0;
             header("Location: events.php");
@@ -53,7 +53,7 @@ if (isset($_GET["id"])) {
     ?>
   <section>
         <?php while($resultevent=mysqli_fetch_assoc($result)){?>
-    <div class="rows inner_banner inner_banner_4" style="background-image: url(<?php echo $resultevent['avatar'] ?>);">
+    <div class="rows inner_banner inner_banner_4" style="background-image: url('<?php echo $resultevent['avatar'] ?>');">
       <div class="container">
                 
         <h2><span><?php echo $resultevent["title"];   ?></span> </h2>
@@ -83,12 +83,11 @@ if (isset($_GET["id"])) {
         $row_sum_att=mysqli_fetch_assoc($resultSumAtt);
         $sum_att=$row_sum_att["sum_att"];
 
-        $time = $resultevent["start_date"];
-        $time = date_parse_from_format('Y-m-d H:i:s', $time);
-        date_default_timezone_set('Asia/Ho_Chi_Minh');
-        $now = time();
-        $time_stamp = mktime($time['hour'],$time['minute'],$time['second'],$time['month'],$time['day'],$time['year']);
-        if (($now - $time_stamp) > 7*24*60*60){
+        $now = date('Y-m-d H:i:s');
+        $start_time = $resultevent['start_date'];
+        $diff = (strtotime($start_time) - strtotime($now));
+
+        if ($diff <=0){
           echo " <li class=''><a class='cancel_button' disabled title='Thời gian đăng ký vé đã kết thúc' >Hết hạn</a> </li>";
         } else {
           if ($sum_att>=$resultevent["ticket_number"]){
@@ -206,7 +205,7 @@ if (isset($_GET["id"])) {
         <div class="modal-body">
           Bạn chắc chắn <span style="color: green">muốn đăng kí</span> tham gia sự kiện này?
           <input type="hidden" name="id" value="<?php echo $resultevent['id']; ?>">
-             <input type="hidden" name="title" value="<?php echo $resultevent['title']; ?>">
+             <input type="hidden" name="title" value="<?php echo htmlspecialchars($resultevent['title']); ?>">
                 <input type="hidden" name="start_date" value="<?php echo $resultevent['start_date']; ?>">
                    <input type="hidden" name="place" value="<?php echo $resultevent['place']; ?>">
                     <input type="hidden" name="photo" value="<?php echo $resultevent['avatar']; ?>">

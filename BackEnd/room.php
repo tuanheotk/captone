@@ -230,7 +230,7 @@ if (isset($_GET["id"])) {
                 </div>
                 <div class="modal-body text-center">
                     <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
-                    <img width="100%" src="https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl=http://localhost/event/room.php?id=<?php echo $event_id ?>&choe=UTF-8">      
+                    <img width="100%" src="https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl=https://sukien.vanlanguni.edu.vn/room.php?id=<?php echo $event_id ?>&choe=UTF-8">      
                 </div>
                 <!-- <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
@@ -328,20 +328,24 @@ if (isset($_GET["id"])) {
                 rows+= '<p class="card-text question-content">'+q.content+'</p>';
                 rows+= '<p class="card-text question-time"><small class="text-muted">'+q.create_at+'</small></p>';
 
-                $.each(data.liked, function(index, l) {
-                    if (question_id == l.question_id) {
-                        if (user_id == l.user_id) {
-                            liked = true;
-                            return false;
+                if (data.liked.length > 0) {
+                    $.each(data.liked, function(index, l) {
+                        if (question_id == l.question_id) {
+                            if (user_id == l.user_id) {
+                                liked = true;
+                                return false;
+                            } else {
+                                liked = false;
+
+                            }
+
                         } else {
                             liked = false;
-
                         }
-
-                    } else {
-                        liked = false;
-                    }
-                })
+                    })
+                } else {
+                    liked = false;
+                }
 
                 if (liked) {
                     rows+= '<button type="button" class="custom-btn custom-liked btn-unlike-question" title="Bỏ yêu thích">'+num_like+' <i class="fa fa-heart" aria-hidden="true"></i></button> ';
@@ -622,21 +626,24 @@ if (isset($_GET["id"])) {
                     rows+= '<h5 class="card-title user-fullname">'+q.user_fullname+'</h5>';
                     rows+= '<p class="card-text question-content">'+q.content+'</p>';
                     rows+= '<p class="card-text question-time"><small class="text-muted">'+q.create_at+'</small></p>';
+                    if (data.liked.length > 0) {
+                        $.each(data.liked, function(index, l) {
+                            if (question_id == l.question_id) {
+                                if (user_id == l.user_id) {
+                                    liked = true;
+                                    return false;
+                                } else {
+                                    liked = false;
 
-                    $.each(data.liked, function(index, l) {
-                        if (question_id == l.question_id) {
-                            if (user_id == l.user_id) {
-                                liked = true;
-                                return false;
+                                }
+
                             } else {
                                 liked = false;
-
                             }
-
-                        } else {
-                            liked = false;
-                        }
-                    })
+                        })
+                    } else {
+                        liked = false;
+                    }
 
                     if (liked) {
                         rows+= '<button type="button" class="custom-btn custom-liked btn-unlike-question" title="Bỏ yêu thích">'+num_like+' <i class="fa fa-heart" aria-hidden="true"></i></button> ';
